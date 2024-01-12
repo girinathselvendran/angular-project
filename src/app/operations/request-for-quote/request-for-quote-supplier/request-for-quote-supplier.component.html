@@ -1,0 +1,994 @@
+<div>
+  <div class="panel-title panelHeading pull-left">
+    <div class="nopaddingbottom">
+      <b>
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.titles.rfqSupplier'
+          "
+          class="main-title"
+        ></span
+      ></b>
+    </div>
+  </div>
+  <div class="pull-right buttonGroup">
+    <div class="row">
+      <button class="capsule-button green" (click)="saveRFQSupplier()">
+        <div class="icon-circle">
+          <i class="fas fa-light fa-floppy-disk"></i>
+        </div>
+        {{ "operations.requestForQuote.partDetails.buttons.save" | translate }}
+      </button>
+      <button (click)="resetForm()" class="capsule-button grey">
+        <div class="icon-circle">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </div>
+        {{ "operations.requestForQuote.partDetails.buttons.reset" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+<div class="line"></div>
+<br />
+<hr
+  style="height: 2px; border-width: 100%; color: gray; background-color: gray"
+/>
+<form
+  class="container-new-ui"
+  [formGroup]="editSaveSupplierForm"
+  autocomplete="off"
+>
+  <div class="row">
+    <!-- supplier Code -->
+    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+      <label for="supplierCode" class="labelText">
+        <a class="light-blue-part" (click)="supplierHyperlink()">
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.label.supplierCode'
+            "
+          ></span>
+        </a>
+        <i class="red"> *</i>
+      </label>
+
+      <ng-select
+        [items]="supplierCodeDDList"
+        [searchFn]="dropdownSearchFn"
+        [selectOnTab]="true"
+        (input)="checkNgSelectValue($event, 'supplierCode')"
+        bindLabel="supplierCode"
+        formControlName="supplierCode"
+        notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+        placeholder="{{
+          'operations.requestForQuote.rfqSupplier.placeholder.supplierCode'
+            | translate
+        }}"
+        (change)="onSupplierCodeSelected($event)"
+        [ngClass]="{
+          redBorder:
+            (submitted &&
+              editSaveSupplierFormController['supplierCode'].errors) ||
+            (editSaveSupplierFormController['supplierCode'].errors &&
+              (editSaveSupplierFormController['supplierCode'].dirty ||
+                editSaveSupplierFormController['supplierCode'].touched))
+        }"
+      >
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-index="index"
+          let-search="searchTerm"
+        >
+          <div title="{{ item?.supplierCode }} - {{ item?.supplierName }}">
+            <small
+              ><b>{{ item?.supplierCode }}</b></small
+            ><br />
+            <span class="dropDownDescription">{{ item?.supplierName }}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+
+      <div
+        class="help-block red"
+        *ngIf="
+          (submitted &&
+            editSaveSupplierFormController['supplierCode'].errors) ||
+          (editSaveSupplierFormController['supplierCode'].errors &&
+            (editSaveSupplierFormController['supplierCode'].dirty ||
+              editSaveSupplierFormController['supplierCode'].touched))
+        "
+      >
+        <p
+          *ngIf="
+            editSaveSupplierFormController['supplierCode'].errors['invalid']
+          "
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.supplierCode.invalid'
+            "
+          ></span>
+        </p>
+        <p
+          *ngIf="
+            editSaveSupplierFormController['supplierCode'].errors['required']
+          "
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.supplierCode.required'
+            "
+          ></span>
+        </p>
+      </div>
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+      <label for="supplierName" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.supplierName'
+          "
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control new-form-control-input"
+        id="supplierName"
+        formControlName="supplierName"
+        placeholder="{{
+          'operations.requestForQuote.rfqSupplier.placeholder.supplierName'
+            | translate
+        }}"
+      />
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <fieldset>
+        <label [for]="'preferredSupplier'" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.label.preferredSupplier'
+            "
+          ></span>
+        </label>
+        <br />
+        <div class="onoffswitch" style="margin-top: 8px">
+          <input
+            type="checkbox"
+            [formControlName]="'preferredSupplier'"
+            [id]="'preferredSupplier'"
+            class="onoffswitch-checkbox"
+            [readonly]="false"
+            [disabled]="false"
+            (input)="onChangePreferredSupplierToggle($event)"
+          />
+          <label
+            class="onoffswitch-label"
+            [for]="'preferredSupplier'"
+            style="color: white"
+          >
+            <span
+              class="onoffswitch-inner"
+              data-swchon-text="YES"
+              data-swchoff-text="NO"
+            ></span>
+            <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="form-group col-lg-2 col-md-2 col-sm-2"
+      [ngClass]="{
+        'has-error':
+          (submitted &&
+            editSaveSupplierFormController['quotationRefNo'].errors) ||
+          (editSaveSupplierFormController['quotationRefNo'].errors &&
+            (editSaveSupplierFormController['quotationRefNo'].dirty ||
+              editSaveSupplierFormController['quotationRefNo'].touched))
+      }"
+    >
+      <label for="quotationRefNo" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.quotationRefNo'
+          "
+        ></span>
+        <i class="red"> *</i>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        maxlength="20"
+        class="form-control new-form-control-input"
+        id="quotationRefNo"
+        formControlName="quotationRefNo"
+        placeholder="{{
+          'operations.requestForQuote.rfqSupplier.placeholder.quotationRefNo'
+            | translate
+        }}"
+      />
+      <div
+        class="help-block red"
+        *ngIf="
+          (submitted &&
+            editSaveSupplierFormController['quotationRefNo'].errors) ||
+          (editSaveSupplierFormController['quotationRefNo'].errors &&
+            (editSaveSupplierFormController['quotationRefNo'].dirty ||
+              editSaveSupplierFormController['quotationRefNo'].touched))
+        "
+      >
+        <p
+          *ngIf="
+            editSaveSupplierFormController['quotationRefNo'].errors['required']
+          "
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.quotationRefNo.required'
+            "
+          ></span>
+        </p>
+      </div>
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="quotationDate" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.quotationDate'
+          "
+        ></span>
+        <i class="red"> *</i>
+      </label>
+      <div class="input-group input-group-md">
+        <input
+          type="text"
+          class="form-control uppercase"
+          bsDatepicker
+          (keydown.arrowdown)="quotationDate.click()"
+          formControlName="quotationDate"
+          #quotationDate
+          [bsConfig]="{
+            dateInputFormat: 'DD-MMM-YYYY',
+            containerClass: 'theme-dark-blue',
+            adaptivePosition: true
+          }"
+          [ngClass]="{
+            redBorderCalender:
+              (submitted &&
+                editSaveSupplierFormController['quotationDate'].errors) ||
+              (editSaveSupplierFormController['quotationDate'].errors &&
+                (editSaveSupplierFormController['quotationDate'].dirty ||
+                  editSaveSupplierFormController['quotationDate'].touched))
+          }"
+          (ngModelChange)="validateQuotationDate('quotationDate', $event)"
+        />
+
+        <span class="input-group-btn">
+          <button
+            class="btn custom-button"
+            type="button"
+            (click)="quotationDate.click()"
+            tabindex="-1"
+          >
+            <app-svg-calender-icon></app-svg-calender-icon>
+          </button>
+        </span>
+      </div>
+      <div
+        class="help-block red"
+        *ngIf="
+          (submitted &&
+            editSaveSupplierFormController['quotationDate'].errors) ||
+          (editSaveSupplierFormController['quotationDate'].errors &&
+            (editSaveSupplierFormController['quotationDate'].dirty ||
+              editSaveSupplierFormController['quotationDate'].touched))
+        "
+      >
+        <div
+          *ngIf="editSaveSupplierFormController['quotationDate'].errors?.['invalid']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.quotationDate.invalid'
+            "
+          ></span>
+        </div>
+        <div
+          *ngIf="editSaveSupplierFormController['quotationDate'].errors?.['required']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.quotationDate.required'
+            "
+          ></span>
+        </div>
+        <div
+          *ngIf="editSaveSupplierFormController['quotationDate'].errors?.['customError']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.quotationDateGreaterThanRfqDate'
+            "
+          ></span>
+        </div>
+        <!-- <div
+                *ngIf="editSaveSupplierFormController['quotationDate'].errors?.['bsDate']"
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.rfqSupplier.errors.quotationDate.invalid'
+                  "
+                ></span>
+              </div> -->
+        <!-- <div
+                *ngIf="editSaveSupplierFormController['quotationDate'].errors?.['invalidToDate']"
+              >
+                <span
+                  [translate]="
+                    'gateMovesReport.error.endPeriodGreaterThanToDate'
+                  "
+                >
+                </span>
+                {{
+                  editSaveSupplierFormController["quotationDate"].value
+                    | date : "dd-MMM-yyyy"
+                    | uppercase
+                }}
+              </div> -->
+        <!-- <div
+                *ngIf="editSaveSupplierFormController['quotationDate'].errors?.['inValidDateString']"
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.rfqSupplier.errors.quotationDate.invalid'
+                  "
+                ></span>
+              </div> -->
+      </div>
+    </div>
+
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="quotationValidTill" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.quotationValidTill'
+          "
+        ></span>
+      </label>
+      <div class="input-group input-group-md">
+        <input
+          type="text"
+          class="form-control uppercase"
+          bsDatepicker
+          (keydown.arrowdown)="quotationValidTill.click()"
+          formControlName="quotationValidTill"
+          #quotationValidTill
+          [bsConfig]="{
+            dateInputFormat: 'DD-MMM-YYYY',
+            containerClass: 'theme-dark-blue',
+            adaptivePosition: true
+          }"
+          [ngClass]="{
+            redBorderCalender:
+              (submitted &&
+                editSaveSupplierFormController['quotationValidTill'].errors) ||
+              (editSaveSupplierFormController['quotationValidTill'].errors &&
+                (editSaveSupplierFormController['quotationValidTill'].dirty ||
+                  editSaveSupplierFormController['quotationValidTill'].touched))
+          }"
+          (ngModelChange)="
+            validateQuotationValidTillDate('quotationValidTill', $event)
+          "
+        />
+
+        <span class="input-group-btn">
+          <button
+            class="btn custom-button"
+            type="button"
+            (click)="quotationValidTill.click()"
+            tabindex="-1"
+          >
+            <app-svg-calender-icon></app-svg-calender-icon>
+          </button>
+        </span>
+      </div>
+      <div
+        class="help-block red"
+        *ngIf="
+          (submitted &&
+            editSaveSupplierFormController['quotationValidTill'].errors) ||
+          (editSaveSupplierFormController['quotationValidTill'].errors &&
+            (editSaveSupplierFormController['quotationValidTill'].dirty ||
+              editSaveSupplierFormController['quotationValidTill'].touched))
+        "
+      >
+        <div
+          *ngIf="editSaveSupplierFormController['quotationValidTill'].errors?.['invalid']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.quotationValidTill.invalid'
+            "
+          ></span>
+        </div>
+        <div
+          *ngIf="editSaveSupplierFormController['quotationValidTill'].errors?.['customErrorquotationDateValidTill']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.quotationValidDateGreaterThanQuotationDate'
+            "
+          ></span>
+        </div>
+        <div
+          *ngIf="editSaveSupplierFormController['quotationValidTill'].errors?.['bsDate']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.quotationValidTill.invalid'
+            "
+          ></span>
+        </div>
+        <div
+          *ngIf="editSaveSupplierFormController['quotationValidTill'].errors?.['invalidToDate']"
+        >
+          <span
+            [translate]="'gateMovesReport.error.endPeriodGreaterThanToDate'"
+          >
+          </span>
+          {{
+            editSaveSupplierFormController["quotationValidTill"].value
+              | date : "dd-MMM-yyyy"
+              | uppercase
+          }}
+        </div>
+
+        <div
+          *ngIf="editSaveSupplierFormController['quotationValidTill'].errors?.['inValidCurrentDate']"
+        >
+          <span
+            [translate]="'gateMovesReport.error.endPeriodSmallerThanCurrent'"
+          ></span>
+          {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+        </div>
+        <div
+          *ngIf="editSaveSupplierFormController['quotationValidTill'].errors?.['inValidDateString']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.quotationDate.invalid'
+            "
+          ></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+      <label for="supplierCurrency" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.supplierCurrency'
+          "
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control new-form-control-input"
+        id="supplierCurrency"
+        formControlName="supplierCurrency"
+        placeholder="{{
+          'operations.requestForQuote.rfqSupplier.placeholder.supplierCurrency'
+            | translate
+        }}"
+      />
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+      <label for="supplierQuoteAmount" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.supplierQuoteAmount'
+          "
+        ></span>
+        <i class="red"> *</i>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control amountInput new-form-control-input"
+        id="supplierQuoteAmount"
+        formControlName="supplierQuoteAmount"
+        [scale]="2"
+        numericType="decimal"
+        numeric
+        [ngClass]="{
+          redBorderCalender:
+            (submitted &&
+              editSaveSupplierFormController['supplierQuoteAmount'].errors) ||
+            (editSaveSupplierFormController['supplierQuoteAmount'].errors &&
+              (editSaveSupplierFormController['supplierQuoteAmount'].dirty ||
+                editSaveSupplierFormController['supplierQuoteAmount'].touched))
+        }"
+        placeholder="{{
+          'operations.requestForQuote.rfqSupplier.placeholder.supplierQuoteAmount'
+            | translate
+        }}"
+      />
+      <div
+        class="help-block red"
+        *ngIf="
+          (submitted &&
+            editSaveSupplierFormController['supplierQuoteAmount'].errors) ||
+          (editSaveSupplierFormController['supplierQuoteAmount'].errors &&
+            (editSaveSupplierFormController['supplierQuoteAmount'].dirty ||
+              editSaveSupplierFormController['supplierQuoteAmount'].touched))
+        "
+      >
+        <div
+          *ngIf="editSaveSupplierFormController['supplierQuoteAmount'].errors?.['invalid']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.supplierQuoteAmount.invalid'
+            "
+          ></span>
+        </div>
+        <div
+          *ngIf="editSaveSupplierFormController['supplierQuoteAmount'].errors?.['required']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.supplierQuoteAmount.required'
+            "
+          ></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="discountPer" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.discountPer'
+          "
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control amountInput new-form-control-input"
+        id="discountPer"
+        formControlName="discountPer"
+        maxlength="6"
+        [scale]="2"
+        numericType="decimal"
+        numeric
+        placeholder="{{
+          'operations.requestForQuote.rfqSupplier.placeholder.discountPer'
+            | translate
+        }}"
+        [ngClass]="{
+          redBorderCalender:
+            (submitted &&
+              editSaveSupplierFormController['discountPer'].errors) ||
+            (editSaveSupplierFormController['discountPer'].errors &&
+              (editSaveSupplierFormController['discountPer'].dirty ||
+                editSaveSupplierFormController['discountPer'].touched))
+        }"
+        (input)="handleAmountCalculation('discountPer')"
+      />
+      <div
+        *ngIf="
+          (submitted && editSaveSupplierFormController['discountPer'].errors) ||
+          (editSaveSupplierFormController['discountPer'].errors &&
+            (editSaveSupplierFormController['discountPer'].dirty ||
+              editSaveSupplierFormController['discountPer'].touched))
+        "
+        class="help-block red"
+      >
+        <div
+          *ngIf="
+            editSaveSupplierFormController['discountPer'];
+            errors: ['min'] || editSaveSupplierFormController['discountPer'];
+            errors: ['max']
+          "
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.discountPer.minMaxError'
+            "
+          ></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="discountAmount" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.discountAmount'
+          "
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control amountInput new-form-control-input"
+        id="discountAmount"
+        formControlName="discountAmount"
+        maxlength="6"
+        [scale]="2"
+        numericType="decimal"
+        numeric
+        placeholder="{{
+          'operations.requestForQuote.rfqSupplier.placeholder.discountAmount'
+            | translate
+        }}"
+      />
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="totalSupplierQuoteAmount" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.totalSupplierQuoteAmount'
+          "
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control amountInput new-form-control-input"
+        id="totalSupplierQuoteAmount"
+        formControlName="totalSupplierQuoteAmount"
+        [scale]="2"
+        numericType="decimal"
+        numeric
+        placeholder="{{
+          'operations.requestForQuote.rfqSupplier.placeholder.totalSupplierQuoteAmount'
+            | translate
+        }}"
+      />
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="deliveryDate" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.deliveryDate'
+          "
+        ></span>
+        <i class="red"> *</i>
+      </label>
+      <div class="input-group input-group-md">
+        <input
+          type="text"
+          class="form-control uppercase"
+          bsDatepicker
+          (keydown.arrowdown)="deliveryDate.click()"
+          formControlName="deliveryDate"
+          #deliveryDate
+          [bsConfig]="{
+            dateInputFormat: 'DD-MMM-YYYY',
+            containerClass: 'theme-dark-blue',
+            adaptivePosition: true
+          }"
+          [ngClass]="{
+            redBorderCalender:
+              (submitted &&
+                editSaveSupplierFormController['deliveryDate'].errors) ||
+              (editSaveSupplierFormController['deliveryDate'].errors &&
+                (editSaveSupplierFormController['deliveryDate'].dirty ||
+                  editSaveSupplierFormController['deliveryDate'].touched))
+          }"
+          (ngModelChange)="validateQuotationDate('deliveryDate', $event)"
+        />
+
+        <span class="input-group-btn">
+          <button
+            class="btn custom-button"
+            type="button"
+            (click)="deliveryDate.click()"
+            tabindex="-1"
+          >
+            <app-svg-calender-icon></app-svg-calender-icon>
+          </button>
+        </span>
+      </div>
+      <div
+        class="help-block red"
+        *ngIf="
+          (submitted &&
+            editSaveSupplierFormController['deliveryDate'].errors) ||
+          (editSaveSupplierFormController['deliveryDate'].errors &&
+            (editSaveSupplierFormController['deliveryDate'].dirty ||
+              editSaveSupplierFormController['deliveryDate'].touched))
+        "
+      >
+        <div
+          *ngIf="editSaveSupplierFormController['deliveryDate'].errors?.['invalid']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.deliveryDate.invalid'
+            "
+          ></span>
+        </div>
+        <div
+          *ngIf="editSaveSupplierFormController['deliveryDate'].errors?.['required']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.deliveryDate.required'
+            "
+          ></span>
+        </div>
+        <div
+          *ngIf="editSaveSupplierFormController['deliveryDate'].errors?.['customError']"
+        >
+          <span
+            [translate]="
+              'operations.requestForQuote.rfqSupplier.errors.deliveryDateGreaterThanCurrent'
+            "
+          ></span>
+          {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="totalPOValueAllocated" class="labelText">
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.label.totalPOValueAllocated'
+          "
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control amountInput new-form-control-input"
+        id="totalPOValueAllocated"
+        formControlName="totalPOValueAllocated"
+        [scale]="2"
+        numericType="decimal"
+        numeric
+        placeholder="{{
+          'operations.requestForQuote.rfqSupplier.placeholder.totalPOValueAllocated'
+            | translate
+        }}"
+      />
+    </div>
+  </div>
+</form>
+
+<div>
+  <div class="panel-title panelHeading pull-left">
+    <div class="nopaddingbottom">
+      <b>
+        <span
+          [translate]="
+            'operations.requestForQuote.rfqSupplier.titles.rfqSupplierDetail'
+          "
+          class="main-title"
+        ></span
+      ></b>
+    </div>
+  </div>
+  <div class="line"></div>
+  <br /><br />
+  <div class="line"></div>
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <app-shared-table-new
+      #sharedTableNew
+      [headerColumnList]="supplierDetailListColumnList"
+      [tableInitialData]="supplierDetailList"
+      [isGridTittle]="false"
+      [showTableHeader]="false"
+      [filter]="false"
+      [excelIcon]="false"
+      [refreshIcon]="false"
+      [tableTitle]="'RFQ Supplier Detail List Grid'"
+      (sendTableRowData)="receiveTableSupplerList($event)"
+      (handlePartRowData)="handlePartRowData($event)"
+      [excelFileName]="'RFQ Supplier Detail List'"
+    ></app-shared-table-new>
+  </div>
+</div>
+<div class="row new-wizard" style="padding: 9px">
+  <fuel-ux-wizard>
+    <div class="wizard">
+      <div class="steps-container">
+        <ul class="steps">
+          <li
+            data-step="1"
+            [class.active]="activeTab === 1"
+            (click)="checkFileMode($event, 1)"
+            #partDetailsTab
+          >
+            <!-- <span class="badge badge-info">1</span> -->
+            <span
+              [translate]="
+                'operations.requestForQuote.rfqSupplier.titles.partDetail'
+              "
+            ></span>
+            <span class="chevron"></span>
+          </li>
+          <li
+            data-step="2"
+            [class.active]="activeTab === 2"
+            (click)="checkFileMode($event, 2)"
+          >
+            <!-- <span class="badge badge-info">2</span> -->
+            <span
+              [translate]="
+                'operations.requestForQuote.rfqSupplier.titles.quotesAndOrderAllocation'
+              "
+            ></span>
+            <span class="chevron"></span>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="pull-right buttonGroup"
+        *ngIf="activeTab === 2"
+        style="padding: 5px 22px"
+      >
+        <div class="row">
+          <button class="capsule-button green" (click)="saveOrderAllocation()">
+            <div class="icon-circle">
+              <i class="fas fa-light fa-floppy-disk"></i>
+            </div>
+            {{
+              "operations.requestForQuote.partDetails.buttons.save" | translate
+            }}
+          </button>
+          <button
+            (click)="resetOrderAllocationForm()"
+            class="capsule-button grey"
+          >
+            <div class="icon-circle">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </div>
+            {{
+              "operations.requestForQuote.partDetails.buttons.reset" | translate
+            }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-pane" data-step="1" [class.active]="activeTab === 1">
+        <div class="panel-title panelHeading pull-left">
+          <div class="nopaddingbottom">
+            <u>
+              <b>
+                <span
+                  [translate]="
+                    'operations.requestForQuote.rfqSupplier.titles.partDetail'
+                  "
+                  class="main-title"
+                ></span
+              ></b>
+            </u>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 nopadding">
+          <form
+            class="container-new-ui"
+            [formGroup]="editSavePartDetailForm"
+            autocomplete="off"
+          >
+            <div class="form-group col-lg-2 col-md-2 col-sm-2">
+              <label for="estimateAmount" class="labelText">
+                <span
+                  [translate]="
+                    'operations.requestForQuote.rfqSupplier.label.estimateAmount'
+                  "
+                ></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control amountInput new-form-control-input"
+                id="estimateAmount"
+                formControlName="estimateAmount"
+                maxlength="6"
+                [scale]="2"
+                numericType="decimal"
+                numeric
+                placeholder="{{
+                  'operations.requestForQuote.rfqSupplier.placeholder.estimateAmount'
+                    | translate
+                }}"
+              />
+              <!-- (input)="handleAmountCalculation('estimateAmount')" -->
+            </div>
+          </form>
+          <app-shared-table-new
+            #sharedTableNew
+            [headerColumnList]="partDetailColumnList"
+            [tableInitialData]="partDetailList"
+            [isGridTittle]="false"
+            [showTableHeader]="false"
+            [filter]="false"
+            [excelIcon]="false"
+            [refreshIcon]="false"
+            [tableTitle]="'RFQ Part Details List Grid'"
+            (sendTableRowData)="receiveTablePartList($event)"
+            (handlePartSpecificationRowData)="
+              handlePartSpecificationRowData($event)
+            "
+            (getTableDataService)="refreshPartList($event)"
+            [excelFileName]="'RFQ Part Details List'"
+          ></app-shared-table-new>
+        </div>
+      </div>
+      <div class="step-pane" data-step="2" [class.active]="activeTab === 2">
+        <app-quote-and-order-allocation
+          [editSaveQuoteAndOrderAllocationForm]="
+            editSaveQuoteAndOrderAllocationForm
+          "
+          (sendSelectedData)="receiveOrderAllocationSelectedData($event)"
+          [quoteAndOrderAllocationData]="quoteAndOrderAllocationData"
+        ></app-quote-and-order-allocation>
+      </div>
+    </div>
+  </fuel-ux-wizard>
+</div>
+
+<app-add-rfqsupplier #rfqSupplier></app-add-rfqsupplier>
+
+<div
+  bsModal
+  #partSpecificationModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            {{ tableTitle }}
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right">
+          <div class="custom-button-close" (click)="handleCloseSpecification()">
+            <i class="fas fa-fw fa-times white-icon" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <app-shared-table-new
+          [headerColumnList]="tableColumnsPartSpecification"
+          [filter]="true"
+          [excelIcon]="true"
+          [refreshIcon]="true"
+          [showHide]="true"
+          [globalSearch]="true"
+          [isPanelHeading]="false"
+          [addRecordIcon]="false"
+          [tableInitialData]="partSpecificationData"
+          [isMasterComp]="false"
+          [tableTitle]="tableTitle"
+          [excelFileName]="excelFileName"
+        ></app-shared-table-new>
+      </div>
+
+      <div class="cancel-modal-footer">
+        <div class="row">
+          <button
+            class="capsule-button reset-button-color"
+            (click)="handleCloseSpecification()"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            {{ "common.buttons.close" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,324 @@
+<div
+  bsModal
+  #approvalPopup="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            <span [translate]="'operations.approval.titles.approval'"></span>
+          </h4>
+        </b>
+        <div class="pull-right buttonGroup">
+          <div class="row">
+            <button
+              (click)="handleApprovalFormClear()"
+              class="capsule-button grey"
+            >
+              <div class="icon-circle">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </div>
+              {{ "operations.approval.button.clear" | translate }}
+            </button>
+            <button
+              class="capsule-button green"
+              (click)="handleApprovalPopup()"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-light fa-floppy-disk"></i>
+              </div>
+              {{ "operations.approval.button.save" | translate }}
+            </button>
+            <button
+              class="capsule-button"
+              (click)="approvalPopupClose()"
+              style="background-color: #ec5656"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-xmark"></i>
+              </div>
+              {{ "operations.approval.button.cancel" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="widget-body fuelux">
+          <div class="container-fluid">
+            <div class="row">
+              <form
+                class="container-new-ui"
+                [formGroup]="approvalForm"
+                autocomplete="off"
+              >
+                <!-- approval Type -->
+                <div
+                  *ngIf="selectedForm === 'PR'"
+                  class="form-group col-lg-6 col-md-6 col-sm-6"
+                >
+                  <label for="approvalType" class="labelText">
+                    <span
+                      [translate]="'operations.approval.label.approvalType'"
+                    ></span>
+                    <i class="red"> *</i>
+                  </label>
+
+                  <ng-select
+                    [items]="approvalType"
+                    [searchFn]="dropdownSearchFn"
+                    [selectOnTab]="true"
+                    (input)="checkNgSelectValue($event, 'approvalType')"
+                    bindLabel="code"
+                    formControlName="approvalType"
+                    notFoundText="{{
+                      'common.dropdown.notFoundText' | translate
+                    }}"
+                    placeholder="{{
+                      'operations.approval.placeholder.approvalType' | translate
+                    }}"
+                    [ngClass]="{
+                      redBorder:
+                        (submitted &&
+                          approvalFormController['approvalType'].errors) ||
+                        (approvalFormController['approvalType'].errors &&
+                          (approvalFormController['approvalType'].dirty ||
+                            approvalFormController['approvalType'].touched))
+                    }"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div title="{{ item?.code }}">
+                        <small
+                          ><b>{{ item?.code }}</b></small
+                        >
+                      </div>
+                    </ng-template>
+                  </ng-select>
+
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        approvalFormController['approvalType'].errors) ||
+                      (approvalFormController['approvalType'].errors &&
+                        (approvalFormController['approvalType'].dirty ||
+                          approvalFormController['approvalType'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        approvalFormController['approvalType'].errors['invalid']
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.approvalType.invalid'
+                        "
+                      ></span>
+                    </p>
+                    <p
+                      *ngIf="
+                        approvalFormController['approvalType'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.approvalType.required'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="form-group col-lg-6 col-md-6 col-sm-6"
+                  [ngClass]="{
+                    'has-error':
+                      (submitted &&
+                        this.approvalFormController['approvedBy'].errors) ||
+                      (this.approvalFormController['approvedBy'].errors &&
+                        (this.approvalFormController['approvedBy'].dirty ||
+                          this.approvalFormController['approvedBy'].touched))
+                  }"
+                >
+                  <label for="approvedBy" class="labelText">
+                    <span
+                      [translate]="'operations.approval.label.approvedBy'"
+                    ></span><i class="red"> *</i>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="approvedBy"
+                    formControlName="approvedBy"
+                    maxlength="20"
+                    spaceatfirst
+                    placeholder="{{
+                      'operations.approval.placeholder.approvedBy' | translate
+                    }}"
+                  />
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        approvalFormController['approvedBy'].errors) ||
+                      (approvalFormController['approvedBy'].errors &&
+                        (approvalFormController['approvedBy'].dirty ||
+                          approvalFormController['approvedBy'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        approvalFormController['approvedBy'].errors['required']
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.approvalBy.required'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+                <!-- RFQ Date -->
+                <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                  <label for="approvedDate" class="labelText">
+                    <span
+                      [translate]="'operations.approval.label.approvedDate'"
+                    ></span><i class="red"> *</i>
+                  </label>
+                  <div class="input-group input-group-md">
+                    <input
+                      type="text"
+                      class="form-control uppercase"
+                      bsDatepicker
+                      (keydown.arrowdown)="approvedDate.click()"
+                      formControlName="approvedDate"
+                      #approvedDate
+                      [bsConfig]="{
+                        dateInputFormat: 'DD-MMM-YYYY',
+                        containerClass: 'theme-dark-blue',
+                        adaptivePosition: true
+                      }"
+                      [ngClass]="{
+                        redBorderCalender:
+                          (submitted &&
+                            approvalFormController['approvedDate'].errors) ||
+                          (approvalFormController['approvedDate'].errors &&
+                            (approvalFormController['approvedDate'].dirty ||
+                              approvalFormController['approvedDate'].touched))
+                      }"
+                      (ngModelChange)="
+                        validateApprovedDate('approvedDate', $event)
+                      "
+                    />
+
+                    <span class="input-group-btn">
+                      <button
+                        class="btn custom-button"
+                        type="button"
+                        (click)="approvedDate.click()"
+                        tabindex="-1"
+                      >
+                        <app-svg-calender-icon></app-svg-calender-icon>
+                      </button>
+                    </span>
+                  </div>
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        approvalFormController['approvedDate'].errors) ||
+                      (approvalFormController['approvedDate'].errors &&
+                        (approvalFormController['approvedDate'].dirty ||
+                          approvalFormController['approvedDate'].touched))
+                    "
+                  >
+                    <div
+                      *ngIf="approvalFormController['approvedDate'].errors?.['invalid']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.approvalDate.invalid'
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      *ngIf="approvalFormController['approvedDate'].errors?.['currentDateError']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.approvalDateGreater'
+                        "
+                      ></span>
+                      {{ currentDateFormat | date : "dd-MMM-yyyy" | uppercase }}
+                    </div>
+                    <div
+                      *ngIf="approvalFormController['approvedDate'].errors?.['requestedDateError']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.approvalDateLesser'
+                        "
+                      ></span>
+
+                      {{
+                        requestedDateFormat | date : "dd-MMM-yyyy" | uppercase
+                      }}
+                    </div>
+                    <div
+                      *ngIf="
+                        approvalFormController['approvedDate'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.approvalDate.required'
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                  <label for="approvalRemarks" class="labelText">
+                    <span
+                      [translate]="'operations.approval.label.approvalRemarks'"
+                    ></span>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="approvalRemarks"
+                    formControlName="approvalRemarks"
+                    spaceatfirst
+                    maxlength="500"
+                    placeholder="{{
+                      'operations.approval.placeholder.approvalRemarks'
+                        | translate
+                    }}"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

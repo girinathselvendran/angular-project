@@ -1,0 +1,312 @@
+<!-- <ngx-ui-loader hasProgressBar=false></ngx-ui-loader>f -->
+<div
+  bsModal
+  #attachmentPopup="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="productPopupLabel"
+  [config]="{ backdrop: 'static', keyboard: false }"
+  aria-hidden="true"
+  (onShown)="onAttachmentModalShown($event)"
+>
+  <div class="modal-dialog modal-lg" role="dialog">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <!-- <div class="panel-title panelHeading pull-left">
+          <b> <span [translate]="'common.attachment.title'"></span></b>
+        </div> -->
+        <b class="float-left">
+          <h4 class="modal-title">
+            <span [translate]="'common.attachment.title'"></span>
+          </h4>
+        </b>
+        <div class="gridRightAlign">
+          <div class="row">
+            <button
+              class="capsule-button"
+              type="button"
+              id="btnCancel"
+              title="{{ 'common.attachment.buttons.close' | translate }}"
+              (click)="closeAttachmentClick()"
+              style="background-color: #ec5656"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-xmark"></i>
+              </div>
+              {{ "operations.purchaseRequisition.buttons.close" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div *ngIf="disableBtnsBit == false">
+          <div class="row">
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td>
+                    <input
+                      id="files"
+                      [disabled]="disableBtnsBit"
+                      type="file"
+                      name="attachFile"
+                      #attachFile
+                      multiple
+                      (change)="onChange($event)"
+                      title="Choose Files"
+                      class="hidden"
+                    />
+                    <button
+                      type="button"
+                      [disabled]="disableBtnsBit"
+                      class="btn white attachment-bg-green buttonMargin buttonBorder"
+                      id="btnAddAttach"
+                      [disabled]="disableBtnsBit || disableAdd"
+                      [ngClass]="{ disabled: disableBtnsBit }"
+                      title="Add Files"
+                      (click)="onChooseFilesBtnClick()"
+                    >
+                      <i class="fas fa-fw fa-plus white" aria-hidden="true"></i>
+
+                      <span
+                        [translate]="'common.attachment.buttons.addFiles'"
+                      ></span>
+                    </button>
+                    <button
+                      type="button"
+                      [disabled]="
+                        disableBtnsBit ||
+                        this.tempUploadedFiles?.length == 0 ||
+                        disableUpload == true
+                      "
+                      class="btn white attachment-bg-info buttonMargin buttonBorder"
+                      id="btnUpload"
+                      [ngClass]="{ disabled: disableBtnsBit }"
+                      title="Start Upload"
+                      (click)="addAttachment()"
+                    >
+                      <i
+                        class="fas fa-fw fa-upload white"
+                        aria-hidden="true"
+                      ></i>
+
+                      <span
+                        [translate]="'common.attachment.buttons.startUpload'"
+                      ></span>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+
+              <div
+                *ngIf="isFileValidErrorMessage != ''"
+                class="help-block"
+                style="color: red"
+              >
+                <div>
+                  <b>{{ isFileValidErrorMessage }}</b>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="tempUploadedFiles?.length > 0">
+          <div
+            class="col-xs-9 col-sm-9 col-md-9 col-lg-9 attachment-module no-padding jarviswidget-color-blueLight"
+            sa-widget
+            editbutton="false"
+            color="blueLight"
+            togglebutton="false"
+            fullscreenbutton="false"
+            colorbutton="false"
+          >
+            <header class="no-padding">
+              <h2>
+                <strong>
+                  <span
+                    [translate]="'common.attachment.estAttachmentDetails'"
+                  ></span>
+                </strong>
+              </h2>
+            </header>
+            <div>
+              <!-- widget content -->
+              <div
+                class="widget-body no-padding attachmentTimeLine"
+                #attachmentDetailsBody
+                id="attachmentDetailsBody"
+              >
+                <div class="well well-sm">
+                  <div class="smart-timeline">
+                    <ul class="smart-timeline-list">
+                      <li *ngFor="let data of tempUploadedFiles">
+                        <div class="smart-timeline-icon">
+                          <!-- <a> <i (click)="!disableBtnsBit && onDeleteAttachment(data)" title="Delete Attachment"
+                              [class.unclickable]="disableBtnsBit" class="fal fa-trash-alt pointer"></i></a> -->
+
+                          <a
+                            *ngIf="
+                              data.value == 0 ||
+                              data.value == 100 ||
+                              data.state == 'saved'
+                            "
+                          >
+                            <i
+                              (click)="
+                                !disableBtnsBit && onDeleteAttachment(data)
+                              "
+                              title="Delete Attachment"
+                              [class.unclickable]="disableBtnsBit"
+                              class="fal fa-trash-alt red pointer"
+                            ></i
+                          ></a>
+                          <a
+                            *ngIf="
+                              data.value > 0 &&
+                              data.value < 100 &&
+                              data.state != 'saved'
+                            "
+                          >
+                            <i
+                              (click)="!disableBtnsBit && cancelUpload(data)"
+                              title="Cancel Attachment"
+                              [class.unclickable]="disableBtnsBit"
+                              class="fas fa-times red pointer"
+                            ></i
+                          ></a>
+                        </div>
+                        <div class="smart-timeline-time">
+                          <small
+                            ><b>{{
+                              data.attachmentDate
+                                | date : "dd-MMM-yyyy HH:mm"
+                                | uppercase
+                            }}</b></small
+                          >
+                        </div>
+                        <div class="smart-timeline-content">
+                          <div class="container-fluid no-padding">
+                            <div
+                              class="col-lg-10 col-md-10 col-sm-10 pull-left"
+                            >
+                              <a
+                                ><u>
+                                  <b
+                                    class="pointer"
+                                    (click)="downloadAttachFile(data)"
+                                    >{{ data.name }}</b
+                                  >
+                                </u></a
+                              >
+                              <div>
+                                <span
+                                  [translate]="'common.attachment.attachedBy'"
+                                ></span
+                                >{{ data.userName | uppercase }}
+                              </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
+                              <img
+                                class="pointer"
+                                *ngIf="
+                                  data.type == 'image/png' ||
+                                  data.type == 'image/jpeg' ||
+                                  data.type == 'image/jpg' ||
+                                  data.type == 'image/gif'
+                                "
+                                [src]="data.filePath"
+                                alt="img"
+                                width="50"
+                                (click)="showImage($event)"
+                                (dblclick)="downloadAttachFile(data)"
+                              />
+                            </div>
+                          </div>
+                          <div *ngIf="data.state != 'saved'">
+                            <div class="attachmentprogress progress">
+                              <div
+                                class="progress-bar progress-bar-info progress-bar-striped"
+                                role="progressbar"
+                                attr.aria-valuenow="{{ data.value }}"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                [ngStyle]="{ width: data.value + '%' }"
+                              >
+                                {{ data.value }}%
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-xs-3 col-sm-3 col-md-3 col-lg-3 attachment-module no-padding jarviswidget-color-blueLight"
+            color="blueLight"
+            sa-widget
+            editbutton="false"
+            color="blueLight"
+            togglebutton="false"
+            fullscreenbutton="false"
+            colorbutton="false"
+          >
+            <!-- sa-widget [editbutton]="false" [togglebutton]="false"
+            [fullscreenbutton]="false" [colorbutton]="false" -->
+            <header>
+              <h2>
+                <strong>
+                  <span [translate]="'common.attachment.preview'"></span>
+                </strong>
+              </h2>
+            </header>
+            <div>
+              <!-- widget content -->
+              <div class="widget-body no-padding attachmentTimeLine">
+                <div
+                  *ngIf="selectedFileURL != null && selectedFileURL != ''"
+                  class="col-xs-4 col-sm-4 col-md-4 col-lg-4"
+                >
+                  <img
+                    *ngIf="selectedFileURL != null && selectedFileURL != ''"
+                    [src]="selectedFileURL"
+                    alt="img"
+                    width="200"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="row"
+          *ngIf="disableBtnsBit == true && tempUploadedFiles?.length == 0"
+        >
+          There are no attachments to view
+        </div>
+      </div>
+      <div class="panel-footer">
+        <div class="row" style="text-align: initial">
+          <b
+            >Accepted formats are ".jpg, .png, .jpeg, .xls, .xlsx, .csv, .doc,
+            .ods, .docx, .pdf, .gif, .txt, .zip, .msg, .jfif"
+          </b>
+        </div>
+        <div class="row" style="text-align: initial">
+          <b>
+            Max File Size: <span style="font-weight: bolder">15 MB</span>; Max
+            length of File:
+            <span style="font-weight: bolder">50 characters</span>;
+          </b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

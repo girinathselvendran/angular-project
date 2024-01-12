@@ -1,0 +1,332 @@
+{
+  "welcomeMessage": "شكرًا لانضمامك، {{ firstName }}! نحن سعداء بوجودك!",
+  "login": {
+    "username": "أدخل اسم المستخدم الخاص بك",
+    "password": "كلمة المرور هنا"
+  },
+  "common": {
+    "notificationTitle": {
+      "error": "خطأ",
+      "success": "نجاح",
+      "information": "معلومات",
+      "confirmation": "تأكيد"
+    },
+    "Information": {
+      "noChangesInfo": "لا توجد تغييرات للحفظ",
+      "noChangesToUpdate": "لا توجد تغييرات للتحديث",
+      "unsavedChangesInfo": "لديك تغييرات غير محفوظة على الشاشة. هل ترغب في المتابعة؟",
+      "notFound": "السجل غير موجود",
+      "deleteConfirmation": "هل أنت متأكد من حذف السجل؟ انقر نعم لحذف السجل. انقر لا لتجاهل الطلب."
+    },
+    "roleRightsMessages": {
+      "create": "المستخدم مقيد من إنشاء سجلات جديدة",
+      "view": "المستخدم مقيد من إنشاء وتحرير السجلات",
+      "edit": "المستخدم مقيد من تحرير السجلات الحالية",
+      "delete": "المستخدم مقيد من إزالة السجلات الحالية",
+      "warning": "تحذير",
+      "viewNew": "المستخدم مقيد من إنشاء سجلات جديدة",
+      "viewEdit": "المستخدم مقيد من تحرير السجلات الحالية",
+      "newOrEdit": "تحذير: المستخدم مقيد من إنشاء سجلات جديدة/تحريرها"
+    },
+    "grid": {
+      "summary": {
+        "footerSummaryShowing": "عرض",
+        "footerSummaryTo": "إلى",
+        "footerSummaryOf": "من",
+        "footerSummaryRecords": "سجل",
+        "footerSummaryFiltered": "تمت التصفية",
+        "footerSummaryFrom": "من"
+      },
+      "placeholder": {
+        "globalFilter": "بحث عام",
+        "chooseFile": "اختر ملف"
+      },
+      "showHide": {
+        "showHide": "إظهار / إخفاء",
+        "commonShowHide": "إظهار / إخفاء"
+      },
+      "noRecordsFound": "لا توجد سجلات لعرضها",
+      "searchCompletedNoRecordFound": "اكتملت البحث ولا توجد سجلات مطابقة لعرضها",
+      "selectionLimitError": "يجب ألا يكون التحديد أكثر من 100 سجل",
+      "hold": "احتجاز",
+      "tooltip": {
+        "refresh": "تحديث",
+        "pdfDownload": "تنزيل PDF",
+        "excelDownload": "تنزيل Excel",
+        "filter": "تصفية",
+        "clearFilter": "مسح التصفية",
+        "upload": "تحميل",
+        "search": "بحث",
+        "print": "طباعة",
+        "delete": "حذف",
+        "generateReport": "إنشاء تقرير"
+      }
+    },
+    "buttons": {
+      "addNew": "إضافة جديد",
+      "save": "حفظ",
+      "showHide": "إظهار / إخفاء",
+      "search": "بحث"
+    },
+    "mode": {
+      "new": "جديد",
+      "edit": "تحرير",
+      "view": "عرض"
+    },
+    "upload": {
+      "tooltip": {
+        "close": "إغلاق",
+        "downloadTemplate": "تنزيل القالب",
+        "success": "نجاح",
+        "failure": "فشل",
+        "downloadErrorFile": "تنزيل ملف الخطأ",
+        "clear": "مسح",
+        "delete": "حذف تفاصيل الإصلاح"
+      },
+      "buttons": {
+        "close": "إغلاق",
+        "downloadTemplate": "تنزيل القالب",
+        "success": "نجاح",
+        "failure": "فشل",
+        "downloadErrorFile": "تنزيل ملف الخطأ",
+        "cancel": "إلغاء"
+      },
+      "titles": {
+        "totalProcessed": "إجمالي المعالجة",
+        "success": "نجاح",
+        "error": "خطأ"
+      },
+      "grid": {
+        "status": "الحالة",
+        "errorMessage": "رسالة الخطأ"
+      }
+    },
+    "attachment": {
+      "buttons": {
+        "addFiles": "إضافة ملفات",
+        "startUpload": "بدء التحميل",
+        "close": "إغلاق"
+      },
+      "title": "المرفقات",
+      "estAttachmentDetails": "تفاصيل المرفقات",
+      "attachedBy": "تم إرفاقه بواسطة",
+      "preview": "معاينة",
+      "deleteConfirmation": "هل أنت متأكد من حذف السجل؟ انقر نعم لتأكيد الحذف ولا لتجاهل الطلب."
+    }
+  },
+  "attachment": {
+    "attachmentAddedInfo": "تمت إضافة المرفقات إلى القائمة. انقر على زر حفظ المرفقات للحفظ",
+    "estimateattachmentAddedInfo": "تمت إضافة مرفقات صالحة إلى القائمة. انقر على زر بدء التحميل لتحميل الملفات",
+    "attachmentRemovedInfo": "تمت إزالة المرفق من القائمة بنجاح.",
+    "attachmentSuccessfullyAdded": "تمت إضافة المرفقات بنجاح إلى ",
+    "attachmentSuccessfullyUploaded": "تم تحميل المرفقات بنجاح. ",
+    "attachmentSuccessfullyRemoved": "تمت إزالة المرفقات بنجاح من ",
+    "unSavedAttachmentsConfirmation": "لديك مرفقات غير محفوظة على الشاشة. هل ترغب في المتابعة؟",
+    "attachmentDeleteConfirmation": "هل أنت متأكد من حذف الملف؟ انقر نعم لتأكيد الحذف ولا لتجاهل الطلب.",
+    "label": {
+      "attachments": "المرفقات",
+      "uploadAttachments": "تحميل المرفقات",
+      "attachmentDetails": "تفاصيل المرفقات",
+      "estAttachmentDetails": "تفاصيل المرفقات",
+      "attachedBy": "تم إرفاقه بواسطة: ",
+      "preview": "معاينة",
+      "nameLKP": "الرأس / الرقم الخطي",
+      "description": "وصف الملف"
+    },
+    "buttons": {
+      "saveAttachment": "حفظ المرفق",
+      "chooseFiles": "اختر الملفات",
+      "addFiles": "إضافة ملفات...",
+      "startUpload": "بدء التحميل"
+    },
+    "error": {
+      "nameLKP.invalid": "الرأس / الرقم الخطي غير صالح",
+      "nameLKP.required": "الرأس / الرقم الخطي مطلوب",
+      "description.required": "وصف الملف مطلوب"
+    }
+  },
+  "changePassword": {
+    "messages": {
+      "success": "تم تغيير كلمة المرور بنجاح"
+    },
+    "titles": {
+      "pageTitle": "تغيير كلمة المرور"
+    },
+    "label": {
+      "oldPassword": "كلمة المرور القديمة",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور"
+    },
+    "error": {
+      "oldPassword": {
+        "required": "كلمة المرور القديمة مطلوبة",
+        "invalidPassword": "كلمة المرور القديمة غير متطابقة مع المستخدم"
+      },
+      "newPassword": {
+        "required": "كلمة المرور الجديدة مطلوبة",
+        "pattern": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل، حرف صغير واحد على الأقل، رقم واحد على الأقل، وحرف خاص واحد على الأقل باستثناء الأحرف \\ / : * ? “ < > | [ ] + = - ",
+        "samePassword": "لا يمكن أن تكون كلمة المرور الجديدة مماثلة للقديمة",
+        "minLength": "يجب أن تكون طول كلمة المرور على الأقل 8 أحرف"
+      },
+      "confirmPassword": {
+        "required": "تأكيد كلمة المرور مطلوب",
+        "invalidConfirmPassword": "كلمة المرور الجديدة وتأكيد كلمة المرور غير متطابقين",
+        "pattern": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل، حرف صغير واحد على الأقل، رقم واحد على الأقل، وحرف خاص واحد على الأقل باستثناء الأحرف \\ / : * ? “ < > | [ ] + = - ",
+        "samePassword": "لا يمكن أن تكون كلمة المرور الجديدة مماثلة للقديمة",
+        "minLength": "يجب أن تكون طول كلمة المرور على الأقل 8 أحرف"
+      }
+    },
+    "placeholder": {
+      "oldPassword": "كلمة المرور القديمة",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور"
+    },
+    "buttons": {
+      "changePassword": "تغيير كلمة المرور"
+    },
+    "tooltip": {
+      "oldPassword": "الرجاء إدخال كلمة المرور القديمة",
+      "newPassword": "الرجاء إدخال كلمة المرور الجديدة",
+      "confirmPassword": "الرجاء تأكيد كلمة المرور الجديدة"
+    },
+    "roleRightsMessages": {
+      "create": "المستخدم مقيد من إنشاء سجلات جديدة.",
+      "view": "المستخدم مقيد من تحرير السجلات الحالية.",
+      "edit": "المستخدم مقيد من تحرير السجلات الحالية.",
+      "warning": "تحذير"
+    }
+  },
+  "master": {
+    "part": {
+      "titles": {
+        "part": "القطعة",
+        "purchasePartSpec": "مواصفات القطعة للشراء",
+        "partCategory": "فئة القطعة",
+        "supplierDetails": "تفاصيل المورد",
+        "supplierMappingListView": "عرض قائمة تعيين الموردين",
+        "partRatesListView": "عرض قائمة أسعار القطع"
+      },
+      "button": {
+        "newPart": "قطعة جديدة",
+        "savePart": "حفظ القطعة",
+        "backToList": "العودة إلى القائمة",
+        "addNew": "إضافة جديد",
+        "save": "حفظ",
+        "savePartCategory": "حفظ فئة القطعة",
+        "close": "إغلاق",
+        "clear": "مسح",
+        "cancel": "إلغاء",
+        "saveSupplier": "حفظ المورد",
+        "saveRates": "حفظ الأسعار",
+        "attachment": "المرفق"
+      },
+      "label": {
+        "supplierCode": "كود المورد",
+        "supplierName": "اسم المورد",
+        "manuFacture": "المصنع",
+        "supplierMfrPartRefNo": "كود المورد / المصنع للقطعة",
+        "country": "الدولة",
+        "city": "المدينة",
+        "associatedDepots": "المستودعات المرتبطة",
+        "partName": "اسم القطعة",
+        "partCode": "كود القطعة",
+        "partType": "نوع القطعة",
+        "ledgerId": "معرّف الحساب",
+        "movementFrequency": "تكرار الحركة",
+        "planningStrategy": "استراتيجية التخطيط",
+        "reOrderLevel": "مستوى إعادة الطلب",
+        "reOrderQuantity": "كمية إعادة الطلب",
+        "stockUom": "وحدة قياس المخزون",
+        "partCategory": "فئة القطعة",
+        "remarks": "ملاحظات",
+        "hazardous": "خطير",
+        "active": "نشط",
+        "partSpecification": "مواصفات القطعة",
+        "uom": "وحدة القياس",
+        "value": "القيمة",
+        "depot": "المستودع",
+        "currency": "العملة",
+        "rate": "السعر",
+        "effectiveDate": "تاريخ السريان"
+      },
+      "placeholder": {
+        "partName": "اسم القطعة",
+        "partCode": "كود القطعة",
+        "partType": "اختر نوع القطعة",
+        "ledgerId": "معرّف الحساب",
+        "movementFrequency": "اختر تكرار الحركة",
+        "planningStrategy": "اختر استراتيجية التخطيط",
+        "reOrderLevel": "مستوى إعادة الطلب",
+        "reOrderQuantity": "كمية إعادة الطلب",
+        "stockUom": "اختر وحدة قياس المخزون",
+        "partCategory": "فئة القطعة",
+        "remarks": "ملاحظات",
+        "hazardous": "خطير",
+        "active": "نشط",
+        "partSpecification": "اختر مواصفات القطعة",
+        "uom": "اختر وحدة القياس",
+        "value": "القيمة",
+        "supplierCode": "اختر كود المورد",
+        "rate": "السعر",
+        "depot": "المستودع",
+        "currency": "العملة"
+      },
+      "errors": {
+        "partCode.deletedSuccessMsgFromLocal": "تمت إزالة مواصفات القطعة بنجاح.",
+        "partCode.required": "كود القطعة مطلوب",
+        "partCode.duplicate": "كود القطعة موجود بالفعل",
+        "partName.required": "اسم القطعة مطلوب",
+        "partType.required": "نوع القطعة مطلوب",
+        "partType.invalid": "نوع القطعة غير صالح",
+        "ledgerId.required": "معرّف الحساب مطلوب",
+        "movementFrequency.invalid": "تكرار الحركة غير صالح",
+        "planningStrategy.invalid": "استراتيجية التخطيط غير صالحة",
+        "planningStrategy.required": "استراتيجية التخطيط مطلوبة",
+        "reOrderLevel.required": "مستوى إعادة الطلب مطلوب",
+        "reOrderLevel.limit": "يجب أن يكون مستوى إعادة الطلب في نطاق 1 إلى 999999999",
+        "reOrderQuantity.limit": "يجب أن تكون كمية إعادة الطلب في نطاق 1 إلى 999999999",
+        "reOrderQuantity.required": "كمية إعادة الطلب مطلوبة",
+        "stockUom.required": "وحدة قياس المخزون مطلوبة",
+        "stockUom.invalid": "وحدة قياس المخزون غير صالحة",
+        "purchaseSpecification.required": "مواصفات القطعة مطلوبة",
+        "purchaseSpecification.invalid": "مواصفات القطعة غير صالحة",
+        "active.required": "يجب تحديد حالة نشطة أو غير نشطة",
+        "partRate.required": "السعر مطلوب",
+        "partRate.limit": "يجب أن يكون السعر في نطاق 0.01 إلى 999999999999.99",
+        "attachment.error": "المرفقات غير مكتملة",
+        "supplierCode.required": "كود المورد مطلوب",
+        "supplierName.required": "اسم المورد مطلوب",
+        "supplierCity.required": "المدينة مطلوبة",
+        "supplierCountry.required": "الدولة مطلوبة",
+        "supplierMappingDetails.required": "تفاصيل تعيين المورد مطلوبة",
+        "supplierMfrPartRefNo.invalid": "كود المورد / المصنع للقطعة غير صالح",
+        "partRatesDetails.invalid": "تفاصيل الأسعار غير صالحة",
+        "partRatesDetails.required": "تفاصيل الأسعار مطلوبة",
+        "effectiveDate.invalid": "تاريخ السريان غير صالح"
+      },
+      "info": {
+        "partCode.limit": "يجب أن يكون كود القطعة في نطاق 0 إلى 9999999999.99",
+        "partName.limit": "يجب أن يكون اسم القطعة في نطاق 0 إلى 255 حرفًا",
+        "partSpecification.limit": "يجب أن تكون مواصفات القطعة في نطاق 0 إلى 500 حرفًا",
+        "uom.invalid": "وحدة القياس غير صالحة",
+        "rate.invalid": "السعر غير صالح",
+        "attachment.limit": "يجب أن تكون المرفقات في نطاق 0 إلى 10",
+        "supplierDetails.invalid": "تفاصيل المورد غير صالحة",
+        "supplierCity.limit": "يجب أن تكون المدينة في نطاق 0 إلى 255 حرفًا",
+        "supplierCountry.limit": "يجب أن تكون الدولة في نطاق 0 إلى 255 حرفًا",
+        "supplierName.limit": "يجب أن يكون اسم المورد في نطاق 0 إلى 255 حرفًا",
+        "supplierMappingDetails.limit": "يجب أن تكون تفاصيل تعيين المورد في نطاق 0 إلى 500 حرفًا",
+        "supplierCode.limit": "يجب أن يكون كود المورد في نطاق 0 إلى 255 حرفًا",
+        "supplierMfrPartRefNo.limit": "يجب أن يكون كود المورد / المصنع للقطعة في نطاق 0 إلى 255 حرفًا"
+      },
+      "title": {
+        "savePartCategory": "حفظ فئة القطعة",
+        "saveSupplier": "حفظ المورد",
+        "saveRates": "حفظ الأسعار"
+      },
+      "warnings": {
+        "closeWindow": "سيتم إغلاق النافذة وفقدان جميع البيانات غير المحفوظة. هل ترغب في المتابعة؟"
+      }
+    }
+  }
+}

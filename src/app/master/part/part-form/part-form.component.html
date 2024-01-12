@@ -1,0 +1,1887 @@
+<div class="panel-body">
+  <div class="widget-body fuelux">
+    <div class="container-fluid">
+      <div class="row">
+        <div
+          *ngIf="!showCreatePartFirst"
+          class="alert alert-danger white"
+          role="alert"
+        >
+          <i class="fa fa-fw fa-times"></i>
+          <span
+            [translate]="'master.part.errors.addSupplierInformationError'"
+          ></span>
+        </div>
+        <!-- ......................................................................................................................... -->
+        <div
+          *ngIf="!showCreatePartFirstAddRates"
+          class="alert alert-danger white"
+          role="alert"
+        >
+          <i class="fa fa-fw fa-times"></i>
+          <span [translate]="'master.part.errors.addRateDetailsError'"></span>
+        </div>
+        <div
+          *ngIf="!hideUnsavedErrorMessage"
+          class="alert alert-danger white"
+          role="alert"
+        >
+          <i class="fa fa-times"></i>
+          <strong [translate]="'master.part.errors.error'"> </strong
+          ><span [translate]="'master.part.errors.partInformationWizardError'">
+          </span>
+        </div>
+
+        <fuel-ux-wizard [(ngModel)]="activeTab">
+          <div class="wizard">
+            <div class="steps-container">
+              <ul class="steps">
+                <li
+                  data-step="1"
+                  [class.active]="activeTab === 1"
+                  (click)="changeTab(1)"
+                >
+                  <span [translate]="'Part Information'"></span>
+                  <span class="chevron"></span>
+                </li>
+                <li
+                  data-step="2"
+                  [class.active]="activeTab === 2"
+                  (click)="checkFileMode($event, 'supplierInformation', 2)"
+                >
+                  <span [translate]="'Supplier Informtion'"></span>
+                  <span class="chevron"></span>
+                </li>
+                <li
+                  data-step="2"
+                  [class.active]="activeTab === 3"
+                  (click)="checkFileMode($event, 'part rate', 3)"
+                >
+                  <span [translate]="'Part Rates'"></span>
+                  <span class="chevron"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- tab component render based on tab -->
+          <br />
+          <div class="step-content">
+            <div
+              class="step-pane"
+              data-step="1"
+              [class.active]="activeTab === 1"
+            >
+              <fieldset>
+                <form
+                  class="container-new-ui"
+                  [formGroup]="editPartSaveForm"
+                  autocomplete="off"
+                >
+                  <div class="row">
+                    <!-- part code input -->
+                    <div
+                      class="form-group col-lg-3 col-md-3 col-sm-3"
+                      [ngClass]="{
+                        'has-error':
+                          (submitted && partInfo['partCode'].errors) ||
+                          (partInfo['partCode'].errors &&
+                            (partInfo['partCode'].dirty ||
+                              partInfo['partCode'].touched))
+                      }"
+                    >
+                      <label for="partCode" class="labelText">
+                        <span [translate]="'master.part.label.partCode'"></span>
+                        <i class="red"> *</i></label
+                      >
+                      <input
+                        type="text"
+                        trim="blur"
+                        class="form-control new-form-control-input"
+                        id="partCode"
+                        alphanumericspecial
+                        formControlName="partCode"
+                        placeholder="{{
+                          'master.part.placeholder.partCode' | translate
+                        }}"
+                        maxlength="20"
+                        uppercase
+                        (input)="validateCode('partCode')"
+                      />
+                      <div
+                        class="help-block red"
+                        *ngIf="
+                          (submitted && partInfo['partCode'].errors) ||
+                          (partInfo['partCode'].errors &&
+                            (partInfo['partCode'].dirty ||
+                              partInfo['partCode'].touched))
+                        "
+                      >
+                        <p *ngIf="partInfo['partCode'].errors['duplicateCode']">
+                          <span
+                            [translate]="
+                              'master.part.errors.partCode.duplicate'
+                            "
+                          ></span>
+                        </p>
+                        <p *ngIf="partInfo['partCode'].errors['required']">
+                          <span
+                            [translate]="'master.part.errors.partCode.required'"
+                          ></span>
+                        </p>
+                        <p
+                          *ngIf="
+                            partInfo['partCode'].errors[
+                              'duplicateBusinesspartCode'
+                            ]
+                          "
+                        >
+                          <span
+                            [translate]="
+                              'master.part.errors.partCode.duplicate'
+                            "
+                          ></span>
+                        </p>
+                      </div>
+                    </div>
+                    <!-- part code end -->
+                    <!-- part name input -->
+                    <div
+                      class="form-group col-lg-3 col-md-3 col-sm-3"
+                      [ngClass]="{
+                        'has-error':
+                          (submitted && partInfo['partName'].errors) ||
+                          (partInfo['partName'].errors &&
+                            (partInfo['partName'].dirty ||
+                              partInfo['partName'].touched))
+                      }"
+                    >
+                      <label for="partName" class="labelText">
+                        <span [translate]="'master.part.label.partName'"></span>
+                        <i class="red"> *</i></label
+                      >
+                      <input
+                        type="text"
+                        trim="blur"
+                        class="form-control new-form-control-input"
+                        id="partName"
+                        formControlName="partName"
+                        placeholder="{{
+                          'master.part.placeholder.partName' | translate
+                        }}"
+                        maxlength="100"
+                        spaceatfirst
+                      />
+
+                      <div
+                        class="help-block red"
+                        *ngIf="
+                          (submitted && partInfo['partName'].errors) ||
+                          (partInfo['partName'].errors &&
+                            (partInfo['partName'].dirty ||
+                              partInfo['partName'].touched))
+                        "
+                      >
+                        <p *ngIf="partInfo['partName'].errors['required']">
+                          <span
+                            [translate]="'master.part.errors.partName.required'"
+                          ></span>
+                        </p>
+                      </div>
+                    </div>
+                    <!-- part name end -->
+                    <!-- part type start -->
+                    <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                      <label for="partType" class="labelText">
+                        <span [translate]="'master.part.label.partType'"></span>
+                        <i class="red"> *</i>
+                      </label>
+                      <ng-select
+                        [items]="partTypeDDList"
+                        [selectOnTab]="true"
+                        bindLabel="code"
+                        (input)="checkNgSelectValue($event, 'partType')"
+                        [searchFn]="dropdownSearchFn"
+                        [ngClass]="{
+                          redBorder:
+                            (submitted && partInfo['partType'].errors) ||
+                            (partInfo['partType'].errors &&
+                              (partInfo['partType'].dirty ||
+                                partInfo['partType'].touched))
+                        }"
+                        placeholder="{{
+                          'master.part.placeholder.partType' | translate
+                        }}"
+                        formControlName="partType"
+                        (customValidator)="
+                          checkNgSelectGeneralInfoValue($event, 'partType')
+                        "
+                        notFoundText="Record not found"
+                      >
+                        <ng-template
+                          ng-option-tmp
+                          let-item="item"
+                          let-index="index"
+                          let-search="searchTerm"
+                        >
+                          <div
+                            class="card-body"
+                            title="{{ item?.code }} - {{ item.description }}"
+                          >
+                            <div>
+                              <small
+                                ><b>{{ item?.code }}</b></small
+                              ><br />
+                              <span class="dropDownDescription">{{
+                                item?.description
+                              }}</span>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <div
+                        class="help-block red"
+                        *ngIf="
+                          (submitted && this.partInfo['partType'].errors) ||
+                          (this.partInfo['partType'].errors &&
+                            (this.partInfo['partType'].dirty ||
+                              this.partInfo['partType'].touched))
+                        "
+                      >
+                        <p *ngIf="this.partInfo['partType'].errors['required']">
+                          <span
+                            [translate]="'master.part.errors.partType.required'"
+                          ></span>
+                        </p>
+                        <p *ngIf="this.partInfo['partType'].errors['invalid']">
+                          <span
+                            [translate]="'master.part.errors.partType.invalid'"
+                          ></span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- part type end -->
+
+                    <!-- ledger id start -->
+                    <div
+                      class="form-group col-lg-3 col-md-3 col-sm-3"
+                      [ngClass]="{
+                        'has-error':
+                          (submitted && partInfo['ledgerId'].errors) ||
+                          (partInfo['ledgerId'].errors &&
+                            (partInfo['ledgerId'].dirty ||
+                              partInfo['ledgerId'].touched))
+                      }"
+                    >
+                      <label for="ledgerId" class="labelText">
+                        <span [translate]="'master.part.label.ledgerId'"></span>
+                      </label>
+                      <input
+                        type="text"
+                        trim="blur"
+                        class="form-control new-form-control-input"
+                        id="ledgerId"
+                        formControlName="ledgerId"
+                        placeholder="{{
+                          'master.part.placeholder.ledgerId' | translate
+                        }}"
+                        maxlength="20"
+                      />
+                      <div
+                        class="help-block red"
+                        *ngIf="
+                          (submitted && partInfo['ledgerId'].errors) ||
+                          (partInfo['ledgerId'].errors &&
+                            (partInfo['ledgerId'].dirty ||
+                              partInfo['ledgerId'].touched))
+                        "
+                      >
+                        <p *ngIf="partInfo['ledgerId'].errors['required']">
+                          <span
+                            [translate]="'master.part.errors.ledgerId.required'"
+                          ></span>
+                        </p>
+
+                        <div *ngIf="partInfo['ledgerId'].errors['pattern']">
+                          <span
+                            [translate]="
+                              'master.part.errors.partnerName.pattern'
+                            "
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- ledger id end -->
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                      <label for="movementFrequency" class="labelText">
+                        <span
+                          [translate]="'master.part.label.movementFrequency'"
+                        ></span>
+                      </label>
+                      <ng-select
+                        [items]="movementFrequencyDDList"
+                        [selectOnTab]="true"
+                        bindLabel="description"
+                        (input)="
+                          checkNgSelectValue($event, 'movementFrequency')
+                        "
+                        [searchFn]="dropdownSearchFn"
+                        [ngClass]="{
+                          redBorder:
+                            (submitted &&
+                              partInfo['movementFrequency'].hasError(
+                                'invalid'
+                              )) ||
+                            ((partInfo['movementFrequency'].dirty ||
+                              partInfo['movementFrequency'].touched) &&
+                              partInfo['movementFrequency'].hasError('invalid'))
+                        }"
+                        placeholder="{{
+                          'master.part.placeholder.movementFrequency'
+                            | translate
+                        }}"
+                        formControlName="movementFrequency"
+                        (customValidator)="
+                          checkNgSelectGeneralInfoValue(
+                            $event,
+                            'movementFrequency'
+                          )
+                        "
+                        notFoundText="Record not found"
+                      >
+                        <ng-template
+                          ng-option-tmp
+                          let-item="item"
+                          let-index="index"
+                          let-search="searchTerm"
+                        >
+                          <div
+                            class="card-body"
+                            title="{{ item?.code }} - {{ item.description }}"
+                          >
+                            <div>
+                              <small
+                                ><b>{{ item?.code }}</b></small
+                              ><br />
+                              <span class="dropDownDescription">
+                                {{ item?.description }}
+                              </span>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <div
+                        class="help-block red"
+                        *ngIf="
+                          (submitted &&
+                            partInfo['movementFrequency'].invalid) ||
+                          partInfo['movementFrequency'].invalid
+                        "
+                      >
+                        <p>
+                          <span
+                            [translate]="
+                              'master.part.errors.movementFrequency.invalid'
+                            "
+                          ></span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- movement frequency end -->
+                    <!-- planning strategy start -->
+                    <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                      <label for="planningStrategy" class="labelText">
+                        <span
+                          [translate]="'master.part.label.planningStrategy'"
+                        ></span>
+                        <i class="red"> *</i>
+                      </label>
+                      <ng-select
+                        [items]="planningStrategyDDList"
+                        [selectOnTab]="true"
+                        bindLabel="description"
+                        (input)="checkNgSelectValue($event, 'planningStrategy')"
+                        [searchFn]="dropdownSearchFn"
+                        [ngClass]="{
+                          redBorder:
+                            (submitted &&
+                              partInfo['planningStrategy'].errors) ||
+                            (partInfo['planningStrategy'].errors &&
+                              (partInfo['planningStrategy'].dirty ||
+                                partInfo['planningStrategy'].touched))
+                        }"
+                        placeholder="{{
+                          'master.part.placeholder.planningStrategy' | translate
+                        }}"
+                        formControlName="planningStrategy"
+                        (ngModelChange)="
+                          checkNgSelectGeneralInfoValue(
+                            $event,
+                            'planningStrategy'
+                          )
+                        "
+                        notFoundText="Record not found"
+                      >
+                        <ng-template
+                          ng-option-tmp
+                          let-item="item"
+                          let-index="index"
+                          let-search="searchTerm"
+                        >
+                          <div
+                            class="card-body"
+                            title="{{ item?.code }} - {{ item.description }}"
+                          >
+                            <div>
+                              <small
+                                ><b>{{ item?.code }}</b></small
+                              ><br />
+                              <span class="dropDownDescription">{{
+                                item?.description
+                              }}</span>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <div
+                        class="help-block red"
+                        *ngIf="
+                          (submitted &&
+                            this.partInfo['planningStrategy'].errors) ||
+                          (this.partInfo['planningStrategy'].errors &&
+                            (this.partInfo['planningStrategy'].dirty ||
+                              this.partInfo['planningStrategy'].touched))
+                        "
+                      >
+                        <p
+                          *ngIf="
+                            this.partInfo['planningStrategy'].errors['required']
+                          "
+                        >
+                          <span
+                            [translate]="
+                              'master.part.errors.planningStrategy.required'
+                            "
+                          ></span>
+                        </p>
+                        <p
+                          *ngIf="
+                            this.partInfo['planningStrategy'].errors['invalid']
+                          "
+                        >
+                          <span
+                            [translate]="
+                              'master.part.errors.planningStrategy.invalid'
+                            "
+                          ></span>
+                        </p>
+                      </div>
+                    </div>
+                    <!-- planning strategy end -->
+                    <!-- re order level start -->
+                    <div
+                      class="col-lg-3 col-md-3 col-sm-3 form-group"
+                      [ngClass]="{
+                        'has-error':
+                          (submitted && this.partInfo['reOrderLevel'].errors) ||
+                          (this.partInfo['reOrderLevel'].errors &&
+                            (this.partInfo['reOrderLevel'].dirty ||
+                              this.partInfo['reOrderLevel'].touched))
+                      }"
+                    >
+                      <label for="reOrderLevel" class="labelText">
+                        <span
+                          [translate]="'master.part.label.reOrderLevel'"
+                        ></span>
+
+                        <!-- // enum id = 517 means -> "None" -->
+                        <i
+                          *ngIf="
+                            this.partInfo['planningStrategy']?.value?.enumId ==
+                            517
+                              ? false
+                              : true
+                          "
+                          class="red"
+                        >
+                          *</i
+                        >
+                      </label>
+                      <!-- amountInput -->
+                      <!-- numericType="decimal" -->
+                      <input
+                        type="text"
+                        trim="blur"
+                        class="form-control new-form-control-input"
+                        id="reOrderLevel"
+                        formControlName="reOrderLevel"
+                        maxlength="10"
+                        placeholder="{{
+                          'master.part.placeholder.reOrderLevel' | translate
+                        }}"
+                        numeric
+                        numericType="number"
+                        (input)="validateReOrderLevel('reOrderLevel')"
+                      />
+                      <div
+                        *ngIf="
+                          (submitted && this.partInfo['reOrderLevel'].errors) ||
+                          (this.partInfo['reOrderLevel'].errors &&
+                            (this.partInfo['reOrderLevel'].dirty ||
+                              this.partInfo['reOrderLevel'].touched))
+                        "
+                        class="help-block red"
+                      >
+                        <div
+                          *ngIf="
+                            this.partInfo['reOrderLevel'].errors['required']
+                          "
+                        >
+                          <span
+                            [translate]="
+                              'master.part.errors.reOrderLevel.required'
+                            "
+                          ></span>
+                        </div>
+                        <div
+                          *ngIf="this.partInfo['reOrderLevel'].errors['min']"
+                        >
+                          <span
+                            [translate]="
+                              'master.part.errors.reOrderLevel.limit'
+                            "
+                          ></span>
+                        </div>
+                        <div
+                          *ngIf="this.partInfo['reOrderLevel'].errors['max']"
+                        >
+                          <span
+                            [translate]="
+                              'master.part.errors.reOrderLevel.limit'
+                            "
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- re order level end -->
+                    <!-- reOrder quantity start -->
+                    <div
+                      class="col-lg-3 col-md-3 col-sm-3 form-group"
+                      [ngClass]="{
+                        'has-error':
+                          (submitted &&
+                            this.partInfo['reOrderQuantity'].errors) ||
+                          (this.partInfo['reOrderQuantity'].errors &&
+                            (this.partInfo['reOrderQuantity'].dirty ||
+                              this.partInfo['reOrderQuantity'].touched))
+                      }"
+                    >
+                      <label for="reOrderQuantity" class="labelText">
+                        <span
+                          [translate]="'master.part.label.reOrderQuantity'"
+                        ></span>
+                        <!-- // enum id = 517 means -> "None" -->
+                        <i
+                          *ngIf="
+                            this.partInfo['planningStrategy']?.value?.enumId ==
+                            517
+                              ? false
+                              : true
+                          "
+                          class="red"
+                        >
+                          *</i
+                        >
+                      </label>
+
+                      <input
+                        type="text"
+                        trim="blur"
+                        class="form-control new-form-control-input"
+                        id="reOrderQuantity"
+                        formControlName="reOrderQuantity"
+                        maxlength="10"
+                        placeholder="{{
+                          'master.part.placeholder.reOrderQuantity' | translate
+                        }}"
+                        numeric
+                        numericType="number"
+                        (input)="validatereOrderQuantity('reOrderQuantity')"
+                      />
+                      <div
+                        *ngIf="
+                          (submitted &&
+                            this.partInfo['reOrderQuantity'].errors) ||
+                          (this.partInfo['reOrderQuantity'].errors &&
+                            (this.partInfo['reOrderQuantity'].dirty ||
+                              this.partInfo['reOrderQuantity'].touched))
+                        "
+                        class="help-block red"
+                      >
+                        <div
+                          *ngIf="
+                            this.partInfo['reOrderQuantity'].errors['required']
+                          "
+                        >
+                          <span
+                            [translate]="
+                              'master.part.errors.reOrderQuantity.required'
+                            "
+                          ></span>
+                        </div>
+                        <div
+                          *ngIf="this.partInfo['reOrderQuantity'].errors['min']"
+                        >
+                          <span
+                            [translate]="
+                              'master.part.errors.reOrderQuantity.limit'
+                            "
+                          ></span>
+                        </div>
+                        <div
+                          *ngIf="this.partInfo['reOrderQuantity'].errors['max']"
+                        >
+                          <span
+                            [translate]="
+                              'master.part.errors.reOrderQuantity.limit'
+                            "
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- reOrder quantity end -->
+                  </div>
+                  <div class="row">
+                    <!-- stockuom start -->
+                    <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                      <label for="stockUom" class="labelText">
+                        <span [translate]="'master.part.label.stockUom'"></span>
+                        <i class="red"> *</i>
+                      </label>
+                      <ng-select
+                        [items]="stockUomDDList"
+                        [selectOnTab]="true"
+                        bindLabel="code"
+                        (input)="checkNgSelectValue($event, 'stockUom')"
+                        [searchFn]="dropdownSearchFn"
+                        [ngClass]="{
+                          redBorder:
+                            (submitted && partInfo['stockUom'].errors) ||
+                            (partInfo['stockUom'].errors &&
+                              (partInfo['stockUom'].dirty ||
+                                partInfo['stockUom'].touched))
+                        }"
+                        placeholder="{{
+                          'master.part.placeholder.stockUom' | translate
+                        }}"
+                        formControlName="stockUom"
+                        (customValidator)="
+                          checkNgSelectGeneralInfoValue($event, 'stockUom')
+                        "
+                        notFoundText="Record not found"
+                      >
+                        <ng-template
+                          ng-option-tmp
+                          let-item="item"
+                          let-index="index"
+                          let-search="searchTerm"
+                        >
+                          <div
+                            class="card-body"
+                            title="{{ item?.code }} - {{ item.description }}"
+                          >
+                            <div>
+                              <small
+                                ><b>{{ item?.code }}</b></small
+                              ><br />
+                              <span class="dropDownDescription">{{
+                                item?.description
+                              }}</span>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <div
+                        class="help-block red"
+                        *ngIf="
+                          (submitted && this.partInfo['stockUom'].errors) ||
+                          (this.partInfo['stockUom'].errors &&
+                            (this.partInfo['stockUom'].dirty ||
+                              this.partInfo['stockUom'].touched))
+                        "
+                      >
+                        <p *ngIf="this.partInfo['stockUom'].errors['required']">
+                          <span
+                            [translate]="'master.part.errors.stockUom.required'"
+                          ></span>
+                        </p>
+                        <p *ngIf="this.partInfo['stockUom'].errors['invalid']">
+                          <span
+                            [translate]="'master.part.errors.stockUom.invalid'"
+                          ></span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- stockuom end -->
+
+                    <!-- remarks start -->
+                    <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                      <label for="remarks" class="labelText">
+                        <span [translate]="'master.part.label.remarks'"></span>
+                      </label>
+                      <input
+                        type="text"
+                        trim="blur"
+                        class="form-control new-form-control-input"
+                        id="remarks"
+                        formControlName="remarks"
+                        placeholder="{{
+                          'master.part.placeholder.remarks' | translate
+                        }}"
+                        maxlength="500"
+                        spaceatfirst
+                      />
+                    </div>
+                    <!-- remarks end -->
+
+                    <!-- part category start -->
+                    <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                      <label for="partCategory" class="labelText">
+                        <span
+                          [translate]="'master.part.label.partCategory'"
+                        ></span>
+                        <i class="red"> *</i>
+                      </label>
+                      <br />
+                      <div>
+                        <a class="light-blue-part" (click)="openContactDialog()"
+                          >Add/View Part Category</a
+                        >
+                      </div>
+                      <!-- isPartCategoryRequired -->
+                      <div
+                        class="help-block red"
+                        *ngIf="
+                          isPartCategoryRequired &&
+                          this.checkedPartCategoryList.length == 0 &&
+                          this.modalSelectedData.length == 0
+                        "
+                      >
+                        <p>
+                          <span
+                            [translate]="
+                              'master.part.errors.partCategory.required'
+                            "
+                          ></span>
+                        </p>
+                      </div>
+                    </div>
+                    <!-- part category end -->
+
+                    <div class="row col-lg-3 col-md-3 col-sm-3">
+                      <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                        <label for="hazardous" class="labelText"
+                          ><span [translate]="'master.part.label.hazardous'">
+                          </span>
+                        </label>
+                        <br />
+                        <div class="onoffswitch">
+                          <input
+                            type="checkbox"
+                            formControlName="hazardous"
+                            id="hazardous"
+                            class="onoffswitch-checkbox"
+                          />
+                          <label
+                            class="onoffswitch-label white"
+                            for="hazardous"
+                          >
+                            <span
+                              class="onoffswitch-inner"
+                              data-swchon-text="YES"
+                              data-swchoff-text="NO"
+                            ></span>
+                            <span class="onoffswitch-switch"></span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-1 col-md-1 col-sm-1"></div>
+                      <div class="form-group col-lg-1 col-md-1 col-sm-1">
+                        <label for="active" class="labelText"
+                          ><span [translate]="'master.part.label.active'">
+                          </span>
+                        </label>
+                        <br />
+                        <div class="onoffswitch">
+                          <input
+                            type="checkbox"
+                            formControlName="active"
+                            id="active"
+                            class="onoffswitch-checkbox"
+                          />
+                          <label class="onoffswitch-label white" for="active">
+                            <span
+                              class="onoffswitch-inner"
+                              data-swchon-text="YES"
+                              data-swchoff-text="NO"
+                            ></span>
+                            <span class="onoffswitch-switch"></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                        <br />
+                        <div>
+                          <a
+                            class="light-blue-part"
+                            (click)="openPurchasePartSpecification()"
+                            >Purchase Part Specification</a
+                          >
+
+                          <i class="red"> *</i>
+                        </div>
+                        <!-- isPartCategoryRequired -->
+                        <div
+                          class="help-block red"
+                          *ngIf="
+                            isPartCategoryRequired &&
+                            this.checkedPartCategoryList.length == 0 &&
+                            this.modalSelectedData.length == 0
+                          "
+                        >
+                          <p>
+                            <span
+                              [translate]="
+                                'master.part.errors.partCategory.required'
+                              "
+                            ></span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <br />
+                <!-- <form
+                  class="container-new-ui"
+                  [formGroup]="purchasePartSpecificationForm"
+                  autocomplete="off"
+                >
+                  <div>
+                    <div class="row">
+                      <div class="col-lg-5 col-md-5 col-sm-5">
+                        <div class="panel panel-info">
+                          <div class="panel-heading clearfix">
+                            <div class="panel-title panelSubHeading pull-left">
+                              <span
+                                [translate]="
+                                  'master.part.titles.purchasePartSpec'
+                                "
+                              ></span>
+                            </div>
+                            <div class="pull-right row buttonGroup">
+                              <button
+                                type="button"
+                                class="capsule-button reset-button-color"
+                                title="{{
+                                  'master.part.button.clear' | translate
+                                }}"
+                                (click)="clearPartSpecification()"
+                              >
+                                <div class="icon-circle">
+                                  <i class="fa-regular fa-circle-xmark"></i>
+                                </div>
+                                <span
+                                  [translate]="'master.part.button.clear'"
+                                ></span>
+                              </button>
+                              <button
+                                type="submit"
+                                [disabled]="disableSaveButton"
+                                class="capsule-button navyBlue"
+                                title="{{
+                                  'master.part.button.addNew' | translate
+                                }}"
+                                (click)="
+                                  !disableSaveButton && savePartSpecification()
+                                "
+                              >
+                                <div class="icon-circle">
+                                  <i class="fa-solid fa-plus"></i>
+                                </div>
+                                <span
+                                  [translate]="'master.part.button.addNew'"
+                                ></span>
+                              </button>
+                            </div>
+                          </div>
+                          <br />
+                          <div class="panel-body">
+                            <div class="row">
+                              <div
+                                class="form-group col-lg-12 col-md-12 col-sm-12"
+                              >
+                                <label
+                                  for="partSpecification"
+                                  class="labelText"
+                                >
+                                  <span
+                                    [translate]="
+                                      'master.part.label.partSpecification'
+                                    "
+                                  ></span>
+                                  <i class="red"> *</i>
+                                </label>
+                                <ng-select
+                                  [items]="partSpecificationDDList"
+                                  [selectOnTab]="true"
+                                  bindLabel="code"
+                                  (input)="
+                                    checkNgSelectValuePurchasePartSpecification(
+                                      $event,
+                                      'partSpecification'
+                                    )
+                                  "
+                                  (ngModelChange)="
+                                    validatePartSpecification(
+                                      'partSpecification'
+                                    )
+                                  "
+                                  [searchFn]="dropdownSearchFn"
+                                  [ngClass]="{
+                                    redBorder:
+                                      (submitted &&
+                                        this.purchasePartInfo[
+                                          'partSpecification'
+                                        ].errors) ||
+                                      (this.purchasePartInfo[
+                                        'partSpecification'
+                                      ].errors &&
+                                        (this.purchasePartInfo[
+                                          'partSpecification'
+                                        ].dirty ||
+                                          this.purchasePartInfo[
+                                            'partSpecification'
+                                          ].touched))
+                                  }"
+                                  placeholder="{{
+                                    'master.part.placeholder.partSpecification'
+                                      | translate
+                                  }}"
+                                  formControlName="partSpecification"
+                                  (customValidator)="
+                                    checkNgSelectGeneralInfoValue(
+                                      $event,
+                                      'partSpecification'
+                                    )
+                                  "
+                                  notFoundText="Record not found"
+                                >
+                                  <ng-template
+                                    ng-option-tmp
+                                    let-item="item"
+                                    let-index="index"
+                                    let-search="searchTerm"
+                                  >
+                                    <div
+                                      class="card-body"
+                                      title="{{ item?.code }} - {{
+                                        item.description
+                                      }}"
+                                    >
+                                      <div>
+                                        <small
+                                          ><b>{{ item?.code }}</b></small
+                                        ><br />
+                                        <span class="dropDownDescription">{{
+                                          item?.description
+                                        }}</span>
+                                      </div>
+                                    </div>
+                                  </ng-template>
+                                </ng-select>
+                                <div
+                                  class="help-block red"
+                                  *ngIf="
+                                    (submitted &&
+                                      this.purchasePartInfo['partSpecification']
+                                        .errors) ||
+                                    (this.purchasePartInfo['partSpecification']
+                                      .errors &&
+                                      (this.purchasePartInfo[
+                                        'partSpecification'
+                                      ].dirty ||
+                                        this.purchasePartInfo[
+                                          'partSpecification'
+                                        ].touched))
+                                  "
+                                >
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['partSpecification']
+                                        .errors['required']
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.purchaseSpecification.required'
+                                      "
+                                    ></span>
+                                  </p>
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['partSpecification']
+                                        .errors['invalid']
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.purchaseSpecification.invalid'
+                                      "
+                                    ></span>
+                                  </p>
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['partSpecification']
+                                        .errors['duplicatePartSpecification']
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.purchaseSpecification.duplicate'
+                                      "
+                                    ></span>
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div
+                                class="col-lg-12 col-md-12 col-sm-12 form-group"
+                                [ngClass]="{
+                                  'has-error':
+                                    (submitted &&
+                                      this.purchasePartInfo['value'].errors) ||
+                                    (this.purchasePartInfo['value'].errors &&
+                                      (this.purchasePartInfo['value'].dirty ||
+                                        this.purchasePartInfo['value'].touched))
+                                }"
+                              >
+                                <label for="value" class="labelText">
+                                  <span
+                                    [translate]="'master.part.label.value'"
+                                  ></span>
+                                  <i class="red"> *</i>
+                                </label>
+
+                                <input
+                                  type="text"
+                                  trim="blur"
+                                  class="form-control new-form-control-input"
+                                  id="value"
+                                  formControlName="value"
+                                  maxlength="15"
+                                  NumericAndDecimal
+                                  placeholder="{{
+                                    'master.part.placeholder.value' | translate
+                                  }}"
+                                  (input)="validatevalue('value')"
+                                />
+                                <div
+                                  *ngIf="
+                                    (submitted &&
+                                      this.purchasePartInfo['value'].errors) ||
+                                    (this.purchasePartInfo['value'].errors &&
+                                      (this.purchasePartInfo['value'].dirty ||
+                                        this.purchasePartInfo['value'].touched))
+                                  "
+                                  class="help-block red"
+                                >
+                                  <div
+                                    *ngIf="
+                                      this.purchasePartInfo['value'].errors[
+                                        'required'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.value.required'
+                                      "
+                                    ></span>
+                                  </div>
+                                  <div
+                                    *ngIf="
+                                      this.purchasePartInfo['value'].errors[
+                                        'min'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.value.limit'
+                                      "
+                                    ></span>
+                                  </div>
+                                  <div
+                                    *ngIf="
+                                      this.purchasePartInfo['value'].errors[
+                                        'max'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.value.limit'
+                                      "
+                                    ></span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div
+                                class="form-group col-lg-12 col-md-12 col-sm-12"
+                              >
+                                <label for="uom" class="labelText">
+                                  <span
+                                    [translate]="'master.part.label.uom'"
+                                  ></span>
+                                  <i class="red"> *</i>
+                                </label>
+                                <ng-select
+                                  [items]="uomDDList"
+                                  [selectOnTab]="true"
+                                  bindLabel="code"
+                                  (input)="
+                                    checkNgSelectValuePurchasePartSpecification(
+                                      $event,
+                                      'uom'
+                                    )
+                                  "
+                                  [searchFn]="dropdownSearchFn"
+                                  [ngClass]="{
+                                    redBorder:
+                                      (submitted &&
+                                        this.purchasePartInfo['uom'].errors) ||
+                                      (this.purchasePartInfo['uom'].errors &&
+                                        (this.purchasePartInfo['uom'].dirty ||
+                                          this.purchasePartInfo['uom'].touched))
+                                  }"
+                                  placeholder="{{
+                                    'master.part.placeholder.uom' | translate
+                                  }}"
+                                  formControlName="uom"
+                                  (customValidator)="
+                                    checkNgSelectGeneralInfoValue($event, 'uom')
+                                  "
+                                  notFoundText="Record not found"
+                                >
+                                  <ng-template
+                                    ng-option-tmp
+                                    let-item="item"
+                                    let-index="index"
+                                    let-search="searchTerm"
+                                  >
+                                    <div
+                                      class="card-body"
+                                      title="{{ item?.code }} - {{
+                                        item.description
+                                      }}"
+                                    >
+                                      <div>
+                                        <small
+                                          ><b>{{ item?.code }}</b></small
+                                        ><br />
+                                        <span class="dropDownDescription">{{
+                                          item?.description
+                                        }}</span>
+                                      </div>
+                                    </div>
+                                  </ng-template>
+                                </ng-select>
+                                <div
+                                  class="help-block red"
+                                  *ngIf="
+                                    (submitted &&
+                                      this.purchasePartInfo['uom'].errors) ||
+                                    (this.purchasePartInfo['uom'].errors &&
+                                      (this.purchasePartInfo['uom'].dirty ||
+                                        this.purchasePartInfo['uom'].touched))
+                                  "
+                                >
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['uom'].errors[
+                                        'required'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.uom.required'
+                                      "
+                                    ></span>
+                                  </p>
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['uom'].errors[
+                                        'invalid'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.uom.invalid'
+                                      "
+                                    ></span>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-7 col-md-7 col-sm-7">
+                        <app-shared-table-new
+                          [headerColumnList]="columnHeaderList"
+                          [filter]="true"
+                          [excelIcon]="true"
+                          [refreshIcon]="true"
+                          [showHide]="true"
+                          [globalSearch]="false"
+                          [isPanelHeading]="true"
+                          [addRecordIcon]="false"
+                          [tableInitialData]="partSpecificationList"
+                          (sendTableRowData)="
+                            receiveSpecificationRowData($event)
+                          "
+                          [isMasterComp]="false"
+                          [tableTitle]="'Purchase Part Specification List View'"
+                          [excelFileName]="'Purchase Part Specification List'"
+                          [deleteIcon]="true"
+                          (handleDeleteRowDataWithIndex)="
+                            deletePartSpecification($event)
+                          "
+                        ></app-shared-table-new>
+                      </div>
+                    </div>
+                  </div>
+                </form> -->
+                <!-- Modal components-->
+                <div
+                  bsModal
+                  #contactModal="bs-modal"
+                  class="modal"
+                  tabindex="-1"
+                  role="dialog"
+                  aria-labelledby="contactModalLabel"
+                  aria-hidden="true"
+                  [config]="{ backdrop: 'static' }"
+                >
+                  <form
+                    class="container-new-ui"
+                    [formGroup]="editPartSaveForm"
+                    autocomplete="off"
+                  >
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header-new header-blue">
+                          <b class="floatleft-part">
+                            <h4 class="modal-title">
+                              <span
+                                [translate]="'master.part.titles.partCategory'"
+                              ></span>
+                              <label class="linebadge">
+                                {{ mode | translate | uppercase }}</label
+                              >
+                            </h4>
+                          </b>
+                          <div class="gridRightAlign">
+                            <div class="row">
+                              <!-- <button
+                              [disabled]="disableSaveButton"
+                              type="submit"
+                              class="btn btn-default buttonMargin buttonBorder"
+                              id="btnSaveContact"
+                              title="{{
+                                'master.part.button.savePartCategory'
+                                  | translate
+                              }}"
+                              (click)="!disableSaveButton && savePartCategory()"
+                            >
+                              <i
+                                class="fa fa-fw fa-save greenIcon"
+                                aria-hidden="true"
+                              ></i>
+                              <span
+                                [translate]="
+                                  'master.part.button.savePartCategory'
+                                "
+                              ></span>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-default buttonMargin buttonBorder"
+                              id="btnClsoe"
+                              title="{{
+                                'master.part.button.close' | translate
+                              }}"
+                              (click)="closeContactDialog()"
+                            >
+                              <i
+                                class="fas fa-fw fa-close redIcon"
+                                aria-hidden="true"
+                              ></i>
+                              <span
+                                [translate]="'master.part.button.close'"
+                              ></span>
+                            </button> -->
+                              <button
+                                class="capsule-button green"
+                                [disabled]="disableSaveButton"
+                                type="submit"
+                                id="btnSaveContact"
+                                title="{{
+                                  'master.part.button.savePartCategory'
+                                    | translate
+                                }}"
+                                (click)="
+                                  !disableSaveButton && savePartCategory()
+                                "
+                              >
+                                <div class="icon-circle">
+                                  <i class="fas fa-light fa-floppy-disk"></i>
+                                </div>
+                                {{ "common.buttons.save" | translate }}
+                              </button>
+                              <button
+                                class="capsule-button"
+                                type="button"
+                                id="btnClsoe"
+                                title="{{
+                                  'master.part.button.close' | translate
+                                }}"
+                                (click)="closeContactDialog()"
+                                style="background-color: #ec5656"
+                              >
+                                <div class="icon-circle">
+                                  <i class="fa-regular fa-circle-xmark"></i>
+                                </div>
+                                {{ "master.part.button.close" | translate }}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-body">
+                          <app-shared-table-new
+                            [headerColumnList]="partCategoryColumns"
+                            [filter]="true"
+                            [excelIcon]="true"
+                            [refreshIcon]="true"
+                            [showHide]="true"
+                            [globalSearch]="true"
+                            [isPanelHeading]="true"
+                            [addRecordIcon]="false"
+                            [tableInitialData]="partCategoryDataList"
+                            (sendTableRowData)="receiveTableRowData($event)"
+                            [isMasterComp]="false"
+                            [deleteIcon]="true"
+                            [isCheckBox]="true"
+                            [checkboxWidth]="false"
+                            [defaultSelectedList]="checkedPartCategoryList"
+                            (getTableDataService)="refreshIconClick($event)"
+                            [excelFileName]="partCategoryExcelFileName"
+                            (refreshTableData)="tableRefreshIcon($event)"
+                            (sendSelectedData)="receiveSelectedData($event)"
+                            [tableTitle]="''"
+                          ></app-shared-table-new>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <!-- Modal components-->
+                <div
+                  bsModal
+                  #purchasePartSpecModal="bs-modal"
+                  class="modal newmodal"
+                  tabindex="-1"
+                  role="dialog"
+                  aria-labelledby="contactModalLabel"
+                  aria-hidden="true"
+                  [config]="{ backdrop: 'static' }"
+                >
+                  <form
+                    [formGroup]="purchasePartSpecificationForm"
+                    autocomplete="off"
+                    class="container-new-ui"
+                  >
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header-new header-blue">
+                          <b class="float-left">
+                            <h4 class="modal-title">
+                              <span
+                                [translate]="
+                                  'master.part.titles.purchasePartSpec'
+                                "
+                              ></span>
+                            </h4>
+                          </b>
+
+                          <div class="gridRightAlign">
+                            <div class="row">
+                              <!-- ......................................................................................................................................................... -->
+                              <button
+                                class="capsule-button grey"
+                                type="button"
+                                id="btnClear"
+                                title="{{ 'common.buttons.reset' | translate }}"
+                                (click)="clearPartSpecification()"
+                              >
+                                <div class="icon-circle">
+                                  <i class="fa-solid fa-arrows-rotate"></i>
+                                </div>
+                                {{ "common.buttons.reset" | translate }}
+                              </button>
+                              <button
+                                class="capsule-button green"
+                                type="submit"
+                                id="btnSaveContact"
+                                [disabled]="disableSaveButton"
+                                title="{{
+                                  'master.part.button.addNew' | translate
+                                }}"
+                                (click)="
+                                  !disableSaveButton && savePartSpecification()
+                                "
+                              >
+                                <div class="icon-circle">
+                                  <i class="fas fa-light fa-floppy-disk"></i>
+                                </div>
+                                {{ "common.buttons.save" | translate }}
+                              </button>
+                              <button
+                                class="capsule-button"
+                                type="button"
+                                id="btnClsoe"
+                                (click)="closePurchasePartSpecModal()"
+                                title="{{
+                                  'common.buttons.cancel' | translate
+                                }}"
+                                style="background-color: #ec5656"
+                              >
+                                <div class="icon-circle">
+                                  <i class="fa-regular fa-circle-xmark"></i>
+                                </div>
+                                {{ "common.buttons.cancel" | translate }}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-body">
+                          <div class="panel-body">
+                            <div class="row">
+                              <!-- part spec start -->
+                              <div
+                                class="form-group col-lg-4 col-md-4 col-sm-4"
+                              >
+                                <label
+                                  for="partSpecification"
+                                  class="labelText"
+                                >
+                                  <span
+                                    [translate]="
+                                      'master.part.label.partSpecification'
+                                    "
+                                  ></span>
+                                  <i class="red"> *</i>
+                                </label>
+                                <ng-select
+                                  [items]="partSpecificationDDList"
+                                  [selectOnTab]="true"
+                                  bindLabel="code"
+                                  (input)="
+                                    checkNgSelectValuePurchasePartSpecification(
+                                      $event,
+                                      'partSpecification'
+                                    )
+                                  "
+                                  (ngModelChange)="
+                                    validatePartSpecification(
+                                      'partSpecification'
+                                    )
+                                  "
+                                  [searchFn]="dropdownSearchFn"
+                                  [ngClass]="{
+                                    redBorder:
+                                      (submitted &&
+                                        this.purchasePartInfo[
+                                          'partSpecification'
+                                        ].errors) ||
+                                      (this.purchasePartInfo[
+                                        'partSpecification'
+                                      ].errors &&
+                                        (this.purchasePartInfo[
+                                          'partSpecification'
+                                        ].dirty ||
+                                          this.purchasePartInfo[
+                                            'partSpecification'
+                                          ].touched))
+                                  }"
+                                  placeholder="{{
+                                    'master.part.placeholder.partSpecification'
+                                      | translate
+                                  }}"
+                                  formControlName="partSpecification"
+                                  (customValidator)="
+                                    checkNgSelectGeneralInfoValue(
+                                      $event,
+                                      'partSpecification'
+                                    )
+                                  "
+                                  notFoundText="Record not found"
+                                >
+                                  <ng-template
+                                    ng-option-tmp
+                                    let-item="item"
+                                    let-index="index"
+                                    let-search="searchTerm"
+                                  >
+                                    <div
+                                      class="card-body"
+                                      title="{{ item?.code }} - {{
+                                        item.description
+                                      }}"
+                                    >
+                                      <div>
+                                        <small
+                                          ><b>{{ item?.code }}</b></small
+                                        ><br />
+                                        <span class="dropDownDescription">{{
+                                          item?.description
+                                        }}</span>
+                                      </div>
+                                    </div>
+                                  </ng-template>
+                                </ng-select>
+                                <div
+                                  class="help-block red"
+                                  *ngIf="
+                                    (submitted &&
+                                      this.purchasePartInfo['partSpecification']
+                                        .errors) ||
+                                    (this.purchasePartInfo['partSpecification']
+                                      .errors &&
+                                      (this.purchasePartInfo[
+                                        'partSpecification'
+                                      ].dirty ||
+                                        this.purchasePartInfo[
+                                          'partSpecification'
+                                        ].touched))
+                                  "
+                                >
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['partSpecification']
+                                        .errors['required']
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.purchaseSpecification.required'
+                                      "
+                                    ></span>
+                                  </p>
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['partSpecification']
+                                        .errors['invalid']
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.purchaseSpecification.invalid'
+                                      "
+                                    ></span>
+                                  </p>
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['partSpecification']
+                                        .errors['duplicatePartSpecification']
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.purchaseSpecification.duplicate'
+                                      "
+                                    ></span>
+                                  </p>
+                                </div>
+                              </div>
+
+                              <!-- part spec end -->
+                              <!-- value input -->
+                              <div
+                                class="col-lg-4 col-md-4 col-sm-4 form-group"
+                                [ngClass]="{
+                                  'has-error':
+                                    (submitted &&
+                                      this.purchasePartInfo['value'].errors) ||
+                                    (this.purchasePartInfo['value'].errors &&
+                                      (this.purchasePartInfo['value'].dirty ||
+                                        this.purchasePartInfo['value'].touched))
+                                }"
+                              >
+                                <label for="value" class="labelText">
+                                  <span
+                                    [translate]="'master.part.label.value'"
+                                  ></span>
+                                  <i class="red"> *</i>
+                                </label>
+
+                                <input
+                                  type="text"
+                                  trim="blur"
+                                  class="form-control new-form-control-input"
+                                  id="value"
+                                  formControlName="value"
+                                  maxlength="15"
+                                  NumericAndDecimal
+                                  placeholder="{{
+                                    'master.part.placeholder.value' | translate
+                                  }}"
+                                  (input)="validatevalue('value')"
+                                />
+                                <div
+                                  *ngIf="
+                                    (submitted &&
+                                      this.purchasePartInfo['value'].errors) ||
+                                    (this.purchasePartInfo['value'].errors &&
+                                      (this.purchasePartInfo['value'].dirty ||
+                                        this.purchasePartInfo['value'].touched))
+                                  "
+                                  class="help-block red"
+                                >
+                                  <div
+                                    *ngIf="
+                                      this.purchasePartInfo['value'].errors[
+                                        'required'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.value.required'
+                                      "
+                                    ></span>
+                                  </div>
+                                  <div
+                                    *ngIf="
+                                      this.purchasePartInfo['value'].errors[
+                                        'min'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.value.limit'
+                                      "
+                                    ></span>
+                                  </div>
+                                  <div
+                                    *ngIf="
+                                      this.purchasePartInfo['value'].errors[
+                                        'max'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.value.limit'
+                                      "
+                                    ></span>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- value end -->
+                              <!-- uom start -->
+                              <div
+                                class="form-group col-lg-4 col-md-4 col-sm-4"
+                              >
+                                <label for="uom" class="labelText">
+                                  <span
+                                    [translate]="'master.part.label.uom'"
+                                  ></span>
+                                  <i class="red"> *</i>
+                                </label>
+                                <ng-select
+                                  [items]="uomDDList"
+                                  [selectOnTab]="true"
+                                  bindLabel="code"
+                                  (input)="
+                                    checkNgSelectValuePurchasePartSpecification(
+                                      $event,
+                                      'uom'
+                                    )
+                                  "
+                                  [searchFn]="dropdownSearchFn"
+                                  [ngClass]="{
+                                    redBorder:
+                                      (submitted &&
+                                        this.purchasePartInfo['uom'].errors) ||
+                                      (this.purchasePartInfo['uom'].errors &&
+                                        (this.purchasePartInfo['uom'].dirty ||
+                                          this.purchasePartInfo['uom'].touched))
+                                  }"
+                                  placeholder="{{
+                                    'master.part.placeholder.uom' | translate
+                                  }}"
+                                  formControlName="uom"
+                                  (customValidator)="
+                                    checkNgSelectGeneralInfoValue($event, 'uom')
+                                  "
+                                  notFoundText="Record not found"
+                                >
+                                  <ng-template
+                                    ng-option-tmp
+                                    let-item="item"
+                                    let-index="index"
+                                    let-search="searchTerm"
+                                  >
+                                    <div
+                                      class="card-body"
+                                      title="{{ item?.code }} - {{
+                                        item.description
+                                      }}"
+                                    >
+                                      <div>
+                                        <small
+                                          ><b>{{ item?.code }}</b></small
+                                        ><br />
+                                        <span class="dropDownDescription">{{
+                                          item?.description
+                                        }}</span>
+                                      </div>
+                                    </div>
+                                  </ng-template>
+                                </ng-select>
+                                <div
+                                  class="help-block red"
+                                  *ngIf="
+                                    (submitted &&
+                                      this.purchasePartInfo['uom'].errors) ||
+                                    (this.purchasePartInfo['uom'].errors &&
+                                      (this.purchasePartInfo['uom'].dirty ||
+                                        this.purchasePartInfo['uom'].touched))
+                                  "
+                                >
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['uom'].errors[
+                                        'required'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.uom.required'
+                                      "
+                                    ></span>
+                                  </p>
+                                  <p
+                                    *ngIf="
+                                      this.purchasePartInfo['uom'].errors[
+                                        'invalid'
+                                      ]
+                                    "
+                                  >
+                                    <span
+                                      [translate]="
+                                        'master.part.errors.uom.invalid'
+                                      "
+                                    ></span>
+                                  </p>
+                                </div>
+                              </div>
+
+                              <!-- uom end -->
+                            </div>
+                          </div>
+                          <!-- .......................................................... -->
+                          <div class="col-lg-12 col-md-12 col-sm-12">
+                            <app-shared-table-new
+                              [headerColumnList]="columnHeaderList"
+                              [filter]="true"
+                              [excelIcon]="true"
+                              [refreshIcon]="true"
+                              [showHide]="true"
+                              [globalSearch]="false"
+                              [isPanelHeading]="true"
+                              [addRecordIcon]="false"
+                              [tableInitialData]="partSpecificationList"
+                              (sendTableRowData)="
+                                receiveSpecificationRowData($event)
+                              "
+                              [isMasterComp]="false"
+                              [tableTitle]="
+                                'Purchase Part Specification List View'
+                              "
+                              [excelFileName]="
+                                'Purchase Part Specification List'
+                              "
+                              [deleteIcon]="true"
+                              (handleDeleteRowDataWithIndex)="
+                                deletePartSpecification($event)
+                              "
+                            ></app-shared-table-new>
+                          </div>
+                          <!-- .......................................................... -->
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+
+                  <!-- </form> -->
+                </div>
+              </fieldset>
+            </div>
+
+            <div
+              class="step-pane"
+              data-step="2"
+              [class.active]="activeTab === 2"
+            >
+              <app-supplier-information
+                *ngIf="activeTab === 2"
+                [partInformation]="this.partInformationObject"
+                [disableSaveButton]="disableSaveButton"
+                [disableAddButton]="disableAddButton"
+              >
+              </app-supplier-information>
+            </div>
+            <div
+              class="step-pane"
+              data-step="2"
+              [class.active]="activeTab === 3"
+            >
+              <app-part-rates
+                *ngIf="activeTab === 3"
+                [partInformation]="this.partInformationObject"
+                [disableSaveButton]="disableSaveButton"
+                [disableAddButton]="disableAddButton"
+              ></app-part-rates>
+            </div>
+          </div>
+        </fuel-ux-wizard>
+      </div>
+    </div>
+  </div>
+</div>

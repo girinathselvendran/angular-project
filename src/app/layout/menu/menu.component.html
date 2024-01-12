@@ -1,0 +1,22 @@
+<div class="custom-menu" id="headerMenu">
+  <p-menubar [model]="items"></p-menubar>
+  <!-- <p-menubar [model]="menus"></p-menubar> -->
+</div>
+
+<!-- <div class="col-lg-12 col-md-12 col-sm-12 nopadding" *ngIf="!showNavigation">
+    <ul style="margin-top: 5px;padding-left: 5px;" saSmartMenu>
+      <li class="tabMenuStyle" routerLinkActive="active">
+        <a routerLink="/home_tab">
+          <i style="margin-right: 5px;" class="fa fa-lg fa-fw fa-home"></i> <span style="font-size: 16px;" class="menu-item-parent">Home</span></a>
+      </li>
+    
+      <li  class="tabMenuStyle" #mainModuleList *ngFor="let screen of menus" routerLinkActive="active">
+        <a (click)="routerPage(screen)">
+          <i style="margin-right: 5px;" class=" {{screen.cssClass}}"></i> <span style="font-size: 16px;" class="menu-item-parent">{{screen.menuName}}</span></a>
+      </li>
+    </ul>
+</div> -->
+
+<!-- routerPage(screen: any) {
+    this.router.navigate([screen.menuURL], { queryParams: { :screenId screen.screenId } });
+  } -->

@@ -1,0 +1,953 @@
+<div class="panel-default margin-bottom-0">
+  <div class="widget-body fuelux">
+    <div class="container-fluid">
+      <div class="row">
+        <fieldset>
+          <form
+            [formGroup]="editSaveSupplierForm"
+            autocomplete="off"
+            class="container-new-ui"
+          >
+            <div class="row">
+              <!-- supplier code input -->
+              <div
+                class="form-group col-lg-3 col-md-3 col-sm-3"
+                [ngClass]="{
+                  'has-error':
+                    (submitted &&
+                      editSaveSupplierFormInfo['supplierCode'].errors) ||
+                    (editSaveSupplierFormInfo['supplierCode'].errors &&
+                      (editSaveSupplierFormInfo['supplierCode'].dirty ||
+                        editSaveSupplierFormInfo['supplierCode'].touched))
+                }"
+              >
+                <label for="supplierCode" class="labelText">
+                  <span
+                    [translate]="
+                      'master.supplier.supplierGeneralInfo.label.supplierCode'
+                    "
+                  ></span>
+                  <i class="red"> *</i></label
+                >
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control new-form-control-input"
+                  id="supplierCode"
+                  alphanumericspecial
+                  formControlName="supplierCode"
+                  placeholder="{{
+                    'master.supplier.supplierGeneralInfo.placeholder.supplierCode'
+                      | translate
+                  }}"
+                  maxlength="20"
+                  uppercase
+                  (input)="validateSupplierCode('supplierCode')"
+                />
+                <!-- (input)="validateCode('partCode')" -->
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submitted &&
+                      editSaveSupplierFormInfo['supplierCode'].errors) ||
+                    (editSaveSupplierFormInfo['supplierCode'].errors &&
+                      (editSaveSupplierFormInfo['supplierCode'].dirty ||
+                        editSaveSupplierFormInfo['supplierCode'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      editSaveSupplierFormInfo['supplierCode'].errors[
+                        'duplicateSupplierCode'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'master.supplier.supplierGeneralInfo.errors.supplierCode.duplicate'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      editSaveSupplierFormInfo['supplierCode'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'master.supplier.supplierGeneralInfo.errors.supplierCode.required'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- supplier code end -->
+
+              <!-- supplier Name input -->
+              <div
+                class="form-group col-lg-3 col-md-3 col-sm-3"
+                [ngClass]="{
+                  'has-error':
+                    (submitted &&
+                      editSaveSupplierFormInfo['supplierName'].errors) ||
+                    (editSaveSupplierFormInfo['supplierName'].errors &&
+                      (editSaveSupplierFormInfo['supplierName'].dirty ||
+                        editSaveSupplierFormInfo['supplierName'].touched))
+                }"
+              >
+                <label for="supplierName" class="labelText">
+                  <span
+                    [translate]="
+                      'master.supplier.supplierGeneralInfo.label.supplierName'
+                    "
+                  ></span>
+                  <i class="red"> *</i></label
+                >
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control new-form-control-input"
+                  id="supplierName"
+                  formControlName="supplierName"
+                  placeholder="{{
+                    'master.supplier.supplierGeneralInfo.placeholder.supplierName'
+                      | translate
+                  }}"
+                  maxlength="100"
+                  spaceatfirst
+                />
+                <!-- (input)="validateCode('partCode')" -->
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submitted &&
+                      editSaveSupplierFormInfo['supplierName'].errors) ||
+                    (editSaveSupplierFormInfo['supplierName'].errors &&
+                      (editSaveSupplierFormInfo['supplierName'].dirty ||
+                        editSaveSupplierFormInfo['supplierName'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      editSaveSupplierFormInfo['supplierName'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'master.supplier.supplierGeneralInfo.errors.supplierName.required'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- supplier Name end -->
+
+              <!-- ...................................................currency start........................................................................................................ -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                <label for="currency" class="labelText"
+                  ><span
+                    [translate]="
+                      'master.supplier.supplierGeneralInfo.label.currency'
+                    "
+                  >
+                  </span>
+                  <span class="redIcon"> *</span>
+                </label>
+                <ng-select
+                  placeholder="{{
+                    'master.supplier.supplierGeneralInfo.placeholder.currency'
+                      | translate
+                  }}"
+                  [items]="currencyTypes"
+                  [selectOnTab]="true"
+                  (input)="checkNgSelectValue($event, 'currency')"
+                  bindLabel="currencyTypeCode"
+                  [searchFn]="dropdownSearchFn"
+                  formControlName="currency"
+                  notFoundText="Record not found"
+                  [ngClass]="{
+                    redBorder:
+                      (submitted &&
+                        editSaveSupplierFormInfo['currency'].errors) ||
+                      (editSaveSupplierFormInfo['currency'].errors &&
+                        (editSaveSupplierFormInfo['currency'].dirty ||
+                          editSaveSupplierFormInfo['currency'].touched))
+                  }"
+                  (ngModelChange)="
+                    checkNgSelectGeneralInfoValue($event, 'currency')
+                  "
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div>
+                      <small
+                        ><b>{{ item?.currencyTypeCode }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.currencyTypeDescription
+                      }}</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submitted &&
+                      editSaveSupplierFormInfo['currency'].errors) ||
+                    (editSaveSupplierFormInfo['currency'].errors &&
+                      (editSaveSupplierFormInfo['currency'].dirty ||
+                        editSaveSupplierFormInfo['currency'].touched))
+                  "
+                >
+                  <!-- <p *ngIf="editSaveSupplierFormInfo['currency'].errors['duplicateCode']">
+                 <span
+                   [translate]="
+                     'master.supplier.supplierGeneralInfo.errors.currency.duplicate'
+                   "
+                 ></span>
+               </p> -->
+                  <p
+                    *ngIf="
+                      editSaveSupplierFormInfo['currency'].errors['required']
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'master.supplier.supplierGeneralInfo.errors.currency.required'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      this.editSaveSupplierFormInfo['currency'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'master.supplier.supplierGeneralInfo.errors.currency.invalid'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- ........................................................................................................................................... -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                <label for="associatedDepots" class="labelText">
+                  <span
+                    [translate]="
+                      'master.supplier.supplierGeneralInfo.label.associatedDepots'
+                    "
+                  ></span>
+                  <i class="red"> *</i>
+                </label>
+
+                <ng-select
+                  [items]="associatedDepots"
+                  [selectOnTab]="true"
+                  bindLabel="depotCode"
+                  [multiple]="true"
+                  [closeOnSelect]="false"
+                  [markFirst]="true"
+                  [searchFn]="dropdownSearchFnAssociatedDepots"
+                  [ngClass]="{
+                    redBorder:
+                      (submitted &&
+                        editSaveSupplierFormInfo['associatedDepots'].errors) ||
+                      (editSaveSupplierFormInfo['associatedDepots'].errors &&
+                        (editSaveSupplierFormInfo['associatedDepots'].dirty ||
+                          editSaveSupplierFormInfo['associatedDepots'].touched))
+                  }"
+                  placeholder="{{
+                    'master.supplier.supplierGeneralInfo.placeholder.associatedDepots'
+                      | translate
+                  }}"
+                  notFoundText="Record not found"
+                  id="associatedDepots"
+                  formControlName="associatedDepots"
+                  (input)="checkNgSelectValue($event, 'associatedDepots')"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                    let-clear="clear"
+                  >
+                    <div title="{{ item?.depotCode }} - {{ item?.depotName }}">
+                      <small
+                        ><b>{{ item?.depotCode }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.depotName
+                      }}</span>
+                    </div>
+                    <!-- <div>
+                      <small
+                        ><b>{{ item?.depotCode }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.depotName
+                      }}</span>
+                    </div> -->
+                  </ng-template>
+                  <ng-template
+                    ng-multi-label-tmp
+                    let-items="items"
+                    let-clear="clear"
+                  >
+                    <div
+                      class="ng-value"
+                      *ngFor="let item of items ? items.slice(0, 2) : []"
+                    >
+                      <span class="ng-value-label">{{ item?.depotCode }} </span>
+                      <span
+                        class="ng-value-icon right"
+                        (click)="clear(item)"
+                        aria-hidden="true"
+                        >×</span
+                      >
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 2">
+                      <span class="ng-value-label"
+                        >{{ items.length - 2 }} more...</span
+                      >
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <!-- <div class="help-block red">
+                                                  <p *ngIf="!isCurrencyExists">
+                                                    <span [translate]="'businessPartner.errors.currencyNotExists'"></span>
+                                                  </p>
+                                                </div> -->
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submitted &&
+                      editSaveSupplierFormInfo['associatedDepots'].errors) ||
+                    (editSaveSupplierFormInfo['associatedDepots'].errors &&
+                      (editSaveSupplierFormInfo['associatedDepots'].dirty ||
+                        editSaveSupplierFormInfo['associatedDepots'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      editSaveSupplierFormInfo['associatedDepots'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'master.supplier.supplierGeneralInfo.errors.associatedDepots.invalid'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      editSaveSupplierFormInfo['associatedDepots'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'master.supplier.supplierGeneralInfo.errors.associatedDepots.required'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- ............................................................................................................................................................ -->
+            </div>
+            <div class="row">
+              <div class="form-group col-lg-9 col-md-9 col-sm-9">
+                <label for="remarks" class="labelText"
+                  ><span
+                    [translate]="
+                      'master.supplier.supplierGeneralInfo.label.remarks'
+                    "
+                  ></span
+                ></label>
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control new-form-control-input"
+                  id="remarks"
+                  formControlName="remarks"
+                  maxlength="500"
+                  placeholder="{{
+                    'master.supplier.supplierGeneralInfo.placeholder.remarks'
+                      | translate
+                  }}"
+                  spaceatfirst
+                />
+
+                <div class="help-block red">
+                  <div *ngIf="false">
+                    <span
+                      [translate]="'tariffGroup.error.remarks.required'"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-lg-1 col-md-1 col-sm-1">
+                <label for="manufacturer" class="labelText"
+                  ><span
+                    [translate]="
+                      'master.supplier.supplierGeneralInfo.label.manufacturer'
+                    "
+                  >
+                  </span>
+                </label>
+                <br />
+                <br />
+                <div class="onoffswitch">
+                  <input
+                    type="checkbox"
+                    formControlName="manufacturer"
+                    id="manufacturer"
+                    class="onoffswitch-checkbox"
+                  />
+                  <label class="onoffswitch-label white" for="manufacturer">
+                    <span
+                      class="onoffswitch-inner"
+                      data-swchon-text="YES"
+                      data-swchoff-text="NO"
+                    ></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-lg-1 col-md-1 col-sm-1">
+                <label for="description" class="labelText"
+                  ><span
+                    [translate]="
+                      'master.supplier.supplierGeneralInfo.label.blacklist'
+                    "
+                  >
+                  </span>
+                </label>
+                <br />
+                <br />
+                <div class="onoffswitch">
+                  <input
+                    type="checkbox"
+                    formControlName="blacklist"
+                    id="blacklist"
+                    class="onoffswitch-checkbox"
+                  />
+                  <label class="onoffswitch-label white" for="blacklist">
+                    <span
+                      class="onoffswitch-inner"
+                      data-swchon-text="YES"
+                      data-swchoff-text="NO"
+                    ></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group col-lg-1 col-md-1 col-sm-1">
+                <label for="active" class="labelText"
+                  ><span
+                    [translate]="
+                      'master.supplier.supplierGeneralInfo.label.active'
+                    "
+                  ></span
+                ></label>
+
+                <br />
+                <br />
+                <div class="onoffswitch">
+                  <input
+                    type="checkbox"
+                    formControlName="active"
+                    id="active"
+                    class="onoffswitch-checkbox"
+                    (input)="onChangeActiveToggle($event)"
+                  />
+                  <label class="onoffswitch-label white" for="active">
+                    <span
+                      class="onoffswitch-inner"
+                      data-swchon-text="YES"
+                      data-swchoff-text="NO"
+                    ></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+              <!-- ...................................................................................................................... -->
+            </div>
+            <div class="panel panel-info">
+              <div class="panel-heading clearfix">
+                <span class="panel-title panelSubHeading pull-left">
+                  <span
+                    [translate]="'master.supplier.title.billingInfo'"
+                  ></span>
+                </span>
+              </div>
+              <br />
+              <div class="panel-body">
+                <div class="row">
+                  <!-- ........................Supplier Classification Start................................................................................................................................... -->
+                  <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                    <label for="supplierClassification" class="labelText"
+                      ><span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.label.supplierClassification'
+                        "
+                      >
+                      </span>
+                    </label>
+                    <ng-select
+                      placeholder="{{
+                        'master.supplier.supplierGeneralInfo.placeholder.supplierClassification'
+                          | translate
+                      }}"
+                      [items]="supplierClassifications"
+                      [selectOnTab]="true"
+                      (input)="
+                        checkNgSelectValue($event, 'supplierClassification')
+                      "
+                      (ngModelChange)="changeSupplierClassification()"
+                      bindLabel="enumCode"
+                      [searchFn]="dropdownSearchFnSupplierClassification"
+                      formControlName="supplierClassification"
+                      notFoundText="Not found"
+                      [ngClass]="{
+                        redBorder:
+                          (submitted &&
+                            editSaveSupplierFormInfo[
+                              'supplierClassification'
+                            ].hasError('invalid')) ||
+                          ((editSaveSupplierFormInfo['supplierClassification']
+                            .dirty ||
+                            editSaveSupplierFormInfo['supplierClassification']
+                              .touched) &&
+                            editSaveSupplierFormInfo[
+                              'supplierClassification'
+                            ].hasError('invalid'))
+                      }"
+                    >
+                      <ng-template
+                        ng-option-tmp
+                        let-item="item"
+                        let-index="index"
+                        let-search="searchTerm"
+                      >
+                        <div>
+                          <small
+                            ><b>{{ item?.enumCode }}</b></small
+                          ><br />
+                        </div>
+                      </ng-template>
+                    </ng-select>
+
+                    <div
+                      class="help-block red"
+                      *ngIf="
+                        (submitted &&
+                          editSaveSupplierFormInfo['supplierClassification']
+                            .invalid) ||
+                        editSaveSupplierFormInfo['supplierClassification']
+                          .invalid
+                      "
+                    >
+                      <p>
+                        <span
+                          [translate]="
+                            'master.supplier.supplierGeneralInfo.errors.supplierClassification.invalid'
+                          "
+                        ></span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- ........................Supplier Classification End.................................................................................................................. -->
+                  <!-- ........................Exemption Under Start.................................................................................................................. -->
+
+                  <div
+                    class="form-group col-lg-3 col-md-3 col-sm-3"
+                    [ngClass]="{
+                      'has-error':
+                        (submitted &&
+                          editSaveSupplierFormInfo['exemptionUnder'].errors) ||
+                        (editSaveSupplierFormInfo['exemptionUnder'].errors &&
+                          (editSaveSupplierFormInfo['exemptionUnder'].dirty ||
+                            editSaveSupplierFormInfo['exemptionUnder'].touched))
+                    }"
+                  >
+                    <label for="exemptionUnder" class="labelText">
+                      <span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.label.exemptionUnder'
+                        "
+                      ></span>
+                      <i *ngIf="exemptionUnderNeeded" class="red"> *</i></label
+                    >
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="exemptionUnder"
+                      formControlName="exemptionUnder"
+                      placeholder="{{
+                        'master.supplier.supplierGeneralInfo.placeholder.exemptionUnder'
+                          | translate
+                      }}"
+                      maxlength="250"
+                      spaceatfirst
+                    />
+
+                    <div
+                      class="help-block red"
+                      *ngIf="
+                        (submitted &&
+                          editSaveSupplierFormInfo['exemptionUnder'].errors) ||
+                        (editSaveSupplierFormInfo['exemptionUnder'].errors &&
+                          (editSaveSupplierFormInfo['exemptionUnder'].dirty ||
+                            editSaveSupplierFormInfo['exemptionUnder'].touched))
+                      "
+                    >
+                      <p
+                        *ngIf="
+                          editSaveSupplierFormInfo['exemptionUnder'].errors[
+                            'required'
+                          ]
+                        "
+                      >
+                        <span
+                          [translate]="
+                            'master.supplier.supplierGeneralInfo.errors.exemptionUnder.required'
+                          "
+                        ></span>
+                      </p>
+                    </div>
+                  </div>
+                  <!-- ........................Exemption Under End.................................................................................................................. -->
+                  <!-- ........................Ledger ID start.................................................................................................................. -->
+
+                  <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                    <label for="ledgerId" class="labelText">
+                      <span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.label.ledgerId'
+                        "
+                      ></span>
+                    </label>
+
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="ledgerId"
+                      formControlName="ledgerId"
+                      maxlength="20"
+                      placeholder="{{
+                        'master.supplier.supplierGeneralInfo.placeholder.ledgerId'
+                          | translate
+                      }}"
+                      uppercase
+                      saTrimSpaceAtFirst
+                    />
+                  </div>
+                  <!-- ........................Ledger ID End.................................................................................................................. -->
+                  <!-- ........................VAT registartion start.................................................................................................................. -->
+
+                  <div
+                    class="form-group col-lg-3 col-md-3 col-sm-3"
+                    [ngClass]="{
+                      'has-error':
+                        (submitted &&
+                          editSaveSupplierFormInfo['taxRegistrationNo']
+                            .errors) ||
+                        (editSaveSupplierFormInfo['taxRegistrationNo'].errors &&
+                          (editSaveSupplierFormInfo['taxRegistrationNo']
+                            .dirty ||
+                            editSaveSupplierFormInfo['taxRegistrationNo']
+                              .touched))
+                    }"
+                  >
+                    <label for="taxRegistrationNo" class="labelText">
+                      <span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.label.taxRegistrationNo'
+                        "
+                      ></span>
+                      <i class="red"> *</i>
+                    </label>
+
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="taxRegistrationNo"
+                      formControlName="taxRegistrationNo"
+                      maxlength="20"
+                      placeholder="{{
+                        'master.supplier.supplierGeneralInfo.placeholder.taxRegistrationNo'
+                          | translate
+                      }}"
+                      uppercase
+                      alphanumericspecial
+                      (input)="validateTaxRegNoCode('taxRegistrationNo')"
+                    />
+                    <div
+                      class="help-block red"
+                      *ngIf="
+                        (submitted &&
+                          editSaveSupplierFormInfo['taxRegistrationNo']
+                            .errors) ||
+                        (editSaveSupplierFormInfo['taxRegistrationNo'].errors &&
+                          (editSaveSupplierFormInfo['taxRegistrationNo']
+                            .dirty ||
+                            editSaveSupplierFormInfo['taxRegistrationNo']
+                              .touched))
+                      "
+                    >
+                      <p
+                        *ngIf="
+                          editSaveSupplierFormInfo['taxRegistrationNo'].errors[
+                            'required'
+                          ]
+                        "
+                      >
+                        <span
+                          [translate]="
+                            'master.supplier.supplierGeneralInfo.errors.taxRegistration.required'
+                          "
+                        ></span>
+                      </p>
+                      <p
+                        *ngIf="
+                          editSaveSupplierFormInfo['taxRegistrationNo'].errors[
+                            'duplicateVatNo'
+                          ]
+                        "
+                      >
+                        <span
+                          [translate]="
+                            'master.supplier.supplierGeneralInfo.errors.taxRegistration.duplicate'
+                          "
+                        ></span>
+                      </p>
+                    </div>
+                  </div>
+                  <!-- ........................VAT registartion End.................................................................................................................. -->
+                </div>
+                <div class="row">
+                  <!-- ........................PAN number start.................................................................................................................. -->
+                  <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                    <label for="panNo" class="labelText">
+                      <span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.label.panNumber'
+                        "
+                      ></span>
+                    </label>
+
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="panNo"
+                      formControlName="panNo"
+                      maxlength="10"
+                      placeholder="{{
+                        'master.supplier.supplierGeneralInfo.placeholder.panNumber'
+                          | translate
+                      }}"
+                      spaceatfirst
+                    />
+                  </div>
+                  <!-- ........................PAN number end.................................................................................................................. -->
+                  <!-- ........................TIN number start.................................................................................................................. -->
+                  <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                    <label for="tinNo" class="labelText">
+                      <span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.label.tinNumber'
+                        "
+                      ></span>
+                    </label>
+
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="tinNo"
+                      formControlName="tinNo"
+                      placeholder="{{
+                        'master.supplier.supplierGeneralInfo.placeholder.tinNumber'
+                          | translate
+                      }}"
+                      maxlength="10"
+                      spaceatfirst
+                    />
+                  </div>
+                  <!-- ........................TIN number end.................................................................................................................. -->
+                  <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                    <label for="gstnState" class="labelText">
+                      <span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.label.gstnStateCode'
+                        "
+                      ></span>
+                    </label>
+
+                    <ng-select
+                      [items]="gstnStateCodes"
+                      [searchFn]="dropdownSearchFnGstnState"
+                      [selectOnTab]="true"
+                      (input)="checkNgSelectValue($event, 'gstnState')"
+                      placeholder="{{
+                        'master.supplier.supplierGeneralInfo.placeholder.gstnStateCode'
+                          | translate
+                      }}"
+                      bindLabel="description"
+                      formControlName="gstnState"
+                      notFoundText="Not found"
+                      [ngClass]="{
+                        redBorder:
+                          (submittedDetails &&
+                            this.editSaveSupplierFormInfo['gstnState']
+                              .errors) ||
+                          (this.editSaveSupplierFormInfo['gstnState'].errors &&
+                            (this.editSaveSupplierFormInfo['gstnState'].dirty ||
+                              this.editSaveSupplierFormInfo['gstnState']
+                                .touched))
+                      }"
+                    >
+                      <ng-template
+                        ng-option-tmp
+                        let-item="item"
+                        let-index="index"
+                        let-search="searchTerm"
+                      >
+                        <div>
+                          <br />
+                          <small
+                            ><b>{{ item?.description }}</b></small
+                          >
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div
+                      class="help-block red"
+                      *ngIf="
+                        (submitted &&
+                          editSaveSupplierFormInfo['gstnState'].errors) ||
+                        (editSaveSupplierFormInfo['gstnState'].errors &&
+                          (editSaveSupplierFormInfo['gstnState'].dirty ||
+                            editSaveSupplierFormInfo['gstnState'].touched))
+                      "
+                    >
+                      <!-- <p *ngIf="editSaveSupplierFormInfo['gstnState'].errors['duplicateCode']">
+                      <span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.errors.partCode.duplicate'
+                        "
+                      ></span>
+                    </p> -->
+
+                      <p
+                        *ngIf="
+                          this.editSaveSupplierFormInfo['gstnState'].errors[
+                            'invalid'
+                          ]
+                        "
+                      >
+                        <span
+                          [translate]="
+                            'master.supplier.supplierGeneralInfo.errors.gstnState.invalid'
+                          "
+                        ></span>
+                      </p>
+                    </div>
+                  </div>
+                  <!-- ............................................................................................................ -->
+                  <div
+                    class="form-group col-lg-3 col-md-3 col-sm-3"
+                    [ngClass]="{
+                      'has-error':
+                        (submitted &&
+                          editSaveSupplierFormInfo['gstnNo'].errors) ||
+                        (editSaveSupplierFormInfo['gstnNo'].errors &&
+                          (editSaveSupplierFormInfo['gstnNo'].dirty ||
+                            editSaveSupplierFormInfo['gstnNo'].touched))
+                    }"
+                  >
+                    <label for="gstnNo" class="labelText">
+                      <span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.label.gstnNo'
+                        "
+                      ></span>
+                    </label>
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="gstnNo"
+                      alphanumericspecial
+                      formControlName="gstnNo"
+                      placeholder="{{
+                        'master.supplier.supplierGeneralInfo.placeholder.gstnNo'
+                          | translate
+                      }}"
+                      maxlength="20"
+                      uppercase
+                    />
+                    <!-- (input)="validateCode('partCode')" -->
+                    <div
+                      class="help-block red"
+                      *ngIf="
+                        (submitted &&
+                          editSaveSupplierFormInfo['gstnNo'].errors) ||
+                        (editSaveSupplierFormInfo['gstnNo'].errors &&
+                          (editSaveSupplierFormInfo['gstnNo'].dirty ||
+                            editSaveSupplierFormInfo['gstnNo'].touched))
+                      "
+                    >
+                      <!-- <p *ngIf="editSaveSupplierFormInfo['gstnNo'].errors['duplicateCode']">
+                      <span
+                        [translate]="
+                          'master.supplier.supplierGeneralInfo.errors.partCode.duplicate'
+                        "
+                      ></span>
+                    </p> -->
+                      <p
+                        *ngIf="
+                          editSaveSupplierFormInfo['gstnNo'].errors['required']
+                        "
+                      >
+                        <span
+                          [translate]="
+                            'master.supplier.supplierGeneralInfo.errors.gstnNo.required'
+                          "
+                        ></span>
+                      </p>
+                    </div>
+                  </div>
+                  <!-- ............................................................................................................. -->
+                </div>
+              </div>
+            </div>
+          </form>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>

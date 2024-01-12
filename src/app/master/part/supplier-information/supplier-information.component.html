@@ -1,0 +1,382 @@
+<fieldset>
+  <!-- <div class="panel panel-info"> -->
+  <div class="panel-heading clearfix">
+    <span class="panel-title panelSubHeading pull-left">
+      <span [translate]="'master.part.titles.supplierMappingListView'"></span>
+    </span>
+    <div class="pull-right buttonGroup">
+      <button
+        class="capsule-button navyBlue"
+        [disabled]="disableSaveButton"
+        type="button"
+        id="btnClear"
+        title="{{ 'master.part.button.addPartSupplier' | translate }}"
+        (click)="!disableSaveButton && openAddSupplierDialog('new')"
+      >
+        <div class="icon-circle">
+          <i class="fa-solid fa-plus"></i>
+        </div>
+        <span [translate]="'master.part.button.addPartSupplier'"></span>
+      </button>
+    </div>
+  </div>
+
+  <app-shared-lazy-table-new
+    #sharedLazyTable
+    [headerColumnList]="tableColumnHeaderList"
+    [filter]="true"
+    [excelIcon]="true"
+    [refreshIcon]="true"
+    [holdIcon]="false"
+    [showHide]="true"
+    [globalSearch]="true"
+    [isPanelHeading]="true"
+    [isCheckBox]="false"
+    [checkboxWidth]="false"
+    [excelFileName]="excelFileName"
+    [tableInitialData]="tableInitialData"
+    (sendTableRowData)="receiveTableRowData($event)"
+    (lazyLoadGetData)="getSupplierListServerSide($event)"
+    [tableFilterFormGroup]="supplierInformationTableFilterFormGroup"
+    (exportExcel)="exportToExcel($event)"
+    (handleDeleteRowData)="deleteRowData($event)"
+    [tableTitle]="''"
+  ></app-shared-lazy-table-new>
+  <!-- </div> -->
+</fieldset>
+
+<!-- Modal components-->
+
+<div
+  bsModal
+  #addsupplierModel="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+>
+  <form
+    [formGroup]="addSupplierEditForm"
+    autocomplete="off"
+    class="container-new-ui"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <b class="floatleft-part">
+            <h4 class="modal-title">
+              <span [translate]="'Supplier Details'"></span>
+            </h4>
+          </b>
+
+          <div class="gridRightAlign">
+            <div class="row">
+              <!-- ......................................................................................................................................................... -->
+              <button
+                class="capsule-button grey"
+                type="button"
+                id="btnClear"
+                title="Clear"
+                [ngClass]="{ disabled: false }"
+                (click)="clearForm()"
+              >
+                <div class="icon-circle">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                {{ "common.buttons.reset" | translate }}
+              </button>
+              <button
+                class="capsule-button green"
+                [disabled]="disableSaveButton"
+                type="submit"
+                appPreventDoubleClick
+                [debounceTime]="500"
+                id="btnSaveContact"
+                title="{{ 'master.part.button.saveSupplier' | translate }}"
+                [ngClass]="{ disabled: false }"
+                (click)="!disableSaveButton && onSubmit()"
+              >
+                <div class="icon-circle">
+                  <i class="fas fa-light fa-floppy-disk"></i>
+                </div>
+                {{ "common.buttons.save" | translate }}
+              </button>
+              <button
+                class="capsule-button"
+                type="button"
+                id="btnClsoe"
+                title="{{ 'common.buttons.cancel' | translate }}"
+                [ngClass]="{ disabled: false }"
+                (click)="closeAddSupplierDialog(2)"
+                style="background-color: #ec5656"
+              >
+                <div class="icon-circle">
+                  <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+                {{ "common.buttons.cancel" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="supplierCode" class="labelText">
+                <span [translate]="'master.part.label.supplierCode'"></span>
+                <i class="red"> *</i>
+              </label>
+              <ng-select
+                [items]="supplierCodes"
+                [selectOnTab]="true"
+                bindLabel="supplierCode"
+                (change)="
+                  checkNgSelectValuePurchaseSupplierCode($event, 'supplierCode')
+                "
+                (ngModelChange)="validateSupplierCode('supplierCode')"
+                (input)="checkNgSelectValue($event, 'supplierCode')"
+                [searchFn]="dropdownSearchFn"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.addSupplierEditFormControls['supplierCode']
+                        .errors) ||
+                    (this.addSupplierEditFormControls['supplierCode'].errors &&
+                      (this.addSupplierEditFormControls['supplierCode'].dirty ||
+                        this.addSupplierEditFormControls['supplierCode']
+                          .touched))
+                }"
+                placeholder="{{
+                  'master.part.placeholder.supplierCode' | translate
+                }}"
+                formControlName="supplierCode"
+                (customValidator)="
+                  checkNgSelectGeneralInfoValue($event, 'supplierCode')
+                "
+                notFoundText="Record not found"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div class="card-body" title="{{ item?.supplierCode }}">
+                    <div>
+                      <small
+                        ><b>{{ item?.supplierCode }}</b></small
+                      ><br />
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.addSupplierEditFormControls['supplierCode'].errors) ||
+                  (this.addSupplierEditFormControls['supplierCode'].errors &&
+                    (this.addSupplierEditFormControls['supplierCode'].dirty ||
+                      this.addSupplierEditFormControls['supplierCode'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.addSupplierEditFormControls['supplierCode'].errors[
+                      'required'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="'master.part.errors.supplierCode.required'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.addSupplierEditFormControls['supplierCode'].errors[
+                      'invalid'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="'master.part.errors.supplierCode.invalid'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.addSupplierEditFormControls['supplierCode'].errors[
+                      'duplicateSupplierCode'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="'master.part.errors.supplierCode.duplicate'"
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- ................................................................................................................................................ -->
+            <div class="form-group col-lg-6 col-md-6 col-sm-6">
+              <label for="supplierName" class="labelText">
+                <span [translate]="'master.part.label.supplierName'"></span>
+              </label>
+
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="supplierName"
+                placeholder="{{ 'master.part.label.supplierName' | translate }}"
+                formControlName="supplierName"
+                maxlength="100"
+                uppercase
+                saTrimSpaceAtFirst
+              />
+            </div>
+            <div
+              class="form-group col-lg-3 col-md-3 col-sm-3"
+              class="onoffswitch"
+            >
+              <fieldset>
+                <label [for]="'manuFacture'" class="labelText">
+                  <span [translate]="'Manufacture'"></span>
+                </label>
+                <div class="onoffswitch">
+                  <input
+                    type="checkbox"
+                    [formControlName]="'manuFacture'"
+                    [id]="'manuFacture'"
+                    (change)="onChangeActive('manuFacture')"
+                    class="onoffswitch-checkbox"
+                    [readonly]="false"
+                    [disabled]="false"
+                  />
+                  <label class="onoffswitch-label white" [for]="'manuFacture'">
+                    <span
+                      class="onoffswitch-inner"
+                      data-swchon-text="YES"
+                      data-swchoff-text="NO"
+                    ></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="supplierMfrPartRefNo" class="labelText">
+                <span
+                  [translate]="'master.part.label.supplierMfrPartRefNo'"
+                ></span>
+              </label>
+
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="supplierMfrPartRefNo"
+                formControlName="supplierMfrPartRefNo"
+                maxlength="20"
+                placeholder="{{
+                  'master.part.label.supplierMfrPartRefNo' | translate
+                }}"
+                saTrimSpaceAtFirst
+              />
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="country" class="labelText">
+                <span [translate]="'master.part.label.country'"></span>
+              </label>
+
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="country"
+                placeholder="{{ 'master.part.label.country' | translate }}"
+                formControlName="country"
+                maxlength="100"
+                uppercase
+                saTrimSpaceAtFirst
+              />
+            </div>
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="city" class="labelText">
+                <span [translate]="'master.part.label.city'"></span>
+              </label>
+
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="city"
+                placeholder="{{ 'master.part.label.city' | translate }}"
+                formControlName="city"
+                maxlength="100"
+                uppercase
+                saTrimSpaceAtFirst
+              />
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="associatedDepots" class="labelText">
+                <span [translate]="'master.part.label.associatedDepots'"></span>
+              </label>
+              <ng-select
+                [items]="associatedDepots"
+                [selectOnTab]="true"
+                bindLabel="depotCode"
+                [multiple]="true"
+                [closeOnSelect]="false"
+                [markFirst]="true"
+                formControlName="associatedDepots"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                  let-clear="clear"
+                >
+                  <div title="{{ item?.depotCode }} - {{ item?.depotName }}">
+                    <small
+                      ><b>{{ item?.depotCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.depotName
+                    }}</span>
+                  </div>
+                </ng-template>
+                <ng-template
+                  ng-multi-label-tmp
+                  let-items="items"
+                  let-clear="clear"
+                >
+                  <div
+                    class="ng-value"
+                    *ngFor="let item of items ? items.slice(0, 2) : []"
+                  >
+                    <span class="ng-value-label">{{ item.depotCode }} </span>
+                    <span
+                      class="ng-value-icon right"
+                      (click)="clear(item)"
+                      aria-hidden="true"
+                      >×</span
+                    >
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label"
+                      >{{ items.length - 2 }} more...</span
+                    >
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

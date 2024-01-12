@@ -1,0 +1,239 @@
+<div class="off-screen" #pdfContent>
+  <div class="pdf-content">
+    <div class="pdf-container">
+      <div class="pdf-header mar-pad-bottom-0">
+        <div class="row margin-padding-0">
+          <div class="col">
+            <img class="logo" src="assets/img/iDepoLogo1.png" alt="Logo 2" />
+          </div>
+          <div class="col custom-pdf-header">
+            <strong
+              ><u>
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.title"
+                    | translate
+                }}</u
+              ></strong
+            >
+          </div>
+        </div>
+        <div class="generationInfo">
+          <div class="gen-contanier">
+            <strong>
+              {{
+                "operations.purchaseRequisition.purchaseRequisitionReport.field.generatedBy"
+                  | translate
+              }}
+              &nbsp;&nbsp;&nbsp;: {{ generatedBy }}</strong
+            >
+            <br />
+            <strong>
+              {{
+                "operations.purchaseRequisition.purchaseRequisitionReport.field.generatedDate"
+                  | translate
+              }}{{ generatedDate }}</strong
+            >
+          </div>
+        </div>
+      </div>
+
+      <div >
+        <table class="pdf-table mar-pad-top-0">
+          <thead>
+            <tr>
+              <th class="mainTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.purchaseRequisitionNo"
+                    | translate
+                }}
+              </th>
+              <th class="mainTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.purchaseRequisitionDate"
+                    | translate
+                }}
+              </th>
+              <th class="mainTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.city"
+                    | translate
+                }}
+              </th>
+              <th class="mainTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.depot"
+                    | translate
+                }}
+              </th>
+              <th class="mainTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.totalEstimatedCost"
+                    | translate
+                }}
+              </th>
+              <th class="mainTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.status"
+                    | translate
+                }}
+              </th>
+              <th class="mainTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.lastModifiedBy"
+                    | translate
+                }}
+              </th>
+              <th class="mainTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.lastModifiedDate"
+                    | translate
+                }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ pdfData.purchaseRequisitionNo }}</td>
+              <td>{{ pdfData.prDateString }}</td>
+              <td>{{ pdfData.city }}</td>
+              <td>{{ pdfData.depotCode }}</td>
+              <td id="numberColum">{{ pdfData.totalEstimatedCost }}</td>
+              <td>{{ pdfData.currentStatus }}</td>
+              <td>{{ pdfData.lastModifiedBy }}</td>
+              <td>{{ pdfData.lastModifiedDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="pdf-table mar-pad-top-0">
+          <thead>
+            <tr id="part-table-th">
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.sNo"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.partCode"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.partType"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.partCategory"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.partName"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.availableStock"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.stockUom"
+                    | translate
+                }}/th>
+              </th>
+
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.requestedQuantity"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.approvedQuantity"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.partRate"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.estimatedCost"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.requestedDate"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.partStatus"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">
+                Created By
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.field.createdBy"
+                    | translate
+                }}
+              </th>
+              <th class="detailTb">Created Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let detail of pdfData?.purchaseRequisitionDetails;
+                let i = index
+              "
+            >
+              <td>{{ i + 1 }}</td>
+              <td>{{ detail.partCode }}</td>
+              <td>{{ detail.partType }}</td>
+              <td>{{ detail.partCategory }}</td>
+              <td>{{ detail.partName }}</td>
+              <td id="numberColum"></td>
+              <td>{{ detail.stockUOM }}</td>
+              <td id="numberColum">{{ detail.requisitionQuantity }}</td>
+              <td id="numberColum"></td>
+              <td id="numberColum">{{ detail.partRate }}</td>
+              <td id="numberColum">{{ detail.estimatedCost }}</td>
+              <td>{{ detail.requestedDate }}</td>
+              <td>{{ detail.currentStatus }}</td>
+              <td>{{ detail.createdBy }}</td>
+              <td>{{ detail.createdDate }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="blank-footer"></tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="info-generation">
+        <small>
+          {{
+            "operations.purchaseRequisition.purchaseRequisitionReport.message"
+              | translate
+          }}
+        </small>
+      </div>
+    </div>
+  </div>
+</div>

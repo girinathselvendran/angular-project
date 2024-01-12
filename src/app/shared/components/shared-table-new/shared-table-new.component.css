@@ -1,0 +1,110 @@
+.custom-icon-container {
+  display: inline-block;
+  width: 30px; /* Adjust the width and height as needed */
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f0a718;
+  border: 2px solid white;
+  text-align: center;
+  line-height: 30px; /* Center the icon vertically */
+  cursor: pointer;
+}
+.custom-icon-container-blue {
+  display: inline-block;
+  width: 30px; /* Adjust the width and height as needed */
+  height: 30px;
+  border-radius: 50%;
+  background-color: #18bcf0;
+  border: 2px solid white;
+  text-align: center;
+  line-height: 30px; /* Center the icon vertically */
+  cursor: pointer;
+}
+.custom-icon-container-normalblue {
+  display: inline-block;
+  width: 30px; /* Adjust the width and height as needed */
+  height: 30px;
+  border-radius: 50%;
+  background-color: #0c4da2;
+  border: 2px solid white;
+  text-align: center;
+  line-height: 30px; /* Center the icon vertically */
+  cursor: pointer;
+}
+.custom-icon-container-green {
+  display: inline-block;
+  width: 30px; /* Adjust the width and height as needed */
+  height: 30px;
+  border-radius: 50%;
+  background-color: #60a917;
+  border: 2px solid white;
+  text-align: center;
+  line-height: 30px; /* Center the icon vertically */
+  cursor: pointer;
+}
+.custom-icon-container-delete {
+  display: inline-block;
+  width: 30px; /* Adjust the width and height as needed */
+  height: 30px;
+  border-radius: 50%;
+  background-color: red;
+  border: 2px solid white;
+  text-align: center;
+  line-height: 30px; /* Center the icon vertically */
+  cursor: pointer;
+}
+.custom-icon-container-grey {
+  display: inline-block;
+  width: 30px; /* Adjust the width and height as needed */
+  height: 30px;
+  border-radius: 50%;
+  background-color: #8c8c8c;
+  border: 2px solid white;
+  text-align: center;
+  line-height: 30px; /* Center the icon vertically */
+  cursor: pointer;
+}
+.custom-icon-container-orange {
+  display: inline-block;
+  width: 30px; /* Adjust the width and height as needed */
+  height: 30px;
+  border-radius: 50%;
+  background-color: #db8412;
+  border: 2px solid white;
+  text-align: center;
+  line-height: 30px; /* Center the icon vertically */
+  cursor: pointer;
+}
+.custom-icon-container-navyBlue {
+  display: inline-block;
+  width: 30px; /* Adjust the width and height as needed */
+  height: 30px;
+  border-radius: 50%;
+  background-color: #0c4da2;
+  border: 2px solid white;
+  text-align: center;
+  line-height: 30px; /* Center the icon vertically */
+  cursor: pointer;
+}
+
+.custom-icon-container i {
+  color: white;
+}
+.custom-icon-container-blue i {
+  color: white;
+}
+.custom-icon-container-green i {
+  color: white;
+}
+.custom-icon-container-delete i {
+  color: white;
+}
+.custom-icon-container-grey i {
+  color: white;
+}
+.custom-icon-container-orange i {
+  color: white;
+}
+.custom-icon-container-navyBlue i {
+  color: white;
+}

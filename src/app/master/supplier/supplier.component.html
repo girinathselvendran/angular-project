@@ -1,0 +1,295 @@
+<div
+  class="alert alert-warning"
+  role="alert"
+  *ngIf="showWarningMessageForRoleRights"
+>
+  <i class="fa-fw fa fa-warning"></i>
+  <strong
+    ><span [translate]="'common.roleRightsMessages.warning'"></span
+  ></strong>
+  {{ warningMessageForRoleRights | translate }}
+</div>
+<div class="prContainer">
+  <div class="content-container" *ngIf="showList">
+    <div style="display: flex; justify-content: space-between">
+      <h1
+        style="display: inline"
+        class="purchase-requisition"
+        [translate]="'master.supplier.title.supplierTitle'"
+      ></h1>
+      <!-- <strong style="display: inline; color: rgb(5, 72, 72); font-size: 15px">
+        {{ "Last update was on Sunday, " | translate }}
+        {{ lastModifiedDate }}
+      </strong> -->
+    </div>
+    <br />
+    <!-- <div class="container-table"> -->
+    <app-shared-lazy-table-new
+      #sharedLazyTableNew
+      [headerColumnList]="columnHeaderList"
+      [tableInitialData]="supplierRecordsList"
+      (addTableDataService)="addIconClick($event)"
+      (sendTableRowData)="receiveTableRowData($event)"
+      (lazyLoadGetData)="getSupplierListServerSide($event)"
+      [tableFilterFormGroup]="partTableFilterFormGroup"
+      (exportExcel)="exportToExcel($event)"
+      [showHide]="true"
+      [excelIcon]="true"
+      [refreshIcon]="true"
+      [globalSearch]="true"
+      [isPanelHeading]="true"
+      [addRecordIcon]="true"
+      [excelFileName]="excelFileName"
+      [disableAddButton]="disableAddButton"
+      [filter]="true"
+      [tableTitle]="tableTitle"
+    ></app-shared-lazy-table-new>
+    <!-- [filter]="true"
+  [excelIcon]="true"
+  [refreshIcon]="true"
+  [holdIcon]="false"
+  [showHide]="true"
+  [globalSearch]="true"
+  [isPanelHeading]="false"
+  [checkboxWidth]="false"
+  [uploadFileIcon]="false"
+  [addRecordIcon]="true"
+  [disableAddButton]="disableAddButton"
+  [excelFileName]="excelFileName" -->
+    <!-- </div> -->
+  </div>
+</div>
+<sa-attachment
+  id="attachment"
+  #attachment
+  (attachmentOutPutEvent)="attachmentOutPutEvent($event)"
+  [disableBtnsBit]="disableSaveButton"
+>
+</sa-attachment>
+<div *ngIf="!showList">
+  <div class="panel panel-default">
+    <div class="panel-heading clearfix">
+      <div class="panel-title panelHeading pull-left">
+        <b>
+          <span [translate]="'master.supplier.title.supplierTitle'"></span>
+        </b>
+        <label class="badge badgeMargin">
+          {{ mode | translate | uppercase }}</label
+        >
+      </div>
+      <div class="pull-right buttonGroup row">
+        <button
+          [disabled]="mode == 'new' || disableAttachmentButton"
+          type="button"
+          id="btnAttachment"
+          class="capsule-button pale-orange"
+          title="{{ 'master.supplier.button.attachment' | translate }}"
+          (click)="
+            mode != 'new' &&
+              !disableAttachmentButton &&
+              attachment.showAttachment(
+                'Supplier Master',
+                'SupplierMaster',
+                this.selectedSupplierInfoObject.supplierId,
+                this.selectedSupplierInfoObject.supplierId
+              )
+          "
+        >
+          <div class="icon-circle">
+            <i class="fa-regular fa-paperclip"></i>
+          </div>
+          {{ "master.supplier.button.attachment" | translate }}
+          <span class="badge badge-danger badge-pill attachmentCoutBadge">
+            {{ noOfAttachment }}
+          </span>
+        </button>
+
+        <button
+          class="capsule-button grey"
+          [disabled]="disableAddButton"
+          type="button"
+          id="btnAddNew"
+          title="{{ 'common.buttons.reset' | translate }}"
+          (click)="!disableAddButton && addNewSupplier()"
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </div>
+          {{ "common.buttons.reset" | translate }}
+        </button>
+
+        <button
+          class="capsule-button light-green"
+          [disabled]="disableSaveButton"
+          type="button"
+          id="btnSubmit"
+          (click)="!disableSaveButton && onSubmit()"
+          title="{{ 'master.supplier.button.saveSupplier' | translate }}"
+        >
+          <div class="icon-circle">
+            <i class="fa-regular fa-circle-check"></i>
+          </div>
+          {{ "master.supplier.button.saveSupplier" | translate }}
+        </button>
+
+        <button
+          class="capsule-button pale-orange"
+          title="{{ 'master.supplier.button.backToList' | translate }}"
+          (click)="backToList()"
+        >
+          <div class="icon-circle">
+            <i class="fa-regular fa-arrow-left"></i>
+          </div>
+          {{ "master.supplier.button.backToList" | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <div class="widget-body fuelux">
+        <div class="container-fluid">
+          <div class="row">
+            <div
+              *ngIf="supplierInformationWizardError"
+              class="alert alert-danger white"
+              role="alert"
+            >
+              <i class="fa fa-fw fa-times"></i>
+              <span
+                [translate]="
+                  'master.supplier.supplierGeneralInfo.errors.supplierInformationWizardError'
+                "
+              ></span>
+            </div>
+            <!-- ......................................................................................................................... -->
+            <div
+              *ngIf="showCreateSupplierContactAddress"
+              class="alert alert-danger white"
+              role="alert"
+            >
+              <i class="fa fa-fw fa-times"></i>
+              <span
+                [translate]="
+                  'master.supplier.supplierGeneralInfo.errors.supplierMustForContactAndAdress'
+                "
+              ></span>
+            </div>
+            <div
+              *ngIf="showCreateSupplierMapParts"
+              class="alert alert-danger white"
+              role="alert"
+            >
+              <i class="fa fa-times"></i>
+              <span
+                [translate]="
+                  'master.supplier.supplierGeneralInfo.errors.supplierMustForMapParts'
+                "
+              >
+              </span>
+            </div>
+            <fuel-ux-wizard [(ngModel)]="activeTab">
+              <div class="wizard">
+                <div class="steps-container">
+                  <ul class="steps">
+                    <li
+                      data-step="1"
+                      [class.active]="activeTab === 1"
+                      (click)="checkFileMode($event, 'supplierInformation', 1)"
+                    >
+                      <span
+                        [translate]="
+                          'master.supplier.title.supplierInformation'
+                        "
+                      ></span>
+                      <span class="chevron"></span>
+                    </li>
+                    <li
+                      data-step="2"
+                      [class.active]="activeTab === 2"
+                      (click)="checkFileMode($event, 'contactAndAddress', 2)"
+                    >
+                      <span
+                        [translate]="'master.supplier.title.contactAndAddress'"
+                      ></span>
+                      <span class="chevron"></span>
+                    </li>
+                    <li
+                      data-step="3"
+                      [class.active]="activeTab === 3"
+                      (click)="checkFileMode($event, 'partMapping', 3)"
+                    >
+                      <span
+                        [translate]="'master.supplier.title.partMapping'"
+                      ></span>
+                      <span class="chevron"></span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <br />
+              <!-- tab component render based on tab -->
+              <div class="step-content">
+                <div
+                  class="step-pane"
+                  data-step="1"
+                  [class.active]="activeTab === 1"
+                >
+                  <app-supplier-form
+                    id="SupplierForm"
+                    #SupplierForm
+                    [editSaveSupplierForm]="editSaveForm"
+                    [selectedRowList]="selectedRowList"
+                    [mode]="mode"
+                    [disableSaveButton]="disableSaveButton"
+                    [disableAddButton]="disableAddButton"
+                    [createBit]="createBit"
+                    [editBit]="editBit"
+                    [viewBit]="viewBit"
+                  >
+                  </app-supplier-form>
+                </div>
+
+                <div
+                  *ngIf="activeTab === 2"
+                  class="step-pane"
+                  data-step="2"
+                  [class.active]="activeTab === 2"
+                >
+                  <app-contact-info
+                    [selectedRowList]="selectedSupplierInfoObject"
+                    [mode]="mode"
+                    [disableSaveButton]="disableSaveButton"
+                    [disableAddButton]="disableAddButton"
+                    [createBit]="createBit"
+                    [editBit]="editBit"
+                    [viewBit]="viewBit"
+                  ></app-contact-info>
+                  <app-address-info
+                    [selectedRowList]="selectedSupplierInfoObject"
+                    [mode]="mode"
+                    [disableSaveButton]="disableSaveButton"
+                    [disableAddButton]="disableAddButton"
+                    [createBit]="createBit"
+                    [editBit]="editBit"
+                    [viewBit]="viewBit"
+                  ></app-address-info>
+                </div>
+                <div
+                  *ngIf="activeTab === 3"
+                  class="step-pane"
+                  data-step="3"
+                  [class.active]="activeTab === 3"
+                >
+                  <app-part-mapping
+                    [selectedRowList]="selectedSupplierInfoObject"
+                  ></app-part-mapping>
+                </div>
+              </div>
+            </fuel-ux-wizard>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </div> -->

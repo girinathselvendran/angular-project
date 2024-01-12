@@ -1,0 +1,161 @@
+<div *ngIf="!showForm">
+  <!-- <sa-ribbon icon="fas fa-user-tie"></sa-ribbon> -->
+  <div class="prContainer">
+    <div class="content-container">
+      <div class="flex-container">
+        <h1
+          class="purchase-requisition-title"
+          [translate]="'master.part.titles.part'"
+        ></h1>
+      </div>
+      <div class="mt-2">
+        <app-shared-lazy-table-new
+          #sharedLazyTable
+          [headerColumnList]="columnHeaderList"
+          [filter]="true"
+          [excelIcon]="true"
+          [refreshIcon]="true"
+          [holdIcon]="false"
+          [showHide]="true"
+          [globalSearch]="true"
+          [isPanelHeading]="true"
+          [checkboxWidth]="false"
+          [uploadFileIcon]="true"
+          [addRecordIcon]="true"
+          [excelDocument]="excelDocument"
+          [uploadDynamic]="uploadDynamic"
+          [excelFileName]="excelFileName"
+          [tableInitialData]="partTableDataList"
+          (addTableDataService)="addIconClick($event)"
+          (sendTableRowData)="receiveTableRowData($event)"
+          (lazyLoadGetData)="getPartsListServerSide($event)"
+          [tableFilterFormGroup]="partTableFilterFormGroup"
+          (exportExcel)="exportToExcel($event)"
+          [uploadHeader]="uploadHeader"
+          [uploadColumns]="uploadColumnHeaderList"
+          [tableTitle]="''"
+        ></app-shared-lazy-table-new>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showForm">
+  <div
+    class="alert alert-warning"
+    role="alert"
+    *ngIf="showWarningMessageForRoleRights"
+  >
+    <i class="fa-fw fa fa-warning"></i>
+    <strong
+      ><span [translate]="'common.roleRightsMessages.warning'"></span
+    ></strong>
+    {{ warningMessageForRoleRights | translate }}
+  </div>
+
+  <sa-attachment
+    id="attachment"
+    #attachment
+    (attachmentOutPutEvent)="attachmentOutPutEvent($event)"
+    [disableBtnsBit]="disableSaveButton"
+  >
+  </sa-attachment>
+
+  <div class="panel panel-default">
+    <div class="panel-heading clearfix">
+      <div class="panel-title panelHeading pull-left">
+        <b>
+          <span [translate]="'master.part.titles.part'"></span>
+        </b>
+        <label class="badge badgeMargin">
+          {{ mode | translate | uppercase }}</label
+        >
+      </div>
+      <div class="pull-right row buttonGroup">
+        <button
+          [disabled]="mode == 'new' || disableAttachmentButton"
+          type="button"
+          class="capsule-button pale-orange"
+          id="btnAttachment"
+          title="{{ 'master.part.button.attachment' | translate }}"
+          (click)="
+            mode != 'new' &&
+              !disableAttachmentButton &&
+              attachment.showAttachment(
+                'Part Master',
+                'PartMaster',
+                this.partId,
+                this.partId
+              )
+          "
+        >
+          <div class="icon-circle">
+            <i class="far fa-fw fa-paperclip"></i>
+          </div>
+          <span [translate]="'master.part.button.attachment'"></span>
+          <span class="badge badge-danger badge-pill attachmentCoutBadge">
+            {{ noOfAttachment }}
+          </span>
+        </button>
+
+        <button
+          [disabled]="disableAddButton"
+          type="button"
+          class="capsule-button navyBlue"
+          id="btnAddNew"
+          title="{{ 'master.part.button.newPart' | translate }}"
+          (click)="!disableAddButton && addnewPart()"
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          <span [translate]="'master.part.button.newPart'"></span>
+        </button>
+
+        <button
+          [disabled]="disableSaveButton"
+          type="button"
+          class="capsule-button green"
+          id="btnSubmit"
+          (click)="!disableSaveButton && onSubmit()"
+          title="{{ 'master.part.button.savePart' | translate }}"
+        >
+          <div class="icon-circle">
+            <i class="fas fa-light fa-floppy-disk"></i>
+          </div>
+          <span [translate]="'master.part.button.savePart'"></span>
+        </button>
+        <button
+          type="button"
+          class="capsule-button pale-orange"
+          (click)="backToList()"
+          title="{{ 'master.part.button.backToList' | translate }}"
+        >
+          <!-- <i class="fas fa-fw fa-list-ul blueIcon" aria-hidden="true"></i> -->
+          <div class="icon-circle">
+            <i class="fa-regular fa-arrow-left" aria-hidden="true"></i>
+          </div>
+          <span [translate]="'master.part.button.backToList'"></span>
+        </button>
+      </div>
+    </div>
+
+    <app-part-form
+      #PartForm
+      [mode]="mode"
+      [selectedRowList]="selectedRowList"
+      [partInformationObject]="partInformationObject"
+      (getSelectedPartCategory)="getSelectedPartCategory($event)"
+      [disableSaveButton]="disableSaveButton"
+      [disableAddButton]="disableAddButton"
+      [createBit]="createBit"
+      [editBit]="editBit"
+      [viewBit]="viewBit"
+      [canMoveToNext]="canMoveToNext"
+      [updateOver]="updateOver"
+      [isPartCategoryRequired]="isPartCategoryRequired"
+      [editPartSaveForm]="editSaveForm"
+    >
+    </app-part-form>
+  </div>
+</div>

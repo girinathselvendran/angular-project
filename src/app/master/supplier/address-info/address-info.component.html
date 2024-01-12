@@ -1,0 +1,548 @@
+<div class="modal-overlay" [class.active]="isModalOpen"></div>
+<fieldset>
+  <!-- <div class="panel panel-info"> -->
+  <!-- <div class="panel-heading clearfix">
+      <span class="panel-title panelSubHeading pull-left">
+        <b>
+          <span [translate]="'Address Information'"></span>
+        </b>
+      </span>
+      <div class="pull-right buttonGroup">
+        <button
+          class="capsule-button navyBlue"
+          type="button"
+          id="btnClear"
+          [disabled]="disableAddButton"
+          title="{{
+            'master.supplier.contactAndAddress.addressInformation.titles.addressInformation'
+              | translate
+          }}"
+          (click)="
+            !disableAddButton && !addAddressBtn && openContactDialog('new')
+          "
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          {{
+            "master.supplier.contactAndAddress.addressInformation.titles.addressInformation"
+              | translate
+          }}
+        </button>
+      </div>
+    </div> -->
+  <app-shared-table-new
+    [addRecordIcon]="true"
+    (addTableDataService)="openContactDialog('new')"
+    [filter]="true"
+    [excelIcon]="true"
+    [refreshIcon]="true"
+    [showHide]="false"
+    [globalSearch]="true"
+    [excelFileName]="excelFileName"
+    [isPanelHeading]="true"
+    [headerColumnList]="columnHeaderList"
+    [tableInitialData]="addressInfoList"
+    (sendTableRowData)="receiveTableRowData($event)"
+    (refreshTableData)="refreshIconClick($event)"
+    [isMasterComp]="false"
+    [tableTitle]="tableTitle"
+    [deleteIcon]="true"
+    (handleDeleteRowData)="handleDeleteAddressIcon($event)"
+  ></app-shared-table-new>
+  <!-- </div> -->
+</fieldset>
+
+<!-- Modal components-->
+<div
+  bsModal
+  #addressModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addressModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <form
+    [formGroup]="addressFormGroup"
+    autocomplete="off"
+    class="container-new-ui"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <b class="float-left">
+            <h4 class="modal-title">
+              <span
+                [translate]="
+                  'master.supplier.contactAndAddress.addressInformation.titles.addressInformation'
+                "
+              ></span>
+              <label class="linebadge">
+                {{ addressMode | translate | uppercase }}</label
+              >
+            </h4>
+          </b>
+
+          <div class="gridRightAlign">
+            <div class="row">
+              <!-- ......................................................................................................................................................... -->
+              <button
+                class="capsule-button grey"
+                type="button"
+                id="btnClear"
+                title="Clear"
+                (click)="editBit && addressDetails && addressFormGroupReset()"
+                [ngClass]="{ disabled: !addressDetails }"
+                [disabled]="!editBit"
+              >
+                <div class="icon-circle">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                {{ "operations.purchaseOrder.buttons.reset" | translate }}
+              </button>
+              <button
+                class="capsule-button green"
+                type="submit"
+                appPreventDoubleClick
+                (debounceClick)="editBit && addressDetails && addAddress()"
+                [disabled]="!editBit"
+                [debounceTime]="500"
+                id="btnSaveContact"
+                title="{{ 'common.buttons.save' | translate }}"
+                [ngClass]="{ disabled: !addressDetails }"
+              >
+                <div class="icon-circle">
+                  <i class="fas fa-light fa-floppy-disk"></i>
+                </div>
+                {{ "operations.purchaseRequisition.buttons.save" | translate }}
+              </button>
+              <button
+                class="capsule-button"
+                type="button"
+                id="btnClsoe"
+                (click)="closeContactDialog()"
+                title="{{
+                  'master.supplier.associateParts.button.cancel' | translate
+                }}"
+                [ngClass]="{ disabled: saveButton }"
+                style="background-color: #ec5656"
+              >
+                <div class="icon-circle">
+                  <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+                {{ "operations.purchaseRequisition.buttons.close" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!-- ............................................................................................... -->
+            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+              <label for="addressType" class="labelText">
+                <span
+                  [translate]="
+                    'master.supplier.contactAndAddress.contactInformation.label.addressType'
+                  "
+                ></span>
+                <i class="red"> *</i>
+              </label>
+              <ng-select
+                [ngClass]="{
+                  redBorder:
+                    (addressSubmitted &&
+                      addressFormGroupControls['addressType'].errors) ||
+                    (addressFormGroupControls['addressType'].errors &&
+                      (addressFormGroupControls['addressType'].dirty ||
+                        addressFormGroupControls['addressType'].touched))
+                }"
+                [items]="addressTypes"
+                [searchFn]="dropdownSearchFnAddressType"
+                [selectOnTab]="true"
+                bindLabel="code"
+                placeholder="{{
+                  'master.supplier.contactAndAddress.contactInformation.placeholder.addressType'
+                    | translate
+                }}"
+                notFoundText="Record not found"
+                formControlName="addressType"
+                id="addressType"
+                (input)="checkNgSelectCustomValidator($event, 'addressType')"
+                (ngModelChange)="onAddressTypeSelected('addressType')"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div
+                    class="card-body"
+                    title="{{ item.code }} - {{ item.description }}"
+                  >
+                    <div>
+                      <small
+                        ><b>{{ item?.code }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.description
+                      }}</span>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+
+              <div
+                *ngIf="
+                  (addressSubmitted &&
+                    addressFormGroupControls['addressType'].errors) ||
+                  (addressFormGroupControls['addressType'].errors &&
+                    (addressFormGroupControls['addressType'].dirty ||
+                      addressFormGroupControls['addressType'].touched))
+                "
+                class="help-block red"
+              >
+                <div
+                  *ngIf="
+                    addressFormGroupControls['addressType'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'master.supplier.contactAndAddress.contactInformation.error.addressType.required'
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="
+                    addressFormGroupControls['addressType'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'master.supplier.contactAndAddress.addressInformation.error.addressTypeCode.invalid'
+                    "
+                  ></span>
+                </div>
+                <p
+                  *ngIf="
+                    addressFormGroupControls['addressType'].errors[
+                      'duplicateAddressType'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'master.supplier.contactAndAddress.contactInformation.error.addressType.duplicate'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+
+            <!-- ................................................................................................................................ -->
+            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+              <label for="country" class="labelText">
+                <span
+                  [translate]="
+                    'master.supplier.contactAndAddress.contactInformation.label.country'
+                  "
+                ></span>
+                <i class="red"> *</i>
+              </label>
+              <ng-select
+                (ngModelChange)="onSelectionChange($event)"
+                [ngClass]="{
+                  redBorder:
+                    (addressSubmitted &&
+                      addressFormGroupControls['country'].errors) ||
+                    (addressFormGroupControls['country'].errors &&
+                      (addressFormGroupControls['country'].dirty ||
+                        addressFormGroupControls['country'].touched))
+                }"
+                [items]="countries"
+                [selectOnTab]="true"
+                bindLabel="countryCode"
+                placeholder="{{
+                  'master.supplier.contactAndAddress.contactInformation.placeholder.country'
+                    | translate
+                }}"
+                notFoundText="Record not found"
+                formControlName="country"
+                id="country"
+                [searchFn]="dropdownSearchFnCountry"
+                (input)="checkNgSelectCustomValidator($event, 'country')"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div
+                    class="card-body"
+                    title="{{ item.countryCode }} - {{
+                      item.countryDescription
+                    }}"
+                  >
+                    <div>
+                      <small
+                        ><b>{{ item?.countryCode }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.countryDescription
+                      }}</span>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+
+              <div
+                *ngIf="
+                  (addressSubmitted &&
+                    addressFormGroupControls['country'].errors) ||
+                  (addressFormGroupControls['country'].errors &&
+                    (addressFormGroupControls['country'].dirty ||
+                      addressFormGroupControls['country'].touched))
+                "
+                class="help-block red"
+              >
+                <div
+                  *ngIf="
+                    addressFormGroupControls['country']['errors']['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'master.supplier.contactAndAddress.contactInformation.error.country.required'
+                    "
+                  ></span>
+                </div>
+                <div *ngIf="addressFormGroupControls['country'].errors.invalid">
+                  <span
+                    [translate]="
+                      'master.supplier.contactAndAddress.contactInformation.error.country.invalid'
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <!-- ............................................................................................................................................... -->
+            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+              <label for="city" class="labelText">
+                <span
+                  [translate]="
+                    'master.supplier.contactAndAddress.contactInformation.label.city'
+                  "
+                ></span>
+                <i class="red"> *</i>
+              </label>
+              <ng-select
+                [ngClass]="{
+                  redBorder:
+                    (addressSubmitted &&
+                      addressFormGroupControls['city'].errors) ||
+                    (addressFormGroupControls['city'].errors &&
+                      (addressFormGroupControls['city'].dirty ||
+                        addressFormGroupControls['city'].touched))
+                }"
+                [items]="cities"
+                [selectOnTab]="true"
+                bindLabel="cityCode"
+                placeholder="{{
+                  'master.supplier.contactAndAddress.contactInformation.placeholder.city'
+                    | translate
+                }}"
+                notFoundText="Record not found"
+                formControlName="city"
+                id="city"
+                [searchFn]="dropdownSearchFnCity"
+                (input)="checkNgSelectCustomValidator($event, 'city')"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div
+                    class="card-body"
+                    title="{{ item.cityCode }} - {{ item.cityDescription }}"
+                  >
+                    <div>
+                      <small
+                        ><b>{{ item?.cityCode }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.cityDescription
+                      }}</span>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+
+              <div
+                *ngIf="
+                  (addressSubmitted &&
+                    addressFormGroupControls['city'].errors) ||
+                  (addressFormGroupControls['city'].errors &&
+                    (addressFormGroupControls['city'].dirty ||
+                      addressFormGroupControls['city'].touched))
+                "
+                class="help-block red"
+              >
+                <div
+                  *ngIf="addressFormGroupControls['city']['errors']['required']"
+                >
+                  <span
+                    [translate]="
+                      'master.supplier.contactAndAddress.contactInformation.error.city.required'
+                    "
+                  ></span>
+                </div>
+                <div *ngIf="addressFormGroupControls['city'].errors.invalid">
+                  <span
+                    [translate]="
+                      'master.supplier.contactAndAddress.contactInformation.error.city.invalid'
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ........................................................................................................................ -->
+          <div class="row">
+            <div
+              class="form-group col-lg-12 col-md-12 col-sm-12"
+              [ngClass]="{
+                'has-error':
+                  (addressSubmitted &&
+                    addressFormGroupControls['address'].errors) ||
+                  (addressFormGroupControls['address'].errors &&
+                    (addressFormGroupControls['address'].dirty ||
+                      addressFormGroupControls['address'].touched))
+              }"
+            >
+              <label for="address" class="labelText"
+                ><span
+                  [translate]="
+                    'master.supplier.contactAndAddress.contactInformation.label.address'
+                  "
+                ></span>
+                <span class="redIcon"> *</span>
+              </label>
+              <textarea
+                placeholder="{{
+                  'master.supplier.contactAndAddress.contactInformation.placeholder.address'
+                    | translate
+                }}"
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="address"
+                formControlName="address"
+                maxlength="500"
+                spaceatfirst
+              ></textarea>
+              <div
+                *ngIf="
+                  (addressSubmitted &&
+                    addressFormGroupControls['address'].errors) ||
+                  (addressFormGroupControls['address'].errors &&
+                    (addressFormGroupControls['address'].dirty ||
+                      addressFormGroupControls['address'].touched))
+                "
+                class="help-block red"
+              >
+                <div
+                  *ngIf="
+                    addressFormGroupControls['address']['errors']['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'master.supplier.contactAndAddress.contactInformation.error.address.required'
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="zipCode" class="labelText">
+                <span
+                  [translate]="
+                    'master.supplier.contactAndAddress.contactInformation.label.zipCode'
+                  "
+                ></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="zipCode"
+                formControlName="zipCode"
+                maxlength="20"
+                placeholder="{{
+                  'master.supplier.contactAndAddress.contactInformation.placeholder.zipCode'
+                    | translate
+                }}"
+                spaceatfirst
+              />
+            </div>
+            <!-- .................................................................................................................. -->
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="phoneNo" class="labelText">
+                <span
+                  [translate]="
+                    'master.supplier.contactAndAddress.contactInformation.label.phoneNo'
+                  "
+                ></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="phoneNo"
+                formControlName="phoneNo"
+                maxlength="20"
+                placeholder="{{
+                  'master.supplier.contactAndAddress.contactInformation.placeholder.phoneNo'
+                    | translate
+                }}"
+                spaceatfirst
+              />
+            </div>
+            <!-- ....................................................................................................... -->
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="fax" class="labelText">
+                <span
+                  [translate]="
+                    'master.supplier.contactAndAddress.contactInformation.label.fax'
+                  "
+                ></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="fax"
+                formControlName="fax"
+                maxlength="20"
+                placeholder="{{
+                  'master.supplier.contactAndAddress.contactInformation.placeholder.fax'
+                    | translate
+                }}"
+                spaceatfirst
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

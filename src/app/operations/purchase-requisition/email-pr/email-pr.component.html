@@ -1,0 +1,396 @@
+<div>
+  <p-dialog
+    class="emailPopup"
+    [(visible)]="emailPopup"
+    [modal]="true"
+    [responsive]="true"
+    [minY]="70"
+    [minX]="50"
+    [baseZIndex]="10000"
+    [resizable]="false"
+    [blockScroll]="true"
+    (onShow)="onPopupShow()"
+    (onHide)="onPopupHide($event)"
+  >
+    <!--  -->
+    <form [formGroup]="emailEstimateForm" autocomplete="off">
+      <div class="row emailPopupHeader">
+        <div class="col-lg-3 col-md-3 col-xs-3 text-align-left">
+          <label class="labelButton" (click)="cancelEmailClick()" for="cancel">
+            <span
+              [translate]="'operations.purchaseRequisition.buttons.cancel'"
+            ></span>
+          </label>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-xs-6 text-align-center">
+          <label for="ddlDepot" class="labelHeader">
+            <span
+              [translate]="'operations.purchaseRequisition.titles.sendEmail'"
+            ></span>
+          </label>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-xs-3 text-align-right">
+          <label
+            class="labelButton"
+            appPreventDoubleClick
+            (debounceClick)="onSubmit()"
+            [debounceTime]="500"
+            for="send"
+          >
+            <span
+              [translate]="'operations.purchaseRequisition.buttons.send'"
+            ></span>
+          </label>
+        </div>
+      </div>
+      <div class="emailContent">
+        <div
+          class="col-lg-12 col-md-12 col-sm-12 form-group"
+          [ngClass]="{
+            'has-error':
+              (submitted && emailEstimateFormControls['toEmail'].errors) ||
+              (emailEstimateFormControls['toEmail'].errors &&
+                (emailEstimateFormControls['toEmail'].dirty ||
+                  emailEstimateFormControls['toEmail'].touched))
+          }"
+        >
+          <label for="to" class="labelText">
+            <span
+              [translate]="'operations.purchaseRequisition.label.to'"
+            ></span>
+          </label>
+          <input
+            type="text"
+            trim="blur"
+            class="form-control"
+            id="toEmail"
+            formControlName="toEmail"
+            placeholder="{{
+              'operations.purchaseRequisition.placeholder.to' | translate
+            }}"
+            (input)="validateEmail('toEmail')"
+            maxlength="500"
+          />
+          <div
+            class="help-block red"
+            *ngIf="
+              (submitted && emailEstimateFormControls['toEmail'].errors) ||
+              (emailEstimateFormControls['toEmail'].errors &&
+                (emailEstimateFormControls['toEmail'].dirty ||
+                  emailEstimateFormControls['toEmail'].touched))
+            "
+          >
+            <p *ngIf="emailEstimateFormControls['toEmail'].errors['required']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.to.required'
+                "
+              ></span>
+            </p>
+            <p *ngIf="emailEstimateFormControls['toEmail'].errors['maxlength']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.to.maxlength'
+                "
+              ></span>
+            </p>
+            <p *ngIf="emailEstimateFormControls['toEmail'].errors['pattern']">
+              <span
+                [translate]="'operations.purchaseRequisition.errors.to.pattern'"
+              ></span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="col-lg-12 col-md-12 col-sm-12 form-group"
+          [ngClass]="{
+            'has-error':
+              (submitted && emailEstimateFormControls['ccEmail'].errors) ||
+              (emailEstimateFormControls['ccEmail'].errors &&
+                (emailEstimateFormControls['ccEmail'].dirty ||
+                  emailEstimateFormControls['ccEmail'].touched))
+          }"
+        >
+          <label for="cc" class="labelText">
+            <span
+              [translate]="'operations.purchaseRequisition.label.cc'"
+            ></span>
+          </label>
+          <input
+            type="text"
+            trim="blur"
+            class="form-control"
+            id="ccEmail"
+            formControlName="ccEmail"
+            maxlength="500"
+            placeholder="{{
+              'operations.purchaseRequisition.placeholder.cc' | translate
+            }}"
+            (input)="validateEmail('ccEmail')"
+          />
+          <div
+            class="help-block red"
+            *ngIf="
+              (submitted && emailEstimateFormControls['ccEmail'].errors) ||
+              (emailEstimateFormControls['ccEmail'].errors &&
+                (emailEstimateFormControls['ccEmail'].dirty ||
+                  emailEstimateFormControls['ccEmail'].touched))
+            "
+          >
+            <p *ngIf="emailEstimateFormControls['ccEmail'].errors['required']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.cc.required'
+                "
+              ></span>
+            </p>
+            <p *ngIf="emailEstimateFormControls['ccEmail'].errors['maxlength']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.cc.maxlength'
+                "
+              ></span>
+            </p>
+            <p *ngIf="emailEstimateFormControls['ccEmail'].errors['pattern']">
+              <span
+                [translate]="'operations.purchaseRequisition.errors.cc.pattern'"
+              ></span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="col-lg-12 col-md-12 col-sm-12 form-group"
+          [ngClass]="{
+            'has-error':
+              (submitted && emailEstimateFormControls['bccEmail'].errors) ||
+              (emailEstimateFormControls['bccEmail'].errors &&
+                (emailEstimateFormControls['bccEmail'].dirty ||
+                  emailEstimateFormControls['bccEmail'].touched))
+          }"
+        >
+          <label for="bcc" class="labelText">
+            <span
+              [translate]="'operations.purchaseRequisition.label.bcc'"
+            ></span>
+          </label>
+          <input
+            type="text"
+            trim="blur"
+            class="form-control"
+            id="bccEmail"
+            formControlName="bccEmail"
+            maxlength="500"
+            placeholder="{{
+              'operations.purchaseRequisition.placeholder.bcc' | translate
+            }}"
+            (input)="validateEmail('bccEmail')"
+          />
+          <div
+            class="help-block red"
+            *ngIf="
+              (submitted && emailEstimateFormControls['bccEmail'].errors) ||
+              (emailEstimateFormControls['bccEmail'].errors &&
+                (emailEstimateFormControls['bccEmail'].dirty ||
+                  emailEstimateFormControls['bccEmail'].touched))
+            "
+          >
+            <p *ngIf="emailEstimateFormControls['bccEmail'].errors['required']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.bcc.required'
+                "
+              ></span>
+            </p>
+            <p
+              *ngIf="emailEstimateFormControls['bccEmail'].errors['maxlength']"
+            >
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.bcc.maxlength'
+                "
+              ></span>
+            </p>
+            <p *ngIf="emailEstimateFormControls['bccEmail'].errors['pattern']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.bcc.pattern'
+                "
+              ></span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="col-lg-12 col-md-12 col-sm-12 form-group"
+          [ngClass]="{
+            'has-error':
+              (submitted && emailEstimateFormControls['subject'].errors) ||
+              (emailEstimateFormControls['subject'].errors &&
+                (emailEstimateFormControls['subject'].dirty ||
+                  emailEstimateFormControls['subject'].touched))
+          }"
+        >
+          <label for="subject" class="labelText">
+            <span
+              [translate]="'operations.purchaseRequisition.label.subject'"
+            ></span>
+          </label>
+          <input
+            type="text"
+            trim="blur"
+            class="form-control"
+            id="subject"
+            formControlName="subject"
+            maxlength="100"
+            placeholder="{{
+              'operations.purchaseRequisition.placeholder.subject' | translate
+            }}"
+          />
+          <div
+            class="help-block red"
+            *ngIf="
+              (submitted && emailEstimateFormControls['subject'].errors) ||
+              (emailEstimateFormControls['subject'].errors &&
+                (emailEstimateFormControls['subject'].dirty ||
+                  emailEstimateFormControls['subject'].touched))
+            "
+          >
+            <p *ngIf="emailEstimateFormControls['subject'].errors['required']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.subject.required'
+                "
+              ></span>
+            </p>
+            <p *ngIf="emailEstimateFormControls['subject'].errors['maxlength']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.subject.maxlength'
+                "
+              ></span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          style="
+            border: none;
+            border-bottom: 1px solid lightgray;
+            padding-bottom: 10px;
+          "
+          class="col-lg-12 col-md-12 col-sm-12 form-group"
+          [ngClass]="{
+            'has-error':
+              (submitted && emailEstimateFormControls['attachment'].errors) ||
+              (emailEstimateFormControls['attachment'].errors &&
+                (emailEstimateFormControls['attachment'].dirty ||
+                  emailEstimateFormControls['attachment'].touched))
+          }"
+        >
+          <label for="attachment" class="labelText">
+            <span
+              [translate]="'operations.purchaseRequisition.label.attachment'"
+            ></span>
+          </label>
+          <div (click)="toggleDisable()">
+            <input
+              type="text"
+              trim="blur"
+              class="form-control"
+              id="attachment"
+              formControlName="attachment"
+              [disabled]="true"
+              maxlength="500"
+              placeholder="{{
+                'operations.purchaseRequisition.placeholder.attachment'
+                  | translate
+              }}"
+            />
+          </div>
+          <div
+            class="help-block red"
+            *ngIf="
+              (submitted && emailEstimateFormControls['attachment'].errors) ||
+              (emailEstimateFormControls['attachment'].errors &&
+                (emailEstimateFormControls['attachment'].dirty ||
+                  emailEstimateFormControls['attachment'].touched))
+            "
+          >
+            <p
+              *ngIf="emailEstimateFormControls['attachment'].errors['required']"
+            >
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.attachment.required'
+                "
+              ></span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="col-lg-12 col-md-12 col-sm-12 form-group"
+          [ngClass]="{
+            'has-error':
+              (submitted && emailEstimateFormControls['body'].errors) ||
+              (emailEstimateFormControls['body'].errors &&
+                (emailEstimateFormControls['body'].dirty ||
+                  emailEstimateFormControls['body'].touched))
+          }"
+        >
+          <textarea
+            type="text"
+            trim="blur"
+            class="form-control"
+            id="body"
+            formControlName="body"
+            placeholder="{{
+              'operations.purchaseRequisition.placeholder.body' | translate
+            }}"
+            maxlength="500"
+          ></textarea>
+
+          <div
+            class="help-block red"
+            *ngIf="
+              (submitted && emailEstimateFormControls['body'].errors) ||
+              (emailEstimateFormControls['body'].errors &&
+                (emailEstimateFormControls['body'].dirty ||
+                  emailEstimateFormControls['body'].touched))
+            "
+          >
+            <p *ngIf="emailEstimateFormControls['body'].errors['required']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.body.required'
+                "
+              ></span>
+            </p>
+            <p *ngIf="emailEstimateFormControls['body'].errors['maxlength']">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.errors.body.maxlength'
+                "
+              ></span>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+          <label for="regards" class="labelText font-weight-bold">
+            <span
+              [translate]="'operations.purchaseRequisition.label.regards'"
+            ></span>
+            <div>
+              <span>{{ userFirstName }} {{ userLastName }}</span>
+            </div>
+          </label>
+        </div>
+      </div>
+    </form>
+  </p-dialog>
+</div>

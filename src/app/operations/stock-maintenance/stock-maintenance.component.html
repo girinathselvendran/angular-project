@@ -1,0 +1,732 @@
+<div class="prContainer">
+  <div class="content-container">
+    <div style="display: flex; justify-content: space-between">
+      <h1
+        style="display: inline"
+        [translate]="'operations.stockMaintenance.titles.stockMaintenance'"
+      ></h1>
+    </div>
+
+    <div class="cards">
+      <div class="card-bg" (click)="getCurrentStatusId('Stock', 1)">
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-drafts">
+                <app-svg-stock-icon></app-svg-stock-icon>
+              </div>
+            </div>
+
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.stockMaintenance.label.stock'"
+                ></span>
+                <span class="count">{{ stockRecordCount }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-bg" (click)="getCurrentStatusId('Stock Summary', 2)">
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <app-svg-stock-summary-icon></app-svg-stock-summary-icon>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.stockMaintenance.label.stockSummary'"
+                ></span>
+                <span class="count">{{ stockSummaryRecordCount }}</span>
+              </div>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="col col-auto">
+              <div class="stock-summary-right">
+                <div>
+                  <span
+                    class="card-text-lable"
+                    [translate]="
+                      'operations.stockMaintenance.label.totalStockValue'
+                    "
+                  ></span>
+                  <span class="amount-field">{{ totalStockValue }}</span>
+                </div>
+                <div>
+                  <span
+                    class="card-text-lable"
+                    [translate]="'operations.stockMaintenance.label.currency'"
+                  ></span>
+                  <span class="amount-field">{{ depotHQCurrency }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-table">
+      <form
+        class="container-new-ui"
+        [formGroup]="editSaveForm"
+        autocomplete="off"
+      >
+        <div class="row row-table justify-content-between">
+          <!-- Depot -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="depot" class="labelText">
+              <span
+                [translate]="'operations.stockMaintenance.label.depot'"
+              ></span>
+            </label>
+
+            <ng-select
+              [items]="associatedDepots"
+              [searchFn]="dropdownSearchFn"
+              (input)="checkNgSearchFormSelectValue($event, 'depot')"
+              [selectOnTab]="true"
+              bindLabel="code"
+              formControlName="depot"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              (change)="onDepotSelected($event)"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.stockMaintenance.placeholder.depot' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch && editSaveFormController['depot'].errors) ||
+                  (editSaveFormController['depot'].errors &&
+                    (editSaveFormController['depot'].dirty ||
+                      editSaveFormController['depot'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item.code }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch && editSaveFormController['depot'].errors) ||
+                (editSaveFormController['depot'].errors &&
+                  (editSaveFormController['depot'].dirty ||
+                    editSaveFormController['depot'].touched))
+              "
+            >
+              <p *ngIf="editSaveFormController['depot'].errors['invalid']">
+                <span
+                  [translate]="
+                    'operations.stockMaintenance.errors.depot.invalid'
+                  "
+                ></span>
+              </p>
+              <p *ngIf="editSaveFormController['depot'].errors['required']">
+                <span
+                  [translate]="
+                    'operations.stockMaintenance.errors.depot.required'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Stock -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="store" class="labelText">
+              <span
+                [translate]="'operations.stockMaintenance.label.store'"
+              ></span>
+            </label>
+
+            <ng-select
+              [items]="storeDDList"
+              [searchFn]="dropdownSearchFn"
+              (input)="checkNgSearchFormSelectValue($event, 'store')"
+              [selectOnTab]="true"
+              bindLabel="code"
+              formControlName="store"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              (change)="onStoreSelected($event)"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.stockMaintenance.placeholder.store' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch && editSaveFormController['store'].errors) ||
+                  (editSaveFormController['store'].errors &&
+                    (editSaveFormController['store'].dirty ||
+                      editSaveFormController['store'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.description }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{ item?.code }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item.code }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch && editSaveFormController['store'].errors) ||
+                (editSaveFormController['store'].errors &&
+                  (editSaveFormController['store'].dirty ||
+                    editSaveFormController['store'].touched))
+              "
+            >
+              <p *ngIf="editSaveFormController['store'].errors['invalid']">
+                <span
+                  [translate]="
+                    'operations.stockMaintenance.errors.store.invalid'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <!--Zone  -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="zone" class="labelText">
+              <span
+                [translate]="'operations.stockMaintenance.label.zone'"
+              ></span>
+            </label>
+
+            <ng-select
+              [items]="zoneDDList"
+              [searchFn]="dropdownSearchFn"
+              (input)="checkNgSearchFormSelectValue($event, 'zone')"
+              [selectOnTab]="true"
+              bindLabel="code"
+              formControlName="zone"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              (change)="onZoneSelected($event)"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.stockMaintenance.placeholder.zone' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch && editSaveFormController['zone'].errors) ||
+                  (editSaveFormController['zone'].errors &&
+                    (editSaveFormController['zone'].dirty ||
+                      editSaveFormController['zone'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item.code }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch && editSaveFormController['zone'].errors) ||
+                (editSaveFormController['zone'].errors &&
+                  (editSaveFormController['zone'].dirty ||
+                    editSaveFormController['zone'].touched))
+              "
+            >
+              <p *ngIf="editSaveFormController['zone'].errors['invalid']">
+                <span
+                  [translate]="
+                    'operations.stockMaintenance.errors.zone.invalid'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Bin -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="bin" class="labelText">
+              <span
+                [translate]="'operations.stockMaintenance.label.bin'"
+              ></span>
+            </label>
+
+            <ng-select
+              [items]="binDDList"
+              [searchFn]="dropdownSearchFn"
+              (input)="checkNgSearchFormSelectValue($event, 'bin')"
+              [selectOnTab]="true"
+              bindLabel="code"
+              formControlName="bin"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.stockMaintenance.placeholder.bin' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch && editSaveFormController['bin'].errors) ||
+                  (editSaveFormController['bin'].errors &&
+                    (editSaveFormController['bin'].dirty ||
+                      editSaveFormController['bin'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item.code }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch && editSaveFormController['bin'].errors) ||
+                (editSaveFormController['bin'].errors &&
+                  (editSaveFormController['bin'].dirty ||
+                    editSaveFormController['bin'].touched))
+              "
+            >
+              <p *ngIf="editSaveFormController['bin'].errors['invalid']">
+                <span
+                  [translate]="'operations.stockMaintenance.errors.bin.invalid'"
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Part Type -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="partType" class="labelText">
+              <span
+                [translate]="'operations.stockMaintenance.label.partType'"
+              ></span>
+            </label>
+
+            <ng-select
+              [items]="partTypeDDList"
+              [searchFn]="dropdownSearchFn"
+              (input)="checkNgSearchFormSelectValue($event, 'partType')"
+              [selectOnTab]="true"
+              bindLabel="code"
+              formControlName="partType"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.stockMaintenance.placeholder.partType' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch &&
+                    editSaveFormController['partType'].errors) ||
+                  (editSaveFormController['partType'].errors &&
+                    (editSaveFormController['partType'].dirty ||
+                      editSaveFormController['partType'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item.code }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormController['partType'].errors) ||
+                (editSaveFormController['partType'].errors &&
+                  (editSaveFormController['partType'].dirty ||
+                    editSaveFormController['partType'].touched))
+              "
+            >
+              <p *ngIf="editSaveFormController['partType'].errors['invalid']">
+                <span
+                  [translate]="
+                    'operations.stockMaintenance.errors.partType.invalid'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="btn-col col col-md-2 offset-md-0.5 col-lg-2 offset-lg-0.5 col-sm-2 offset-sm-0.5"
+          >
+            <div class="action-row-buttons">
+              <button
+                class="btn first-action-btn custom-button-search search-button-color"
+                (click)="searchRecordsList()"
+              >
+              <div class="reset-icon-container">
+                <!-- <app-svg-search-icon></app-svg-search-icon> -->
+                <i class="fa-regular fa-play"></i>
+              </div>
+              {{ "operations.stockMaintenance.button.apply" | translate }}
+              </button>
+              <button
+                class="btn custom-button-search reset-button-color"
+                (click)="resetForm()"
+              >
+                <div class="reset-icon-container">
+                  <i class="fa-solid fa-arrows-spin"></i>
+                </div>
+                {{ "operations.stockMaintenance.button.reset" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="line"></div>
+      <br />
+      <!-- <div class="col-lg-2 col-md-2 col-sm-2">
+        <div sa-widget [editbutton]="false" [togglebutton]="false" [fullscreenbutton]="false" [colorbutton]="false"
+          color="#f4f4f4">
+          <header class="text-align-center">
+            <h2>
+              <strong>
+                <span [translate]="'prepEstimation.overview.titles.estimatedStatus'"></span>
+
+              </strong>
+            </h2>
+          </header>
+          <div class="panel-body overviewPanelBody">
+            <div class="doughnutOverviewCenter">
+              <p-chart type="doughnut" [data]="repairTypeStatsData" height="24vh" [options]="estimateStatusOptions">
+              </p-chart>
+            </div>
+
+          </div>
+        </div>
+
+      </div> -->
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <!-- Chart : doughnut  -->
+          <div class="col-lg-4 col-md-4 col-sm-4 nopadding">
+            <div>
+              <header class="text-align-center">
+                <h4>
+                  <u>
+                    <span
+                      [translate]="'operations.stockMaintenance.label.store'"
+                    ></span>
+                  </u>
+                </h4>
+              </header>
+              <div class="panel-body overviewPanelBody">
+                <div class="doughnutOverviewCenter">
+                  <p-chart
+                    type="doughnut"
+                    [data]="storeGraphData"
+                    [options]="storeGraphOptions"
+                    height="240px"
+                  ></p-chart>
+                  <!-- [style]="{ width: '40%' }" -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart : bar  -->
+          <div class="col-lg-4 col-md-4 col-sm-4 nopadding">
+            <header class="text-align-center">
+              <h4>
+                <u>
+                  <span
+                    [translate]="'operations.stockMaintenance.label.zone'"
+                  ></span>
+                </u>
+              </h4>
+            </header>
+            <div class="panel-body overviewPanelBody">
+              <div class="doughnutOverviewCenter">
+                <p-chart
+                  type="pie"
+                  [data]="zoneChartData"
+                  [options]="zoneChartOptions"
+                  height="240px"
+                ></p-chart>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart : bar  -->
+          <div class="col-lg-4 col-md-4 col-sm-4 nopadding">
+            <header class="text-align-center">
+              <h4>
+                <u>
+                  <span
+                    [translate]="'operations.stockMaintenance.label.partType'"
+                  ></span>
+                </u>
+              </h4>
+            </header>
+            <div class="panel-body overviewPanelBody">
+              <div class="doughnutOverviewCenter">
+                <p-chart
+                  type="bar"
+                  [data]="partTypeData"
+                  [options]="partTypeOptions"
+                  height="240px"
+                ></p-chart>
+                <!-- width="300px" -->
+              </div>
+            </div>
+          </div>
+          <app-stock-maintenance-list
+            (getServerSideTable)="getServerSideTable($event)"
+            (exportToExcel)="exportToExcel($event)"
+            [stockMaintenanceData]="stockMaintenanceData"
+            [tableFilterFormGroup]="tableFilterFormGroup"
+            [isStockMaintenance]="isStockMaintenance"
+          ></app-stock-maintenance-list>
+        </div>
+      </div>
+    </div>
+
+    <div
+      bsModal
+      #graphPopup="bs-modal"
+      class="modal graph-modal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="remarksPopupLabel"
+      [config]="{ backdrop: 'static' }"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-graph-new header-blue">
+            <!-- <b class="floatleft-part">
+          <h4 class="modal-title">
+            <span [translate]="'operations.common.titles.remarks'"></span>
+          </h4>
+        </b> -->
+            <div class="row" class="gridRightAlign float-right-part">
+              <button
+                class="capsule-button"
+                type="button"
+                aria-label="Close"
+                (click)="handleClosePopup()"
+                style="background-color: #ec5656"
+              >
+                <div class="icon-circle">
+                  <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+                {{ "common.buttons.close" | translate }}
+              </button>
+            </div>
+          </div>
+          <div class="doughnutOverviewCenter">
+            <header class="text-align-center">
+              <h4>
+                <u>
+                  <span
+                    [translate]="'operations.stockMaintenance.label.bin'"
+                  ></span>
+                </u>
+              </h4>
+              <p *ngIf="!isBinAvailable">
+                No Bin Details Available for the selected Zone
+              </p>
+            </header>
+
+            <p-chart
+              type="doughnut"
+              [data]="binGraphData"
+              [options]="binGraphOptions"
+              height="240px"
+            ></p-chart>
+            <!-- [style]="{ width: '40%' }" -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

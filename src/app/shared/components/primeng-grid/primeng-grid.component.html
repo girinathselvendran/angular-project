@@ -1,0 +1,132 @@
+<p-table *ngIf="showGrid" #dt [columns]="selectedColumns" [value]="gridData" responsiveLayout="scroll" [paginator]="enablePagination" [rows]="10" [(selection)]="selectedData" [loading]="loading" [showCurrentPageReport]="true" [rowHover]="true" styleClass="p-datatable-gridlines"
+    sortMode="single" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" (onHeaderCheckboxToggle)="onSelectAll($event)" [totalRecords]="totalRecords"
+    paginatorDropdownAppendTo="body"
+    [rowsPerPageOptions]="[10,25,50,100]" [globalFilterFields]="globalFilterFields" [scrollable]="true" scrollHeight="500px">
+    <ng-template pTemplate="caption">
+        <div class="flex justify-content-between flex-column sm:flex-row">
+            <button *ngIf="!hideClearButton" [style]="{minWidth: '100px', maxWidth: '100px', marginRight:'0.5rem'}" pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clearFilter()"
+            tooltipPosition="bottom" pTooltip="Clear Search"></button>
+            <span *ngIf="!hideGlobalFilter" class="p-input-icon-left mb-2">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" [(ngModel)]="globalFilter" (input)="onGlobalFilter($event)"
+                    placeholder="Search Keyword" class="w-full" [style]="{minWidth: '300px', maxWidth: '300px'}" />
+            </span>
+            <p-multiSelect *ngIf="!hideColumnSelections" [options]="columns" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" placeholder="Choose Columns" (onChange)="onColumnSelection($event)">
+            </p-multiSelect>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngIf="!hideAction">
+                <div class="flex justify-content-between align-items-center">
+                    Action
+                </div>
+            </th>
+            <th style="width: 3em;" *ngIf="!hideCheckBoxSelection">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [pSortableColumnDisabled]="col.hideSorting" [style]="{minWidth: '160px'}" pReorderableColumn>
+                <div class="flex align-items-center">
+                    {{col.header}}
+                    <p-sortIcon *ngIf="!hideSorting && !col.hideSorting" [field]="col.field"></p-sortIcon>
+                    <p-columnFilter *ngIf="!hideFilter && !col.hideFilter && (!col.filterType || col.filterType == 'text')" type="text" [field]="col.field" display="menu" matchMode="contains" placeholder="Search by {{col.header}}"></p-columnFilter>
+                    <p-columnFilter *ngIf="!hideFilter && !col.hideFilter && col.filterType == 'numeric'" type="numeric" [field]="col.field" display="menu" placeholder="Search by {{col.header}}"></p-columnFilter>
+                    <p-columnFilter *ngIf="!hideFilter && !col.hideFilter && col.filterType == 'option'" [field]="col.field" [showMatchModes]="false" matchMode="equals" display="menu" placeholder="Search by {{col.header}}">
+                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                            <p-dropdown [ngModel]="value" [options]="col.filterOptions" (onChange)="filter($event.value)" placeholder="Any">
+                                <ng-template let-option pTemplate="item">
+                                    <span>{{option.label}}</span>
+                                </ng-template>
+                            </p-dropdown>
+                        </ng-template>
+                    </p-columnFilter>
+                    <p-columnFilter *ngIf="!hideFilter && !col.hideFilter && col.filterType == 'date'" type="date" [field]="col.field" display="menu" placeholder="Search by {{col.header}}"></p-columnFilter>
+                    <p-columnFilter *ngIf="!hideFilter && !col.hideFilter && col.filterType == 'customdate'" [field]="col.field" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" [showClearButton]="false" [showApplyButton]="false"
+                        placeholder="Search by {{col.header}}">
+                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                            <div class="field-checkbox customer-filter-div" *ngIf="col.showCustomDateOptions">
+                                <p-checkbox [(ngModel)]="col.showDateRange" (change)="changeCustomDateFilterMode(col)" [binary]="true" inputId="{{'chk_' + col.field}}"></p-checkbox>
+                                <label class="customer-filter-label" for="{{'chk_' + col.field}}">Search by specific
+                                    range</label>
+                            </div>
+                            <div *ngIf="col.showCustomDateOptions && !col.showDateRange">
+                                <p-multiSelect [ngModel]="col.selectedDateOptions" [options]="dateFilterAdvancedOptions" placeholder="Any" (onChange)="applyCustomDateFilter(col);" optionLabel="name" [filter]="false" [showHeader]="false">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="p-multiselect-representative-option">
+                                            <span class="ml-1">{{option.label}}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                                <div class="customer-filter-div p-column-filter-buttonbar ng-tns-c140-2 ng-star-inserted">
+                                    <p-button label="Clear" styleClass="p-element p-button-outlined p-button-sm ng-tns-c140-2 p-button p-component ng-star-inserted" (onClick)="applyCustomDateFilter(col);"></p-button>
+                                </div>
+                            </div>
+                            <div *ngIf="!col.showCustomDateOptions || col.showDateRange">
+                                <div class="customer-filter-div">
+                                    <label class="customer-filter-label custom-filter-fieldlabel">Select Range</label>
+                                    <p-calendar [(ngModel)]="col.dateRange" selectionMode="range" (onSelect)="applyCustomDateFilter(col)"></p-calendar>
+                                </div>
+                                <div class="customer-filter-div p-column-filter-buttonbar ng-tns-c140-2 ng-star-inserted">
+                                    <p-button label="Clear" styleClass="p-element p-button-outlined p-button-sm ng-tns-c140-2 p-button p-component ng-star-inserted" (onClick)="clearCustomDateFilter(col);applyCustomDateFilter(col);"></p-button>
+                                    <p-button label="Apply" styleClass="p-element p-button-sm ng-tns-c140-2 p-button p-component ng-star-inserted" (onClick)="applyCustomDateFilter(col)"></p-button>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-columnFilter>
+                </div>
+            </th>
+
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData" (click)="onRowClick($event, rowData)"
+        [ngClass]="{'danger': colorCodeBasedOnStatus && rowData.dangerFlag}">
+            <td *ngIf="!hideAction">
+                <button *ngIf="!hideDetailsAction" pButton pRipple icon="pi pi-eye" class="p-button-sm p-button-outlined p-button-info mr-1" (click)="detailData(rowData)"></button>
+                <button *ngIf="!hideEditAction" pButton pRipple icon="pi pi-pencil" class="p-button-sm p-button-outlined p-button-info mr-1" (click)="editData(rowData)"></button>
+                <button *ngIf="showDownload" pButton pRipple icon="pi pi-download" class="p-button-sm p-button-outlined p-button-info mr-1" (click)="downloadData(rowData)"></button>
+                <button *ngIf="showExcelDownload || rowData.showExcelDownload" pButton pRipple icon="pi pi-file-excel" class="mr-2 meadow-green"   tooltipPosition="right" pTooltip="Download Excel"  (click)="downloadExcelData(rowData)"></button>
+                <button *ngIf="ShowCopy" pButton pRipple icon="pi pi-copy" class="p-button-sm p-button-outlined p-button-info mr-1" (click)="copyData(rowData)"></button>
+                <button *ngIf="!hideDeleteAction" pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-outlined p-button-danger" (click)="deleteData(rowData)"></button>
+            </td>
+            <td style="width: 3em;" *ngIf="!hideCheckBoxSelection">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+            <td *ngFor="let col of columns" [style]="{minWidth: '160px'}" [ngClass]="col.rightAlign ? 'rightalign': null">
+                <div class="flex justify-content-center align-items-center" >
+                    <span class="text-word-wrap" *ngIf="!col.dataType">{{ fetchByDotOperator(rowData, col.field) }}</span>
+                    <span *ngIf="col.dataType && col.dataType=='date'">{{ fetchByDotOperator(rowData, col.field) | date:
+                        'dd-MMM-yyyy' }}</span>
+                    <span *ngIf="col.dataType && col.dataType=='dateTime'">{{ fetchByDotOperator(rowData, col.field) |
+                        date: 'dd-MMM-yyyy HH:mm:ss' }}</span>
+                    <span *ngIf="col.dataType && col.dataType=='hyperlink'"><a href="#" [routerLink]=""
+                            (click)="onRowLinkClick(rowData,col.field)">{{ fetchByDotOperator(rowData, col.field)
+                            }}</a></span>
+                    <div class="flex align-items-center" *ngIf="col.dataType && col.dataType=='boolean' && col.control == 'switch'">
+                        <p-inputSwitch [(ngModel)]="rowData.activeStatus" (click)="onStatusChangeaData(rowData)">
+                        </p-inputSwitch>
+                        <span class="ml-3"> </span>
+                    </div>
+                    <div class="flex align-items-center" *ngIf="col.dataType && col.dataType=='boolean' && col.control == 'checkbox'">
+                        <p-checkbox [(ngModel)]="rowData[col.field]" [disabled]="col.disabled" [binary]="true"></p-checkbox>
+                    </div>
+                    <div class="flex align-items-center" *ngIf="col.dataType && col.dataType=='boolean' && col.control == 'togglebutton'">
+                        <p-toggleButton onLabel="Lessee" offLabel="Lessor" [disabled]="col.disabled" [(ngModel)]="rowData[col.field]"></p-toggleButton>
+                    </div>
+
+                </div>
+            </td>
+
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="totalColumns">No data found.</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td [attr.colspan]="totalColumns">Loading data. Please wait.</td>
+        </tr>
+    </ng-template>
+</p-table>

@@ -1,0 +1,206 @@
+<div>
+  <div class="panel-title panelHeading pull-left">
+    <div class="nopaddingbottom">
+      <b>
+        <span
+          [translate]="
+            'operations.purchaseOrder.address.title.supplierContactDetails'
+          "
+          class="main-title"
+        ></span
+      ></b>
+    </div>
+  </div>
+</div>
+<br />
+<hr
+  style="height: 2px; border-width: 100%; color: gray; background-color: gray"
+/>
+<div class="row space-between col-lg-12 col-md-12 col-sm-12">
+  <div class="form-group col-lg-6 col-md-6 col-sm-6">
+    <form [formGroup]="billingAddressForm" autocomplete="off">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <div class="nopaddingbottom">
+            <b class="float-left">
+              <h4 class="modal-title">
+                <span
+                  [translate]="
+                    'operations.purchaseOrder.address.title.billingAddress'
+                  "
+                ></span>
+              </h4>
+            </b>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="form-group col-lg-8 col-md-8 col-sm-8">
+            <label for="description" class="labelText">
+              <span
+                [translate]="
+                  'operations.purchaseOrder.address.label.streetAddress'
+                "
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="streetAddress"
+            />
+          </div>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4">
+            <label for="description" class="labelText">
+              <span
+                [translate]="'operations.purchaseOrder.address.label.country'"
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="country"
+            />
+          </div>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4">
+            <label for="description" class="labelText">
+              <span
+                [translate]="'operations.purchaseOrder.address.label.city'"
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="city"
+            />
+          </div>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4">
+            <label for="description" class="labelText">
+              <span
+                [translate]="'operations.purchaseOrder.address.label.zipCode'"
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="zipCode"
+            />
+          </div>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4">
+            <label for="description" class="labelText">
+              <span
+                [translate]="'operations.purchaseOrder.address.label.email'"
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="email"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="form-group col-lg-6 col-md-6 col-sm-6">
+    <form [formGroup]="deliveryAddressForm" autocomplete="off">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <div class="nopaddingbottom">
+            <b class="float-left">
+              <h4 class="modal-title">
+                <span
+                  [translate]="
+                    'operations.purchaseOrder.address.title.deliveryAddress'
+                  "
+                ></span>
+              </h4>
+            </b>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="form-group col-lg-8 col-md-8 col-sm-8">
+            <label for="description" class="labelText">
+              <span
+                [translate]="
+                  'operations.purchaseOrder.address.label.deliveryAddress'
+                "
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="deliveryAddress"
+            />
+          </div>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4">
+            <label for="description" class="labelText">
+              <span
+                [translate]="'operations.purchaseOrder.address.label.country'"
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="country"
+            />
+          </div>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4">
+            <label for="description" class="labelText">
+              <span
+                [translate]="'operations.purchaseOrder.address.label.city'"
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="city"
+            />
+          </div>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4">
+            <label for="description" class="labelText">
+              <span
+                [translate]="'operations.purchaseOrder.address.label.zipCode'"
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="zipCode"
+            />
+          </div>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4">
+            <label for="description" class="labelText">
+              <span
+                [translate]="'operations.purchaseOrder.address.label.email'"
+              ></span>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="description"
+              formControlName="email"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

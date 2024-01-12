@@ -1,0 +1,13 @@
+<div class="message-dialog">
+    <p-confirmDialog #cd [closable]="false" key="positionDialog" 
+    position="top" [baseZIndex]="10000"
+    [style]="{width: '25vw', 'font-weight': 'bold'}"
+    [styleClass]="styleClass">
+        <ng-template pTemplate="footer" >
+            <button type="button" 
+            [ngClass]="{'p-button-success': seviority === 1, 'p-button-danger': seviority === 2,
+            'p-button-info': seviority === 3, 'p-button-warning': seviority === 4}" 
+            class="p-button-sm" pButton class="mr-2" label="OK" (click)="cd.accept()"></button>
+        </ng-template>
+    </p-confirmDialog>
+</div>

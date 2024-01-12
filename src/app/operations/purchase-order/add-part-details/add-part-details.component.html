@@ -1,0 +1,965 @@
+<div
+  #addPartDetailsModel="bs-modal"
+  bsModal
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <form [formGroup]="addPartDetailsEditForm" autocomplete="off">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <div class="nopaddingbottom">
+            <b class="float-left">
+              <h4 class="modal-title">
+                <span
+                  [translate]="'operations.purchaseOrder.titles.partDetail'"
+                ></span>
+              </h4>
+            </b>
+            <label class="linebadge">
+              {{ partDetailsMode | translate | uppercase }}</label
+            >
+          </div>
+          <div class="cancel-modal-header">
+            <div class="row">
+              <button (click)="resetForm()" class="capsule-button grey">
+                <div class="icon-circle">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                {{ "operations.purchaseOrder.buttons.reset" | translate }}
+              </button>
+              <button
+                class="capsule-button green"
+                (click)="savePartDetails()"
+                [disabled]="disableSavePartDetails"
+                [class.unclickable]="disableSavePartDetails"
+              >
+                <div class="icon-circle">
+                  <i class="fas fa-light fa-floppy-disk"></i>
+                </div>
+                {{ "operations.purchaseRequisition.buttons.save" | translate }}
+              </button>
+              <button
+                class="capsule-button grey"
+                (click)="handleCloseAddPartDetails()"
+              >
+                <div class="icon-circle">
+                  <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+                {{ "operations.purchaseRequisition.buttons.close" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <form
+            class="container-new-ui"
+            [formGroup]="addPartDetailsEditForm"
+            autocomplete="off"
+          >
+            <div class="row row-table">
+              <!-- Part Type -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                <label for="partType" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.partType'
+                    "
+                  ></span>
+                  <i class="red"> *</i>
+                </label>
+
+                <ng-select
+                  [items]="partTypeList"
+                  [searchFn]="dropdownSearchFn"
+                  [selectOnTab]="true"
+                  (input)="checkNgSearchFormSelectValue($event, 'partType')"
+                  bindLabel="code"
+                  formControlName="partType"
+                  notFoundText="{{
+                    'common.dropdown.notFoundText' | translate
+                  }}"
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.partType'
+                      | translate
+                  }}"
+                  (change)="onPartTypeSelected($event)"
+                  [ngClass]="{
+                    redBorder:
+                      (submittedSearch &&
+                        addPartDetailsEditSaveFormControls['partType']
+                          .errors) ||
+                      (addPartDetailsEditSaveFormControls['partType'].errors &&
+                        (addPartDetailsEditSaveFormControls['partType'].dirty ||
+                          addPartDetailsEditSaveFormControls['partType']
+                            .touched))
+                  }"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div title="{{ item?.code }} - {{ item?.description }}">
+                      <small
+                        ><b>{{ item?.code }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.description
+                      }}</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      addPartDetailsEditSaveFormControls['partType'].errors) ||
+                    (addPartDetailsEditSaveFormControls['partType'].errors &&
+                      (addPartDetailsEditSaveFormControls['partType'].dirty ||
+                        addPartDetailsEditSaveFormControls['partType'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['partType'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.partType.required'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['partType'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.partType.invalid'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Part Code -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="partCode" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.partCode'
+                    "
+                  ></span>
+                  <i class="red"> *</i>
+                </label>
+
+                <ng-select
+                  [items]="partCodeList"
+                  [searchFn]="dropdownSearchFn"
+                  [selectOnTab]="true"
+                  (input)="checkNgSearchFormSelectValue($event, 'partCode')"
+                  bindLabel="partCode"
+                  formControlName="partCode"
+                  notFoundText="{{
+                    'common.dropdown.notFoundText' | translate
+                  }}"
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.partCode'
+                      | translate
+                  }}"
+                  (change)="onPartCodeSelected($event)"
+                  [ngClass]="{
+                    redBorder:
+                      (submittedSearch &&
+                        addPartDetailsEditSaveFormControls['partCode']
+                          .errors) ||
+                      (addPartDetailsEditSaveFormControls['partCode'].errors &&
+                        (addPartDetailsEditSaveFormControls['partCode'].dirty ||
+                          addPartDetailsEditSaveFormControls['partCode']
+                            .touched))
+                  }"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div title="{{ item?.partCode }} - {{ item?.partName }}">
+                      <small
+                        ><b>{{ item?.partCode }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.partName
+                      }}</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      addPartDetailsEditSaveFormControls['partCode'].errors) ||
+                    (addPartDetailsEditSaveFormControls['partCode'].errors &&
+                      (addPartDetailsEditSaveFormControls['partCode'].dirty ||
+                        addPartDetailsEditSaveFormControls['partCode'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['partCode'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.partCode.invalid'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['partCode'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.partCode.required'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- Part Name -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="partName" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.partName'
+                    "
+                  ></span>
+                </label>
+
+                <ng-select
+                  [items]="partNameList"
+                  [searchFn]="dropdownSearchFn"
+                  [selectOnTab]="true"
+                  (input)="checkNgSearchFormSelectValue($event, 'partName')"
+                  bindLabel="partName"
+                  formControlName="partName"
+                  notFoundText="{{
+                    'common.dropdown.notFoundText' | translate
+                  }}"
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.partName'
+                      | translate
+                  }}"
+                  [ngClass]="{
+                    redBorder:
+                      (submittedSearch &&
+                        addPartDetailsEditSaveFormControls['partName']
+                          .errors) ||
+                      (addPartDetailsEditSaveFormControls['partName'].errors &&
+                        (addPartDetailsEditSaveFormControls['partName'].dirty ||
+                          addPartDetailsEditSaveFormControls['partName']
+                            .touched))
+                  }"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div title="{{ item?.code }} - {{ item?.description }}">
+                      <small
+                        ><b>{{ item?.code }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.description
+                      }}</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      addPartDetailsEditSaveFormControls['partName'].errors) ||
+                    (addPartDetailsEditSaveFormControls['partName'].errors &&
+                      (addPartDetailsEditSaveFormControls['partName'].dirty ||
+                        addPartDetailsEditSaveFormControls['partName'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['partName'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.partName.invalid'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['partName'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.partName.required'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- Part Category -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="partCategory" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.partCategory'
+                    "
+                  ></span>
+                </label>
+
+                <ng-select
+                  [items]="partCategoryList"
+                  [searchFn]="dropdownSearchFn"
+                  [selectOnTab]="true"
+                  (input)="checkNgSearchFormSelectValue($event, 'partCategory')"
+                  bindLabel="partCategoryCode"
+                  formControlName="partCategory"
+                  notFoundText="{{
+                    'common.dropdown.notFoundText' | translate
+                  }}"
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.partCategory'
+                      | translate
+                  }}"
+                  [ngClass]="{
+                    redBorder:
+                      (submittedSearch &&
+                        addPartDetailsEditSaveFormControls['partCategory']
+                          .errors) ||
+                      (addPartDetailsEditSaveFormControls['partCategory']
+                        .errors &&
+                        (addPartDetailsEditSaveFormControls['partCategory']
+                          .dirty ||
+                          addPartDetailsEditSaveFormControls['partCategory']
+                            .touched))
+                  }"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div title="{{ item?.code }} - {{ item?.description }}">
+                      <small
+                        ><b>{{ item?.code }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.description
+                      }}</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      addPartDetailsEditSaveFormControls['partCategory']
+                        .errors) ||
+                    (addPartDetailsEditSaveFormControls['partCategory']
+                      .errors &&
+                      (addPartDetailsEditSaveFormControls['partCategory']
+                        .dirty ||
+                        addPartDetailsEditSaveFormControls['partCategory']
+                          .touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['partCategory'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.partCategory.invalid'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['partCategory'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.partCategory.required'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- partSpecification -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="partSpecification" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.partSpecification'
+                    "
+                  ></span>
+                </label>
+                <br />
+                <p class="margin-left-10 font-20">
+                  <i
+                    class="far fa-eye clickable"
+                    (click)="handleOpenPartSpecification()"
+                  ></i>
+                </p>
+              </div>
+              <!-- PO Quantity -->
+              <div
+                class="form-group col-lg-3 col-md-3 col-sm-4"
+                [ngClass]="{
+                  'has-error':
+                    (submittedSearch &&
+                      addPartDetailsEditSaveFormControls['poQuantity']
+                        .errors) ||
+                    (addPartDetailsEditSaveFormControls['poQuantity'].errors &&
+                      (addPartDetailsEditSaveFormControls['poQuantity'].dirty ||
+                        addPartDetailsEditSaveFormControls['poQuantity']
+                          .touched))
+                }"
+              >
+                <label for="poQuantity" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.poQuantity'
+                    "
+                  ></span>
+                  <i class="red"> *</i>
+                </label>
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control amountInput new-form-control-input"
+                  id="poQuantity"
+                  formControlName="poQuantity"
+                  maxlength="15"
+                  [scale]="2"
+                  numericType="decimal"
+                  numeric
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.poQuantity'
+                      | translate
+                  }}"
+                  (input)="handleAmountCalculation('poQuantity')"
+                />
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      addPartDetailsEditSaveFormControls['poQuantity']
+                        .errors) ||
+                    (addPartDetailsEditSaveFormControls['poQuantity'].errors &&
+                      (addPartDetailsEditSaveFormControls['poQuantity'].dirty ||
+                        addPartDetailsEditSaveFormControls['poQuantity']
+                          .touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['poQuantity'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.poQuantity.required'
+                      "
+                    ></span>
+                  </p>
+                  <div
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['poQuantity'].errors[
+                        'min'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.poQuantity.limit'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['poQuantity'].errors[
+                        'max'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.poQuantity.limit'
+                      "
+                    ></span>
+                  </div>
+                </div>
+              </div>
+              <!-- partRate -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="partRate" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.partRate'
+                    "
+                  ></span>
+                </label>
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control amountInput new-form-control-input"
+                  id="partRate"
+                  formControlName="partRate"
+                  [scale]="2"
+                  numericType="decimal"
+                  numeric
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.partRate'
+                      | translate
+                  }}"
+                  (input)="handleAmountCalculation('partRate')"
+                />
+              </div>
+              <!-- totalCost -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="totalCost" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.totalCost'
+                    "
+                  ></span>
+                </label>
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control amountInput new-form-control-input"
+                  id="totalCost"
+                  formControlName="totalCost"
+                  [scale]="2"
+                  numericType="decimal"
+                  numeric
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.totalCost'
+                      | translate
+                  }}"
+                />
+              </div>
+              <!-- deliveryDate -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="deliveryDate" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.deliveryDate'
+                    "
+                  ></span>
+                  <i class="red"> *</i>
+                </label>
+                <div class="input-group input-group-md">
+                  <input
+                    type="text"
+                    class="form-control uppercase"
+                    bsDatepicker
+                    (keydown.arrowdown)="deliveryDate.click()"
+                    formControlName="deliveryDate"
+                    #deliveryDate
+                    [bsConfig]="{
+                      dateInputFormat: 'DD-MMM-YYYY',
+                      containerClass: 'theme-dark-blue',
+                      adaptivePosition: true
+                    }"
+                    [ngClass]="{
+                      redBorderCalender:
+                        (submittedSearch &&
+                          addPartDetailsEditSaveFormControls['deliveryDate']
+                            .errors) ||
+                        (addPartDetailsEditSaveFormControls['deliveryDate']
+                          .errors &&
+                          (addPartDetailsEditSaveFormControls['deliveryDate']
+                            .dirty ||
+                            addPartDetailsEditSaveFormControls['deliveryDate']
+                              .touched))
+                    }"
+                    (ngModelChange)="
+                      validateDeliveryDate('deliveryDate', $event)
+                    "
+                  />
+
+                  <span class="input-group-btn">
+                    <button
+                      class="btn custom-button"
+                      type="button"
+                      (click)="deliveryDate.click()"
+                      tabindex="-1"
+                    >
+                      <app-svg-calender-icon></app-svg-calender-icon>
+                    </button>
+                  </span>
+                </div>
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      addPartDetailsEditSaveFormControls['deliveryDate']
+                        .errors) ||
+                    (addPartDetailsEditSaveFormControls['deliveryDate']
+                      .errors &&
+                      (addPartDetailsEditSaveFormControls['deliveryDate']
+                        .dirty ||
+                        addPartDetailsEditSaveFormControls['deliveryDate']
+                          .touched))
+                  "
+                >
+                  <div
+                    *ngIf="addPartDetailsEditSaveFormControls['deliveryDate'].errors?.['invalid']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.deliveryDate.invalid'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    *ngIf="addPartDetailsEditSaveFormControls['deliveryDate'].errors?.['customError']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.deliveryDateGreaterThanCurrent'
+                      "
+                    ></span>
+                    {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                  </div>
+                  <div
+                    *ngIf="addPartDetailsEditSaveFormControls['deliveryDate'].errors?.['bsDate']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.deliveryDate.invalid'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['deliveryDate'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.deliveryDate.required'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    *ngIf="addPartDetailsEditSaveFormControls['deliveryDate'].errors?.['invalidToDate']"
+                  >
+                    <span
+                      [translate]="
+                        'gateMovesReport.error.endPeriodGreaterThanToDate'
+                      "
+                    >
+                    </span>
+                    {{
+                      addPartDetailsEditSaveFormControls["deliveryDate"].value
+                        | date : "dd-MMM-yyyy"
+                        | uppercase
+                    }}
+                  </div>
+
+                  <div
+                    *ngIf="addPartDetailsEditSaveFormControls['deliveryDate'].errors?.['inValidCurrentDate']"
+                  >
+                    <span
+                      [translate]="
+                        'gateMovesReport.error.endPeriodSmallerThanCurrent'
+                      "
+                    ></span>
+                    {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                  </div>
+                  <div
+                    *ngIf="addPartDetailsEditSaveFormControls['deliveryDate'].errors?.['inValidDateString']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.deliveryDate.invalid'
+                      "
+                    ></span>
+                  </div>
+                </div>
+              </div>
+              <!-- prNo -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="prNo" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.prNo'
+                    "
+                  ></span>
+                </label>
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control new-form-control-input"
+                  id="prNo"
+                  formControlName="prNo"
+                  maxlength="100"
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.prNo'
+                      | translate
+                  }}"
+                />
+              </div>
+              <!-- rfqNo -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="rfqNo" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.rfqNo'
+                    "
+                  ></span>
+                </label>
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control new-form-control-input"
+                  id="rfqNo"
+                  formControlName="rfqNo"
+                  maxlength="100"
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.rfqNo'
+                      | translate
+                  }}"
+                />
+              </div>
+              <!-- quoteNo -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="quoteNo" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.quoteNo'
+                    "
+                  ></span>
+                </label>
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control new-form-control-input"
+                  id="quoteNo"
+                  formControlName="quoteNo"
+                  maxlength="100"
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.quoteNo'
+                      | translate
+                  }}"
+                />
+              </div>
+              <!-- stockUOM -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-4">
+                <label for="stockUom" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.addPartDetail.label.stockUOM'
+                    "
+                  ></span>
+                </label>
+
+                <ng-select
+                  [items]="stockUOMList"
+                  [searchFn]="dropdownSearchFn"
+                  [selectOnTab]="true"
+                  (input)="checkNgSearchFormSelectValue($event, 'stockUom')"
+                  bindLabel="stockUom"
+                  formControlName="stockUom"
+                  notFoundText="{{
+                    'common.dropdown.notFoundText' | translate
+                  }}"
+                  placeholder="{{
+                    'operations.purchaseOrder.addPartDetail.placeholder.stockUOM'
+                      | translate
+                  }}"
+                  [ngClass]="{
+                    redBorder:
+                      (submittedSearch &&
+                        addPartDetailsEditSaveFormControls['stockUom']
+                          .errors) ||
+                      (addPartDetailsEditSaveFormControls['stockUom'].errors &&
+                        (addPartDetailsEditSaveFormControls['stockUom'].dirty ||
+                          addPartDetailsEditSaveFormControls['stockUom']
+                            .touched))
+                  }"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div title="{{ item?.code }} - {{ item?.description }}">
+                      <small
+                        ><b>{{ item?.code }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.description
+                      }}</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      addPartDetailsEditSaveFormControls['stockUom'].errors) ||
+                    (addPartDetailsEditSaveFormControls['stockUom'].errors &&
+                      (addPartDetailsEditSaveFormControls['stockUom'].dirty ||
+                        addPartDetailsEditSaveFormControls['stockUom'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['stockUom'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.stockUom.invalid'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      addPartDetailsEditSaveFormControls['stockUom'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.addPartDetail.errors.stockUom.required'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Part Specification Popup -->
+<div
+  bsModal
+  #purchasePartSpecificationModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            <span
+              [translate]="
+                'operations.purchaseRequisition.titles.purchasePartSpecification'
+              "
+            ></span>
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right">
+          <div
+            class="custom-button-close"
+            (click)="handleClosePurchaseSpecification()"
+          >
+            <i class="fas fa-fw fa-times white-icon" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <app-shared-table-new
+          [headerColumnList]="tableColumnsPartSpecification"
+          [filter]="true"
+          [excelIcon]="true"
+          [refreshIcon]="true"
+          [showHide]="true"
+          [globalSearch]="true"
+          [isPanelHeading]="false"
+          [addRecordIcon]="false"
+          [tableInitialData]="purchasePartSpecificationData"
+          [isMasterComp]="false"
+          [tableTitle]="'Purchase Part Specification'"
+          [excelFileName]="'Purchase Part Specification List'"
+        ></app-shared-table-new>
+      </div>
+
+      <div class="cancel-modal-footer">
+        <div class="row">
+          <button
+            class="capsule-button grey"
+            (click)="handleClosePurchaseSpecification()"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div
+bsModal
+#partSpecificationModal="bs-modal"
+class="modal"
+tabindex="-1"
+role="dialog"
+aria-labelledby="contactModalLabel"
+aria-hidden="true"
+[config]="{ backdrop: 'static' }"
+>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header-new header-blue">
+      <b class="float-left">
+        <h4 class="modal-title">
+          {{tableTitle}}
+        </h4>
+      </b>
+      <div class="row" class="gridRightAlign float-right">
+        <div
+          class="custom-button-close"
+          (click)="handleCloseSpecification()"
+        >
+          <i class="fas fa-fw fa-times white-icon" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <app-shared-table-new
+        [headerColumnList]="tableColumnsPartSpecification"
+        [filter]="true"
+        [excelIcon]="true"
+        [refreshIcon]="true"
+        [showHide]="true"
+        [globalSearch]="true"
+        [isPanelHeading]="false"
+        [addRecordIcon]="false"
+        [tableInitialData]="partSpecificationData"
+        [isMasterComp]="false"
+        [tableTitle]="tableTitle"
+        [excelFileName]="excelFileName"
+      ></app-shared-table-new>
+    </div>
+
+    <div class="cancel-modal-footer">
+      <div class="row">
+        <button
+          class="capsule-button reset-button-color"
+          (click)="handleCloseSpecification()"
+        >
+          <div class="icon-circle">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </div>
+          {{ "common.buttons.close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

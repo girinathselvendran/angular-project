@@ -1,0 +1,962 @@
+<div style="padding-top: 5px">
+  <form
+    class="container-new-ui"
+    [formGroup]="editSaveQuoteAndOrderAllocationForm"
+    autocomplete="off"
+  >
+    <div class="row">
+      <!-- Part Code -->
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="partCode" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.partCode'
+            "
+          ></span>
+          <i class="red"> *</i>
+        </label>
+
+        <ng-select
+          [items]="partCodeDDList"
+          [searchFn]="dropdownPartCodeSearchFn"
+          [selectOnTab]="true"
+          (input)="checkNgSelectValue($event, 'partCode')"
+          bindLabel="partCode"
+          formControlName="partCode"
+          notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.partCode'
+              | translate
+          }}"
+          (change)="onPartCodeSelected($event)"
+          [ngClass]="{
+            redBorder:
+              (submitted &&
+                quoteAndOrderAllocationFormController['partCode'].errors) ||
+              (quoteAndOrderAllocationFormController['partCode'].errors &&
+                (quoteAndOrderAllocationFormController['partCode'].dirty ||
+                  quoteAndOrderAllocationFormController['partCode'].touched))
+          }"
+        >
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-index="index"
+            let-search="searchTerm"
+          >
+            <div title="{{ item?.partCode }} - {{ item?.partName }}">
+              <small
+                ><b>{{ item?.partCode }}</b></small
+              ><br />
+              <span class="dropDownDescription">{{ item?.partName }}</span>
+            </div>
+          </ng-template>
+        </ng-select>
+
+        <div
+          class="help-block red"
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['partCode'].errors) ||
+            (quoteAndOrderAllocationFormController['partCode'].errors &&
+              (quoteAndOrderAllocationFormController['partCode'].dirty ||
+                quoteAndOrderAllocationFormController['partCode'].touched))
+          "
+        >
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['partCode'].errors[
+                'invalid'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.partCode.invalid'
+              "
+            ></span>
+          </p>
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['partCode'].errors[
+                'required'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.partCode.required'
+              "
+            ></span>
+          </p>
+        </div>
+      </div>
+      <!-- Part Name -->
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="partName" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.partName'
+            "
+          ></span>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control new-form-control-input"
+          id="rfqNumber"
+          formControlName="partName"
+          maxlength="100"
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.partName'
+              | translate
+          }}"
+        />
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="rfqQuantity" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.rfqQuantity'
+            "
+          ></span>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control new-form-control-input"
+          id="rfqNumber"
+          formControlName="rfqQuantity"
+          maxlength="100"
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.rfqQuantity'
+              | translate
+          }}"
+        />
+      </div>
+
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="stockUom" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.stockUom'
+            "
+          ></span>
+          <i class="red"> *</i>
+        </label>
+
+        <ng-select
+          [items]="stockUomDDList"
+          [searchFn]="dropdownSearchFn"
+          [selectOnTab]="true"
+          (input)="checkNgSelectValue($event, 'stockUom')"
+          bindLabel="stockUom"
+          formControlName="stockUom"
+          notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.stockUom'
+              | translate
+          }}"
+          [ngClass]="{
+            redBorder:
+              (submitted &&
+                quoteAndOrderAllocationFormController['stockUom'].errors) ||
+              (quoteAndOrderAllocationFormController['stockUom'].errors &&
+                (quoteAndOrderAllocationFormController['stockUom'].dirty ||
+                  quoteAndOrderAllocationFormController['stockUom'].touched))
+          }"
+        >
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-index="index"
+            let-search="searchTerm"
+          >
+            <div title="{{ item?.code }} - {{ item?.description }}">
+              <small
+                ><b>{{ item?.code }}</b></small
+              ><br />
+              <span class="dropDownDescription">{{ item?.description }}</span>
+            </div>
+          </ng-template>
+        </ng-select>
+
+        <div
+          class="help-block red"
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['stockUom'].errors) ||
+            (quoteAndOrderAllocationFormController['stockUom'].errors &&
+              (quoteAndOrderAllocationFormController['stockUom'].dirty ||
+                quoteAndOrderAllocationFormController['stockUom'].touched))
+          "
+        >
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['stockUom'].errors[
+                'invalid'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.stockUom.invalid'
+              "
+            ></span>
+          </p>
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['stockUom'].errors[
+                'required'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.stockUom.required'
+              "
+            ></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="form-group col-lg-2 col-md-2 col-sm-3">
+        <label for="partSpecification" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.purchaseSpecification'
+            "
+          ></span>
+        </label>
+        <br />
+        <p class="margin-left-10 font-20">
+          <i
+            class="far fa-eye clickable"
+            (click)="handleOpenPartSpecification()"
+          ></i>
+        </p>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="supplierQuantity" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.supplierQuantity'
+            "
+          ></span>
+          <i class="red"> *</i>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control amountInput new-form-control-input"
+          id="supplierQuantity"
+          formControlName="supplierQuantity"
+          maxlength="15"
+          [scale]="2"
+          numericType="decimal"
+
+          numeric
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.supplierQuantity'
+              | translate
+          }}"
+          [ngClass]="{
+            redBorderCalender:
+              (submitted &&
+                quoteAndOrderAllocationFormController['supplierQuantity']
+                  .errors) ||
+              (quoteAndOrderAllocationFormController['supplierQuantity']
+                .errors &&
+                (quoteAndOrderAllocationFormController['supplierQuantity']
+                  .dirty ||
+                  quoteAndOrderAllocationFormController['supplierQuantity']
+                    .touched))
+          }"
+          (input)="handleAmountCalculation('discountPer'); onChangePoOrSupplierQuantity($event)"
+          
+        />
+        <div
+          class="help-block red"
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['supplierQuantity']
+                .errors) ||
+            (quoteAndOrderAllocationFormController['supplierQuantity'].errors &&
+              (quoteAndOrderAllocationFormController['supplierQuantity']
+                .dirty ||
+                quoteAndOrderAllocationFormController['supplierQuantity']
+                  .touched))
+          "
+        >
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['supplierQuantity'].errors[
+                'invalid'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.supplierQuantity.invalid'
+              "
+            ></span>
+          </p>
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['supplierQuantity'].errors[
+                'required'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.supplierQuantity.required'
+              "
+            ></span>
+          </p>
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['supplierQuantity'].errors[
+                'min'
+              ] ||
+              quoteAndOrderAllocationFormController['supplierQuantity'].errors[
+                'max'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.supplierQuantity.limit'
+              "
+            ></span>
+          </p>
+        </div>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="unitPrice" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.unitPrice'
+            "
+          ></span>
+          <i class="red"> *</i>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control amountInput new-form-control-input"
+          id="unitPrice"
+          formControlName="unitPrice"
+          maxlength="12"
+          [scale]="2"
+          numericType="decimal"
+          numeric
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.unitPrice'
+              | translate
+          }}"
+          [ngClass]="{
+            redBorderCalender:
+              (submitted &&
+                quoteAndOrderAllocationFormController['unitPrice'].errors) ||
+              (quoteAndOrderAllocationFormController['unitPrice'].errors &&
+                (quoteAndOrderAllocationFormController['unitPrice'].dirty ||
+                  quoteAndOrderAllocationFormController['unitPrice'].touched))
+          }"
+          (input)="handleAmountCalculation('discountPer')"
+        />
+        <div
+          class="help-block red"
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['unitPrice'].errors) ||
+            (quoteAndOrderAllocationFormController['unitPrice'].errors &&
+              (quoteAndOrderAllocationFormController['unitPrice'].dirty ||
+                quoteAndOrderAllocationFormController['unitPrice'].touched))
+          "
+        >
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['unitPrice'].errors[
+                'invalid'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.unitPrice.invalid'
+              "
+            ></span>
+          </p>
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['unitPrice'].errors[
+                'required'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.unitPrice.required'
+              "
+            ></span>
+          </p>
+          <!-- <p *ngIf="quoteAndOrderAllocationFormController['unitPrice']errors['min'] || quoteAndOrderAllocationFormController['supplierQuantity']errors['max']">
+                <span
+                    [translate]=" 'operations.requestForQuote.quoteAndOrderAllocation.errors.supplierQuantity.limit' "
+                ></span>
+            </p> -->
+          <div
+            *ngIf="
+              quoteAndOrderAllocationFormController['unitPrice'].errors['min']
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.supplierQuantity.limit'
+              "
+            ></span>
+          </div>
+          <div
+            *ngIf="
+              quoteAndOrderAllocationFormController['unitPrice'].errors['max']
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.supplierQuantity.limit'
+              "
+            ></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="discountPer" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.discountPer'
+            "
+          ></span>
+          <i class="red"> *</i>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control amountInput new-form-control-input"
+          id="discountPer"
+          formControlName="discountPer"
+          maxlength="6"
+          [scale]="2"
+          numericType="decimal"
+          numeric
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.discountPer'
+              | translate
+          }}"
+          [ngClass]="{
+            redBorderCalender:
+              (submitted &&
+                quoteAndOrderAllocationFormController['discountPer'].errors) ||
+              (quoteAndOrderAllocationFormController['discountPer'].errors &&
+                (quoteAndOrderAllocationFormController['discountPer'].dirty ||
+                  quoteAndOrderAllocationFormController['discountPer'].touched))
+          }"
+          (input)="handleAmountCalculation('discountPer')"
+        />
+        <div
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['discountPer'].errors) ||
+            (quoteAndOrderAllocationFormController['discountPer'].errors &&
+              (quoteAndOrderAllocationFormController['discountPer'].dirty ||
+                quoteAndOrderAllocationFormController['discountPer'].touched))
+          "
+          class="help-block red"
+        >
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['discountPer'].errors[
+                'required'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.discountPer.required'
+              "
+            ></span>
+          </p>
+          <div
+            *ngIf="
+              quoteAndOrderAllocationFormController['discountPer'].errors['min']
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.discountPer.minMaxError'
+              "
+            ></span>
+          </div>
+          <div
+            *ngIf="
+              quoteAndOrderAllocationFormController['discountPer'].errors['max']
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.discountPer.minMaxError'
+              "
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="discountAmount" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.discountAmount'
+            "
+          ></span>
+          <i class="red"> *</i>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control amountInput new-form-control-input"
+          id="discountAmount"
+          formControlName="discountAmount"
+          maxlength="6"
+          [scale]="2"
+          numericType="decimal"
+          numeric
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.discountAmount'
+              | translate
+          }}"
+        />
+        <div
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['discountAmount'].errors) ||
+            (quoteAndOrderAllocationFormController['discountAmount'].errors &&
+              (quoteAndOrderAllocationFormController['discountAmount'].dirty ||
+                quoteAndOrderAllocationFormController['discountAmount']
+                  .touched))
+          "
+          class="help-block red"
+        >
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['discountAmount'].errors[
+                'required'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.discountAmount.required'
+              "
+            ></span>
+          </p>
+        </div>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="totalSupplierPrice" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.totalSupplierPrice'
+            "
+          ></span>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control amountInput new-form-control-input"
+          id="totalSupplierPrice"
+          formControlName="totalSupplierPrice"
+          [scale]="2"
+          numericType="decimal"
+          numeric
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.totalSupplierPrice'
+              | translate
+          }}"
+        />
+        <div
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['totalSupplierPrice']
+                .errors) ||
+            (quoteAndOrderAllocationFormController['totalSupplierPrice']
+              .errors &&
+              (quoteAndOrderAllocationFormController['totalSupplierPrice']
+                .dirty ||
+                quoteAndOrderAllocationFormController['totalSupplierPrice']
+                  .touched))
+          "
+          class="help-block red"
+        >
+          <p
+            *ngIf="
+              quoteAndOrderAllocationFormController['totalSupplierPrice']
+                .errors['required']
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.totalSupplierPrice.required'
+              "
+            ></span>
+          </p>
+        </div>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="deliveryDate" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.deliveryDate'
+            "
+          ></span>
+          <i class="red"> *</i>
+        </label>
+        <div class="input-group input-group-md">
+          <input
+            type="text"
+            class="form-control uppercase"
+            bsDatepicker
+            (keydown.arrowdown)="deliveryDate.click()"
+            formControlName="deliveryDate"
+            #deliveryDate
+            [bsConfig]="{
+              dateInputFormat: 'DD-MMM-YYYY',
+              containerClass: 'theme-dark-blue',
+              adaptivePosition: true
+            }"
+            [ngClass]="{
+              redBorderCalender:
+                (submitted &&
+                  quoteAndOrderAllocationFormController['deliveryDate']
+                    .errors) ||
+                (quoteAndOrderAllocationFormController['deliveryDate'].errors &&
+                  (quoteAndOrderAllocationFormController['deliveryDate']
+                    .dirty ||
+                    quoteAndOrderAllocationFormController['deliveryDate']
+                      .touched))
+            }"
+            (ngModelChange)="validateQuotationDate('deliveryDate', $event)"
+          />
+
+          <span class="input-group-btn">
+            <button
+              class="btn custom-button"
+              type="button"
+              (click)="deliveryDate.click()"
+              tabindex="-1"
+            >
+              <app-svg-calender-icon></app-svg-calender-icon>
+            </button>
+          </span>
+        </div>
+        <div
+          class="help-block red"
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['deliveryDate'].errors) ||
+            (quoteAndOrderAllocationFormController['deliveryDate'].errors &&
+              (quoteAndOrderAllocationFormController['deliveryDate'].dirty ||
+                quoteAndOrderAllocationFormController['deliveryDate'].touched))
+          "
+        >
+          <div
+            *ngIf="quoteAndOrderAllocationFormController['deliveryDate'].errors?.['invalid']"
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.deliveryDate.invalid'
+              "
+            ></span>
+          </div>
+          <div
+            *ngIf="quoteAndOrderAllocationFormController['deliveryDate'].errors?.['required']"
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.deliveryDate.required'
+              "
+            ></span>
+          </div>
+          <div
+            *ngIf="quoteAndOrderAllocationFormController['deliveryDate'].errors?.['customError']"
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.deliveryDateGreaterThanCurrent'
+              "
+            ></span>
+            {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="poQuantity" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.poQuantity'
+            "
+          ></span>
+          <i class="red"> *</i>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control amountInput new-form-control-input"
+          id="poQuantity"
+          formControlName="poQuantity"
+          maxlength="15"
+          [scale]="2"
+          numericType="decimal"
+          (input)="onChangePoOrSupplierQuantity($event)" 
+          numeric
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.poQuantity'
+              | translate
+          }}"
+          [ngClass]="{
+            redBorderCalender:
+              (submitted &&
+                quoteAndOrderAllocationFormController['poQuantity'].errors) ||
+              (quoteAndOrderAllocationFormController['poQuantity'].errors &&
+                (quoteAndOrderAllocationFormController['poQuantity'].dirty ||
+                  quoteAndOrderAllocationFormController['poQuantity'].touched))
+          }"
+        />
+        <div *ngIf="isPoQuantityLesserThanSupplierQuantity"
+        class="help-block red">  
+        <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.poQuantityLess'
+              "
+            ></span>
+           
+        </div>
+        <div
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['poQuantity'].errors) ||
+            (quoteAndOrderAllocationFormController['poQuantity'].errors &&
+              (quoteAndOrderAllocationFormController['poQuantity'].dirty ||
+                quoteAndOrderAllocationFormController['poQuantity'].touched))
+          "
+          class="help-block red"
+        >
+          <div
+            *ngIf="quoteAndOrderAllocationFormController['poQuantity'].errors?.['required']"
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.poQuantity.required'
+              "
+            ></span>
+          </div>
+          <div
+            *ngIf="
+              quoteAndOrderAllocationFormController['poQuantity'].errors['min']
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.poQuantity.minMaxError'
+              "
+            ></span>
+          </div>
+          <div
+            *ngIf="
+              quoteAndOrderAllocationFormController['poQuantity'].errors['max']
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.poQuantity.minMaxError'
+              "
+            ></span>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="totalDepotPrice" class="labelText">
+          <span
+            [translate]="
+              'operations.requestForQuote.quoteAndOrderAllocation.label.totalDepotPrice'
+            "
+          ></span>
+          <i class="red"> *</i>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control amountInput new-form-control-input"
+          id="totalDepotPrice"
+          formControlName="totalDepotPrice"
+          maxlength="6"
+          numericType="decimal"
+          numeric
+          placeholder="{{
+            'operations.requestForQuote.quoteAndOrderAllocation.placeholder.totalDepotPrice'
+              | translate
+          }}"
+          [ngClass]="{
+            redBorderCalender:
+              (submitted &&
+                quoteAndOrderAllocationFormController['totalDepotPrice']
+                  .errors) ||
+              (quoteAndOrderAllocationFormController['totalDepotPrice']
+                .errors &&
+                (quoteAndOrderAllocationFormController['totalDepotPrice']
+                  .dirty ||
+                  quoteAndOrderAllocationFormController['totalDepotPrice']
+                    .touched))
+          }"
+          (input)="handleAmountCalculation('totalDepotPrice')"
+        />
+        <div
+          *ngIf="
+            (submitted &&
+              quoteAndOrderAllocationFormController['totalDepotPrice']
+                .errors) ||
+            (quoteAndOrderAllocationFormController['totalDepotPrice'].errors &&
+              (quoteAndOrderAllocationFormController['totalDepotPrice'].dirty ||
+                quoteAndOrderAllocationFormController['totalDepotPrice']
+                  .touched))
+          "
+          class="help-block red"
+        >
+          <div
+            *ngIf="quoteAndOrderAllocationFormController['totalDepotPrice'].errors?.['required']"
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.totalDepotPrice.required'
+              "
+            ></span>
+          </div>
+          <div
+            *ngIf="
+              quoteAndOrderAllocationFormController['totalDepotPrice'].errors[
+                'min'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.totalDepotPrice.minMaxError'
+              "
+            ></span>
+          </div>
+          <div
+            *ngIf="
+              quoteAndOrderAllocationFormController['totalDepotPrice'].errors[
+                'max'
+              ]
+            "
+          >
+            <span
+              [translate]="
+                'operations.requestForQuote.quoteAndOrderAllocation.errors.totalDepotPrice.minMaxError'
+              "
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div>
+  <app-shared-table-new
+    [headerColumnList]="partDetailColumnList"
+    [tableInitialData]="quoteAndOrderAllocationData"
+    [filter]="false"
+    [deleteGnIcon]="false"
+    [refreshIcon]="false"
+    [addRecordIcon]="false"
+    [isCheckBox]="false"
+    [isGridTittle]="false"
+    [showTableHeader]="false"
+    (sendSelectedData)="receiveSelectedData($event)"
+    (sendTableRowData)="receiveTableRowData($event)"
+    (sendSelectedData)="handleDeleteRowData($event)"
+    (handleCompareRowData)="handleCompareRowData($event)"
+    [isMasterComp]="false"
+  ></app-shared-table-new>
+</div>
+
+<app-supplier-comparison
+  #supplierComparison
+  [partCode]="partCode"
+  [supplierComparisonData]="supplierComparisonData"
+></app-supplier-comparison>
+
+
+
+<div
+bsModal
+#partSpecificationModal="bs-modal"
+class="modal"
+tabindex="-1"
+role="dialog"
+aria-labelledby="contactModalLabel"
+aria-hidden="true"
+[config]="{ backdrop: 'static' }"
+>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header-new header-blue">
+      <b class="float-left">
+        <h4 class="modal-title">
+          {{tableTitle}}
+        </h4>
+      </b>
+      <div class="row" class="gridRightAlign float-right">
+        <div
+          class="custom-button-close"
+          (click)="handleCloseSpecification()"
+        >
+          <i class="fas fa-fw fa-times white-icon" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <app-shared-table-new
+        [headerColumnList]="tableColumnsPartSpecification"
+        [filter]="true"
+        [excelIcon]="true"
+        [refreshIcon]="true"
+        [showHide]="true"
+        [globalSearch]="true"
+        [isPanelHeading]="false"
+        [addRecordIcon]="false"
+        [tableInitialData]="partSpecificationData"
+        [isMasterComp]="false"
+        [tableTitle]="tableTitle"
+        [excelFileName]="excelFileName"
+      ></app-shared-table-new>
+    </div>
+
+    <div class="cancel-modal-footer">
+      <div class="row">
+        <button
+          class="capsule-button reset-button-color"
+          (click)="handleCloseSpecification()"
+        >
+          <div class="icon-circle">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </div>
+          {{ "common.buttons.close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

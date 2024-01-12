@@ -1,0 +1,176 @@
+<div
+  [ngStyle]="{
+    'background-image': getUrl(),
+    height: '100vh',
+    'background-size': 'cover',
+    'background-repeat': 'no-repeat',
+    filter: 'blur(0px)',
+    '-webkit-filter': 'blur(0px)'
+  }"
+>
+  
+  <div class="right-align" id="iInterchangeLogo">
+    <img
+      class="logo-container"
+      src="{{ iInterchangeLogo }}"
+      alt="iInterchangeLogo"
+    />
+  </div>
+</div>
+<div  class="login-center">
+  <div
+   
+    class="well no-padding loginForm"
+  >
+    <form
+      (ngSubmit)="onSubmit()"
+      [formGroup]="loginFormGroup"
+      class="smart-form client-form"
+      autocomplete="off"
+    >
+      <header
+      class="forgot-header"
+      >
+        <div> {{
+          "login.login"
+          | translate
+          }} </div>
+      </header>
+      <fieldset>
+        <section>
+        
+          <div class="centered-logo-container" id="companyLogo">
+            <img class="logo-image-password" src="{{ companyLogo }}" alt="companyLogo" />
+          </div> 
+          
+        </section>
+
+        <section>
+          
+          <div class="centered-logo-container" id="companyLogo">
+            <img class="logo-image-password" src="{{ iDepoLogo }}" alt="companyLogo" />
+          </div> 
+        </section>
+        <section>
+        
+          <div class="version-password">
+            <span> 
+              {{
+                "login.version"
+                | translate
+                }} 
+               : {{ versionNo }}</span>
+          </div>
+        </section>
+
+        <section>
+          <label class="label">
+            
+            {{
+              "login.label.username"
+              | translate
+              }} 
+
+          </label>
+          <label class="input">
+            <i class="icon-append fa fa-user"></i>
+            <input
+              class="form-control uppercase"
+              id="userName"
+              formControlName="userName"
+              maxlength="20"
+              name="userName"
+            />
+            <b class="tooltip tooltip-top-right"
+              ><i class="fa fa-user txt-color-teal"></i> 
+              {{
+                "login.enterUsername"
+                | translate
+                }} 
+              </b
+            ></label
+          >
+          <div
+            class="help-block red"
+            *ngIf="submitted && loginFormControls.userName.errors"
+          >
+            <p *ngIf="loginFormControls.userName.errors.required">
+              <span> 
+                
+                {{
+                  "login.errors.enterUsername.required"
+                  | translate
+                  }}
+              </span>
+            </p>
+            <p *ngIf="loginFormControls.userName.errors.invalid">
+              <span> 
+                {{
+                  "login.errors.enterUsername.Invalid"
+                  | translate
+                  }}</span>
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <label class="label">Password</label>
+          <label class="input">
+            <i
+              (click)="toggleHide()"
+              title="{{ showHideText }}"
+              style="cursor: pointer"
+              [ngClass]="
+                !hide
+                  ? 'icon-append fas fa-eye'
+                  : 'icon-append fas fa-eye-slash'
+              "
+            ></i>
+            <input
+              class="form-control"
+              formControlName="password"
+              [type]="hide ? 'text' : 'password'"
+              maxlength="20"
+              name="password"
+            />
+            <b class="tooltip tooltip-top-right">
+              <i class="fa fa-lock txt-color-teal"></i> Please Enter Password</b
+            >
+          </label>
+
+          <div
+            class="help-block red"
+            *ngIf="submitted && loginFormControls.password.errors"
+          >
+            <p *ngIf="loginFormControls.password.errors.required">
+              <span> Password required</span>
+            </p>
+            <p *ngIf="loginFormControls.password.errors.invalid">
+              <span> Invalid Password</span>
+            </p>
+          </div>
+          <div
+            style="text-align: center; padding-top: 10px"
+            class="help-block red"
+            *ngIf="submitted && invalidLogin"
+          >
+            <p>
+              <span>{{ invalidLoginMessage }}</span>
+            </p>
+          </div>
+          <div class="note">
+            <a routerLink="/auth/forgot" routerLinkActive="active"
+              >Forgot password?</a
+            >
+          </div>
+        </section>
+      </fieldset>
+      <footer style="background: none !important; color: white !important">
+        <button type="submit" id="signinBtn" class="btn btn-primary signBtn">
+          Sign In
+        </button>
+
+      </footer>
+    </form>
+  </div>
+</div>

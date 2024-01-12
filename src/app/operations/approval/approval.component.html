@@ -1,0 +1,484 @@
+<div
+  class="alert alert-warning"
+  role="alert"
+  *ngIf="showWarningMessageForRoleRights"
+>
+  <i class="fa-fw fa fa-warning"></i>
+  <strong
+    ><span [translate]="'common.roleRightsMessages.warning'"></span
+  ></strong>
+  {{ warningMessageForRoleRights | translate }}
+</div>
+
+<div>
+  <app-generate-pdf #generatePDF></app-generate-pdf>
+</div>
+<div>
+  <app-generate-po-pdf #generatePdfComponent></app-generate-po-pdf>
+</div>
+<div>
+  <app-generate-rfq-pdf #generatePdfComponent></app-generate-rfq-pdf>
+</div>
+<div class="prContainer">
+  <div class="content-container" *ngIf="showList">
+    <div style="display: flex; justify-content: space-between">
+      <h1
+        style="display: inline"
+        class="purchase-requisition"
+        [translate]="'operations.approval.titles.approvalScreenOverView'"
+      ></h1>
+      <strong style="display: inline; color: rgb(5, 72, 72); font-size: 15px">
+        {{ "operations.common.titles.lastUpdatedWasOn" | translate }}
+        {{ lastModifiedDate }}
+      </strong>
+    </div>
+    <div class="container-table">
+      <div class="row" [hidden]="homeScreen == true">
+        <div
+          class="col-lg-12 col-md-12 col-sm-12 approval-screen-widget-topborder"
+        >
+          <div class="col-lg-3 col-md-3 col-sm-3">
+            <div
+              sa-widget
+              [editbutton]="false"
+              [togglebutton]="false"
+              [fullscreenbutton]="false"
+              [colorbutton]="false"
+              color="#f4f4f4"
+            >
+              <header
+                class="text-align-center"
+                style="display: flex; justify-content: center"
+              >
+                <h2>
+                  <strong
+                    ><span
+                      [translate]="'operations.approval.titles.pendingApproval'"
+                    ></span>
+                  </strong>
+                </h2>
+              </header>
+              <div class="panel-body surveyOverviewPanelBody">
+                <div class="p-1 text-center row">
+                  <div class="col-4 section" *ngIf="showPRCount">
+                    <div style="margin-right: -15px">
+                      <p style="font-weight: 500; font-size: 15px; color: gray">
+                        <span
+                          [translate]="
+                            'operations.approval.titles.purchaseRequisition'
+                          "
+                        ></span>
+                      </p>
+                      <p
+                        style="font-size: 40px; font-weight: 550"
+                        (click)="setCurrentGrid(1)"
+                        class="pointer orange-grid"
+                      >
+                        {{ pendingPR | number }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="col-4 section" *ngIf="showPOCount">
+                    <div style="margin-right: -15px">
+                      <p style="font-weight: 500; font-size: 15px; color: gray">
+                        <span
+                          [translate]="
+                            'operations.approval.titles.requestForQuote'
+                          "
+                        ></span>
+                      </p>
+                      <p
+                        style="font-size: 40px; font-weight: 550"
+                        (click)="setCurrentGrid(2)"
+                        class="pointer brown-grid"
+                      >
+                        {{ pendingRFQ | number }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="col-4 section"
+                    style="border-right: none"
+                    *ngIf="showRFQCount"
+                  >
+                    <div>
+                      <p style="font-weight: 500; font-size: 15px; color: gray">
+                        <span
+                          [translate]="
+                            'operations.approval.titles.purchaseOrder'
+                          "
+                        ></span>
+                      </p>
+                      <p
+                        style="font-size: 40px; font-weight: 550"
+                        (click)="setCurrentGrid(3)"
+                        class="pointer gray-grid"
+                      >
+                        {{ pendingPO | number }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div
+              sa-widget
+              [editbutton]="false"
+              [togglebutton]="false"
+              [fullscreenbutton]="false"
+              [colorbutton]="false"
+              color="#f4f4f4"
+            >
+              <header class="text-align-center">
+                <h2>
+                  <strong
+                    ><i class="fas fa-fw fa-bar-chart-o"></i
+                    ><span
+                      [translate]="
+                        'operations.approval.titles.12MonthsApprovalTrend'
+                      "
+                    ></span>
+                  </strong>
+                </h2>
+              </header>
+              <div class="panel-body surveyOverviewPanelBody">
+                <div class="col-sm-12 col-lg-12 col-md-12 col-xs-12 nopadding">
+                  <br />
+                  <p-chart
+                    type="bar"
+                    [data]="revenueData"
+                    height="24vh"
+                    [options]="options"
+                  ></p-chart>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-3 col-sm-3">
+            <div
+              sa-widget
+              [editbutton]="false"
+              [togglebutton]="false"
+              [fullscreenbutton]="false"
+              [colorbutton]="false"
+              color="#f4f4f4"
+            >
+              <header
+                class="text-align-center"
+                style="display: flex; justify-content: center"
+              >
+                <h2>
+                  <strong
+                    ><span
+                      [translate]="'operations.approval.titles.approved'"
+                    ></span
+                  ></strong>
+                </h2>
+              </header>
+              <div class="panel-body surveyOverviewPanelBody">
+                <div class="p-1 text-center row">
+                  <div class="col-4 section" *ngIf="showPRCount">
+                    <div style="margin-right: -15px">
+                      <p style="font-weight: 500; font-size: 15px; color: gray">
+                        <span
+                          [translate]="
+                            'operations.approval.titles.purchaseRequisition'
+                          "
+                        ></span>
+                      </p>
+                      <p
+                        style="font-size: 40px; font-weight: 550"
+                        (click)="setCurrentGrid(4)"
+                        class="pointer orange-grid"
+                      >
+                        {{ approvedPR | number }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="col-4 section" *ngIf="showPOCount">
+                    <div style="margin-right: -15px">
+                      <p style="font-weight: 500; font-size: 15px; color: gray">
+                        <span
+                          [translate]="
+                            'operations.approval.titles.requestForQuote'
+                          "
+                        ></span>
+                      </p>
+                      <p
+                        style="font-size: 40px; font-weight: 550"
+                        (click)="setCurrentGrid(5)"
+                        class="pointer brown-grid"
+                      >
+                        {{ approvedRFQ | number }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="col-4 section"
+                    style="border-right: none"
+                    *ngIf="showRFQCount"
+                  >
+                    <div>
+                      <p style="font-weight: 500; font-size: 15px; color: gray">
+                        <span
+                          [translate]="
+                            'operations.approval.titles.purchaseOrder'
+                          "
+                        ></span>
+                      </p>
+                      <p
+                        style="font-size: 40px; font-weight: 550"
+                        (click)="setCurrentGrid(6)"
+                        class="pointer gray-grid"
+                      >
+                        {{ approvedPO | number }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ..................................................approval-List.......................................... -->
+      <br />
+      <br />
+
+      <app-approval-list
+        #approval
+        [showGridByType]="showGridByType"
+        [tableTitle]="approvalGridTitle"
+        [showCancelIcon]="showCancelIcon"
+        (valueEmit)="onValueReceived($event)"
+        [selectedForm]="selectedForm"
+        [selectedTabStatus]="selectedTabStatus"
+        (sendSelectedRowFromList)="handleSelectedRowList($event)"
+        (sendEmailGridFunction)="handleEmailIcon($event)"
+        (sendApprovalGridFunction)="handleApprovalIcon($event)"
+        (printFunction)="handlePrintIcon($event)"
+        (sendCancelGridFunction)="handleCancelRejectIcon($event)"
+        (rejectGridFunction)="handleRejectIcon($event)"
+        (approvalFromFn)="handleApprovalFromFn($event)"
+      >
+        <!-- (handleGridPrintIcon)="handleGridPrintIcon($event)" -->
+      </app-approval-list>
+      <!-- ..................................................approval-List-End.......................................... -->
+    </div>
+  </div>
+  <!-- Modal components-->
+  <div *ngIf="!showList">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading clearfix">
+        <div
+          class="panel-title panelHeading pull-left"
+          *ngIf="selectedForm == 'PO'"
+        >
+          <div class="nopaddingbottom">
+            <b>
+              <span
+                [translate]="'operations.purchaseOrder.titles.purchaseOrder'"
+                class="main-title"
+              ></span
+            ></b>
+            <label class="linebadge"> {{ mode | translate | uppercase }}</label>
+          </div>
+          <div>
+            <span class="panelSubHeading-Pr redIcon">
+              {{ "operations.purchaseOrder.label.poNo" | translate }}
+              {{ selectedRowNo }}
+            </span>
+          </div>
+        </div>
+
+        <div
+          class="panel-title panelHeading pull-left"
+          *ngIf="selectedForm == 'PR'"
+        >
+          <div class="nopaddingbottom">
+            <b>
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.titles.purchaseRequisition'
+                "
+                class="main-title"
+              ></span
+            ></b>
+            <label class="linebadge"> {{ mode | translate | uppercase }}</label>
+          </div>
+          <div>
+            <span class="panelSubHeading-Pr redIcon">
+              {{ "operations.purchaseRequisition.label.prNo" | translate }}
+              {{ selectedRowNo }}</span
+            >
+          </div>
+        </div>
+        <div
+          class="panel-title panelHeading pull-left"
+          *ngIf="selectedForm == 'RFQ'"
+        >
+          <div class="nopaddingbottom">
+            <b>
+              <span
+                [translate]="
+                  'operations.requestForQuote.titles.requestForQuote'
+                "
+                class="main-title"
+              ></span
+            ></b>
+            <label class="linebadge"> {{ mode | translate | uppercase }}</label>
+          </div>
+          <div>
+            <span class="panelSubHeading-Pr redIcon">
+              {{ "operations.requestForQuote.label.rfqNo" | translate }}
+              {{ selectedRowNo }}
+            </span>
+          </div>
+        </div>
+
+        <div class="pull-right buttonGroup">
+          <div class="row">
+            <button
+              (click)="handleFormPrintIcon()"
+              class="capsule-button light-blue"
+              [disabled]="disablePrintIcons"
+              [class.unclickable]="disablePrintIcons"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-print"></i>
+              </div>
+              {{ "common.buttons.print" | translate }}
+              {{ selectedForm }}
+            </button>
+            <button
+              *ngIf="!disableCancelRejectionIcons"
+              class="capsule-button brown"
+              (click)="handleCancelIcon('button')"
+              [disabled]="disableCancelRejectionIcons"
+              [class.unclickable]="disableCancelRejectionIcons"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-xmark"></i>
+              </div>
+              {{ "operations.approval.button.cancelRejection" | translate }}
+            </button>
+            <button
+              class="capsule-button light-green"
+              (click)="handleApprovalFromFn($event)"
+              [disabled]="disableApproveIcons"
+              [class.unclickable]="disableApproveIcons"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-check"></i>
+              </div>
+              {{ selectedTabStatus == "APPROVED" ? "Update" : "" }}
+              {{ "common.buttons.approve" | translate }}
+              {{ selectedForm }}
+            </button>
+          
+            <button
+              *ngIf="selectedTabStatus == 'APPROVED'"
+              class="capsule-button navyBlue"
+              (click)="handleEmailIcon($event)"
+              [disabled]="disableEmailIcons"
+              [class.unclickable]="disableEmailIcons"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-envelope"></i>
+              </div>
+              {{ "common.buttons.email" | translate }}
+              {{ selectedForm }}
+            </button>
+            <button
+              class="capsule-button buttonRed"
+              (click)="handleRejectIcon($event)"
+              [disabled]="disableRejectIcons"
+              [class.unclickable]="disableRejectIcons"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-ban"></i>
+              </div>
+              {{ "common.buttons.reject" | translate }}
+              {{ selectedForm }}
+            </button>
+
+            <button
+              class="capsule-button pale-orange"
+              title="{{ 'Back To List' | translate }}"
+              (click)="handleBackToList(true)"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-arrow-left"></i>
+              </div>
+              {{ "common.buttons.backToList" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <app-approval-form
+        [selectedFormRowData]="selectedRowList"
+        [editSavePRForm]="editSavePRForm"
+        [editSaveRFQPartForm]="editSaveRFQPartForm"
+        [editSaveRFQForm]="editSaveRFQForm"
+        [editSavePOForm]="editSavePOForm"
+        [companyId]="companyId"
+        [userId]="userId"
+        [userName]="userName"
+        [screenId]="screenId"
+      >
+      </app-approval-form>
+    </div>
+  </div>
+</div>
+
+<app-approval-popup
+  #approvalpopup
+  [selectedForm]="selectedForm"
+  [selectedRowList]="selectedRowList"
+  [selectedRowDataNos]="selectedRowDataNos"
+  [selectedRowDataIds]="selectedRowDataIds"
+  [tab]="tab"
+  (handleChangeTabStatus)="handleChangeTabStatus($event)"
+  [userName]="userName"
+  (handleRecordListUpdate)="handleRecordListUpdate($event)"
+>
+</app-approval-popup>
+<app-cancel-rejection-popup
+  #cancelpopup
+  [selectedRowList]="selectedRowList"
+  [selectedRowDataNos]="selectedRowDataNos"
+  [selectedRowDataIds]="selectedRowDataIds"
+  [tab]="tab"
+  (handleRecordListUpdate)="handleRecordListUpdate($event)"
+>
+</app-cancel-rejection-popup>
+<app-rejection-popup
+  #rejectionpopup
+  [selectedRowList]="selectedRowList"
+  [selectedForm]="selectedForm"
+  [selectedRowDataNos]="selectedRowDataNos"
+  [selectedRowDataIds]="selectedRowDataIds"
+  [tab]="tab"
+  [selectedForm]="selectedForm"
+  [userName]="userName"
+  (handleRecordListUpdate)="handleRecordListUpdate($event)"
+>
+</app-rejection-popup>
+<app-send-email
+  #emailModal
+  (sendEmailFunction)="sendEmailFunction($event)"
+  [attachmentPath]="attachmentPath"
+  [emailSubject]="emailSubject"
+>
+</app-send-email>
+<app-generate-po-pdf #generatePdfComponent></app-generate-po-pdf>

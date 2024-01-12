@@ -1,0 +1,1142 @@
+<div class="prContainer">
+  <div *ngIf="showList">
+    <div
+      class="alert alert-warning"
+      role="alert"
+      *ngIf="showWarningMessageForRoleRights"
+    >
+      <i class="fa-fw fa fa-warning"></i>
+      <strong
+        ><span [translate]="'common.roleRightsMessages.warning'"></span
+      ></strong>
+      {{ warningMessageForRoleRights | translate }}
+    </div>
+    <div class="content-container">
+      <div style="display: flex; justify-content: space-between">
+        <h1
+          style="display: inline"
+          class="purchase-requisition"
+          [translate]="'operations.purchaseOrder.titles.purchaseOrderOverview'"
+        ></h1>
+        <strong style="display: inline; color: rgb(5, 72, 72); font-size: 15px">
+          {{ "operations.purchaseOrder.titles.lastUpdatedWasOn" | translate }}
+          {{ lastModifiedDate }}
+        </strong>
+      </div>
+
+      <div class="cards" style="margin-top: 20px">
+        <div class="card-bg" (click)="getPRNoByCurrentStatusId(583, 1)">
+          <div class="card">
+            <div class="row">
+              <div class="col col-auto">
+                <div class="rectangle-6 rectangle-overall">
+                  <app-svg-overall-icon></app-svg-overall-icon>
+                </div>
+              </div>
+              <div class="col col-auto">
+                <div class="text-container">
+                  <span
+                    class="card-text-lable"
+                    [translate]="'operations.purchaseOrder.titles.overall'"
+                  ></span>
+                  <span class="count">{{ this.overViewObject?.overAll }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div (click)="getPRNoByCurrentStatusId(578, 2)" class="card-bg">
+          <div class="card">
+            <div class="row">
+              <div class="col col-auto">
+                <div class="rectangle-6 rectangle-drafts">
+                  <app-svg-drafts-icon></app-svg-drafts-icon>
+                </div>
+              </div>
+              <div class="col col-auto">
+                <div class="text-container">
+                  <span
+                    class="card-text-lable"
+                    [translate]="'operations.purchaseOrder.titles.drafts'"
+                  ></span>
+                  <span class="count">{{ this.overViewObject?.drafts }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-bg" (click)="getPRNoByCurrentStatusId(579, 3)">
+          <div class="card">
+            <div class="row">
+              <div class="col col-auto">
+                <div class="rectangle-6 rectangle-pending">
+                  <app-svg-pending-approval-icon></app-svg-pending-approval-icon>
+                </div>
+              </div>
+              <div class="col col-auto">
+                <div class="text-container">
+                  <span
+                    class="card-text-lable"
+                    [translate]="
+                      'operations.purchaseOrder.titles.pendingApproval'
+                    "
+                  ></span>
+                  <span class="count">{{
+                    this.overViewObject?.pendingApproval
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-bg" (click)="getPRNoByCurrentStatusId(580, 4)">
+          <div class="card">
+            <div class="row">
+              <div class="col col-auto">
+                <div class="rectangle-6 rectangle-approved">
+                  <app-svg-aproved-icon></app-svg-aproved-icon>
+                </div>
+              </div>
+              <div class="col col-auto">
+                <div class="text-container">
+                  <span
+                    class="card-text-lable"
+                    [translate]="'operations.purchaseOrder.titles.approved'"
+                  ></span>
+                  <span class="count">{{ this.overViewObject?.approved }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-bg" (click)="getPRNoByCurrentStatusId(581, 5)">
+          <div class="card">
+            <div class="row">
+              <div class="col col-auto">
+                <div class="rectangle-6 rectangle-cancelled">
+                  <app-svg-cancelled-icon></app-svg-cancelled-icon>
+                </div>
+              </div>
+              <div class="col col-auto">
+                <div class="text-container">
+                  <span
+                    class="card-text-lable"
+                    [translate]="'operations.purchaseOrder.titles.canceled'"
+                  ></span>
+                  <span class="count">{{
+                    this.overViewObject?.cancelled
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-bg" (click)="getPRNoByCurrentStatusId(582, 6)">
+          <div class="card">
+            <div class="row">
+              <div class="col col-auto">
+                <div class="rectangle-6 rectangle-rejected">
+                  <app-svg-rejected-icon></app-svg-rejected-icon>
+                </div>
+              </div>
+              <div class="col col-auto">
+                <div class="text-container">
+                  <span
+                    class="card-text-lable"
+                    [translate]="'operations.purchaseOrder.titles.rejected'"
+                  ></span>
+                  <span class="count">{{ this.overViewObject?.rejected }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-table">
+          <!-- <span class="pull-right buttonGroup" style="padding-right: 5px">
+          <button
+            class="capsule-button light-blue"
+            (click)="handleAddRecordIcon($event)"
+          >
+            <div class="icon-circle">
+              <i class="fas fa-plus"></i>
+            </div>
+            {{ "operations.purchaseOrder.buttons.addNewPo" | translate }}
+          </button>
+        </span>
+        <hr /> -->
+          <!-- .......................................................................................................................................... -->
+          <form
+            class="container-new-ui"
+            [formGroup]="editSaveFormSearch"
+            autocomplete="off"
+          >
+            <div class="row row-table">
+              <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                <label for="purchaseOrder" class="labelText">
+                  <span
+                    [translate]="'operations.purchaseOrder.label.purchaseOrder'"
+                  ></span>
+                </label>
+
+                <ng-select
+                  [items]="purchaseOrderDropDownList"
+                  [searchFn]="dropdownDepotSearchFnPurchaseOrder"
+                  [selectOnTab]="true"
+                  (input)="
+                    checkNgSearchFormSelectValue($event, 'purchaseOrder')
+                  "
+                  bindLabel="poNumber"
+                  formControlName="purchaseOrder"
+                  notFoundText="{{
+                    'common.dropdown.notFoundText' | translate
+                  }}"
+                  placeholder="{{
+                    'operations.purchaseOrder.placeholder.purchaseOrder'
+                      | translate
+                  }}"
+                  [ngClass]="{
+                    redBorder:
+                      (submittedSearch &&
+                        this.editSaveFormSearch.controls['purchaseOrder']
+                          .errors) ||
+                      (this.editSaveFormSearch.controls['purchaseOrder']
+                        .errors &&
+                        (this.editSaveFormSearch.controls['purchaseOrder']
+                          .dirty ||
+                          this.editSaveFormSearch.controls['purchaseOrder']
+                            .touched))
+                  }"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div title="{{ item?.poNumber }}">
+                      <small
+                        ><b>{{ item?.poNumber }}</b></small
+                      ><br />
+                
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      this.editSaveFormSearch.controls['purchaseOrder']
+                        .errors) ||
+                    (this.editSaveFormSearch.controls['purchaseOrder'].errors &&
+                      (this.editSaveFormSearch.controls['purchaseOrder']
+                        .dirty ||
+                        this.editSaveFormSearch.controls['purchaseOrder']
+                          .touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      this.editSaveFormSearch.controls['purchaseOrder'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.purchaseOrder.invalid'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                <label for="depot" class="labelText">
+                  <span
+                    [translate]="'operations.purchaseRequisition.label.depot'"
+                  ></span>
+                </label>
+
+                <ng-select
+                  [items]="associatedDepots"
+                  [selectOnTab]="true"
+                  (input)="checkNgSearchFormSelectValue($event, 'depot')"
+                  bindLabel="depotCode"
+                  formControlName="depot"
+                  [searchFn]="dropdownDepotSearchFnDepot"
+                  notFoundText="{{
+                    'common.dropdown.notFoundText' | translate
+                  }}"
+                  placeholder="{{
+                    'operations.purchaseOrder.placeholder.depot' | translate
+                  }}"
+                  [ngClass]="{
+                    redBorder:
+                      (submittedSearch &&
+                        this.editSaveFormSearch.controls['depot'].errors) ||
+                      (this.editSaveFormSearch.controls['depot'].errors &&
+                        (this.editSaveFormSearch.controls['depot'].dirty ||
+                          this.editSaveFormSearch.controls['depot'].touched))
+                  }"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div title="{{ item?.depotCode }} - {{ item?.depotName }}">
+                      <small
+                        ><b>{{ item?.depotCode }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.depotName
+                      }}</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      this.editSaveFormSearch.controls['depot'].errors) ||
+                    (this.editSaveFormSearch.controls['depot'].errors &&
+                      (this.editSaveFormSearch.controls['depot'].dirty ||
+                        this.editSaveFormSearch.controls['depot'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      this.editSaveFormSearch.controls['depot'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseRequisition.errors.depot.invalid'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                <label for="prNo" class="labelText">
+                  <span
+                    [translate]="'operations.purchaseOrder.label.poStatus'"
+                  ></span>
+                </label>
+                <ng-select
+                  [searchFn]="dropdownDepotSearchFnPoStatus"
+                  [items]="POStatuses"
+                  [selectOnTab]="true"
+                  (input)="checkNgSearchFormSelectValue($event, 'poStatus')"
+                  bindLabel="code"
+                  formControlName="poStatus"
+                  notFoundText="{{
+                    'common.dropdown.notFoundText' | translate
+                  }}"
+                  placeholder="{{
+                    'operations.purchaseOrder.placeholder.poStatus' | translate
+                  }}"
+                  [ngClass]="{
+                    redBorder:
+                      (submittedSearch &&
+                        this.editSaveFormSearch.controls['poStatus'].errors) ||
+                      (this.editSaveFormSearch.controls['poStatus'].errors &&
+                        (this.editSaveFormSearch.controls['poStatus'].dirty ||
+                          this.editSaveFormSearch.controls['poStatus'].touched))
+                  }"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div title="{{ item?.code }}">
+                      <small
+                        ><b>{{ item?.code }}</b></small
+                      ><br />
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      this.editSaveFormSearch.controls['poStatus'].errors) ||
+                    (this.editSaveFormSearch.controls['poStatus'].errors &&
+                      (this.editSaveFormSearch.controls['poStatus'].dirty ||
+                        this.editSaveFormSearch.controls['poStatus'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      this.editSaveFormSearch.controls['poStatus'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.poStatus.invalid'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                <label for="prNo" class="labelText">
+                  <span
+                    [translate]="'operations.purchaseOrder.label.poSource'"
+                  ></span>
+                </label>
+                <ng-select
+                  [searchFn]="dropdownDepotSearchFnPoSource"
+                  [items]="POSources"
+                  [selectOnTab]="true"
+                  (input)="checkNgSearchFormSelectValue($event, 'poSource')"
+                  bindLabel="code"
+                  formControlName="poSource"
+                  notFoundText="{{
+                    'common.dropdown.notFoundText' | translate
+                  }}"
+                  placeholder="{{
+                    'operations.purchaseOrder.placeholder.poSource' | translate
+                  }}"
+                  [ngClass]="{
+                    redBorder:
+                      (submittedSearch &&
+                        this.editSaveFormSearch.controls['poSource'].errors) ||
+                      (this.editSaveFormSearch.controls['poSource'].errors &&
+                        (this.editSaveFormSearch.controls['poSource'].dirty ||
+                          this.editSaveFormSearch.controls['poSource'].touched))
+                  }"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div title="{{ item?.code }}">
+                      <small
+                        ><b>{{ item?.code }}</b></small
+                      ><br />
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      this.editSaveFormSearch.controls['poSource'].errors) ||
+                    (this.editSaveFormSearch.controls['poSource'].errors &&
+                      (this.editSaveFormSearch.controls['poSource'].dirty ||
+                        this.editSaveFormSearch.controls['poSource'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      this.editSaveFormSearch.controls['poSource'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.poSource.invalid'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                <label for="purchaseDateFrom" class="labelText">
+                  <span
+                    [translate]="'operations.purchaseOrder.label.poFromDate'"
+                  ></span>
+                </label>
+                <div class="input-group input-group-md">
+                  <input
+                    type="text"
+                    class="form-control uppercase"
+                    bsDatepicker
+                    (keydown.arrowdown)="purchaseDateFrom.click()"
+                    formControlName="poFromDate"
+                    #purchaseDateFrom
+                    [bsConfig]="{
+                      dateInputFormat: 'DD-MMM-YYYY',
+                      containerClass: 'theme-dark-blue',
+                      adaptivePosition: true
+                    }"
+                    [ngClass]="{
+                      redBorderCalender:
+                        startPeriodSmallerThanCurrent ||
+                        startPeriodSmallerThanEnd ||
+                        (submittedSearch &&
+                          editSaveFormSearchControls['poFromDate'].errors) ||
+                        (editSaveFormSearchControls['poFromDate'].errors &&
+                          (editSaveFormSearchControls['poFromDate'].dirty ||
+                            editSaveFormSearchControls['poFromDate'].touched))
+                    }"
+                    (ngModelChange)="validatePeriod('poFromDate', $event)"
+                  />
+                  <span class="input-group-btn">
+                    <button
+                      class="btn custom-button"
+                      type="button"
+                      (click)="purchaseDateFrom.click()"
+                      tabindex="-1"
+                    >
+                      <app-svg-calender-icon></app-svg-calender-icon>
+                    </button>
+                  </span>
+                </div>
+               
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      editSaveFormSearchControls['poFromDate'].errors) ||
+                    (editSaveFormSearchControls['poFromDate'].errors &&
+                      (editSaveFormSearchControls['poFromDate'].dirty ||
+                        editSaveFormSearchControls['poFromDate'].touched))
+                  "
+                >
+                  <div
+                    *ngIf="editSaveFormSearchControls['poFromDate'].errors?.['bsDate']?.['invalid']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.fromDate.invalid'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    *ngIf="editSaveFormSearchControls['poFromDate'].errors?.['greaterThanCurrentDateError']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.poFromGreaterThanCurrent'
+                      "
+                    ></span>
+                    {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                  </div>
+                  <div
+                    *ngIf="editSaveFormSearchControls['poFromDate'].errors?.['customErr']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.poFromGreaterThanPoTo'
+                      "
+                    ></span>
+                    {{
+                      editSaveFormSearchControls["poToDate"].value
+                        | date : "dd-MMM-yyyy"
+                        | uppercase
+                    }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                <label for="poToDate" class="labelText">
+                  <span
+                    [translate]="'operations.purchaseOrder.label.poToDate'"
+                  ></span>
+                </label>
+                <div class="input-group input-group-md">
+                  <input
+                    type="text"
+                    class="form-control uppercase"
+                    bsDatepicker
+                    (keydown.arrowdown)="purchaseDateTo.click()"
+                    formControlName="poToDate"
+                    #purchaseDateTo
+                    [bsConfig]="{
+                      dateInputFormat: 'DD-MMM-YYYY',
+                      containerClass: 'theme-dark-blue',
+                      adaptivePosition: true
+                    }"
+                    [ngClass]="{
+                      redBorderCalender:
+                        startPeriodSmallerThanCurrent ||
+                        startPeriodSmallerThanEnd ||
+                        (submittedSearch &&
+                          editSaveFormSearchControls['poToDate'].errors) ||
+                        (editSaveFormSearchControls['poToDate'].errors &&
+                          (editSaveFormSearchControls['poToDate'].dirty ||
+                            editSaveFormSearchControls['poToDate'].touched))
+                    }"
+                    (ngModelChange)="validatePeriod('poToDate', $event)"
+                  />
+                  <span class="input-group-btn">
+                    <button
+                      class="btn custom-button"
+                      type="button"
+                      (click)="purchaseDateTo.click()"
+                      tabindex="-1"
+                    >
+                      <app-svg-calender-icon></app-svg-calender-icon>
+                    </button>
+                  </span>
+                </div>
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      editSaveFormSearchControls['poToDate'].errors) ||
+                    (editSaveFormSearchControls['poToDate'].errors &&
+                      (editSaveFormSearchControls['poToDate'].dirty ||
+                        editSaveFormSearchControls['poToDate'].touched))
+                  "
+                >
+                  <div
+                    *ngIf="editSaveFormSearchControls['poToDate'].errors?.['bsDate']?.['invalid']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.fromTo.invalid'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    *ngIf="editSaveFormSearchControls['poToDate'].errors?.['customErr']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.poToLesserThanPoFrom'
+                      "
+                    ></span>
+                    {{
+                      editSaveFormSearchControls["poFromDate"].value
+                        | date : "dd-MMM-yyyy"
+                        | uppercase
+                    }}
+                  </div>
+                  <div
+                    *ngIf="editSaveFormSearchControls['poToDate'].errors?.['greaterThanCurrentDateError']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.poToGreaterThanCurrent'
+                      "
+                    ></span>
+
+                    {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                <label for="rfqFromDate" class="labelText">
+                  <span
+                    [translate]="'operations.purchaseOrder.label.rfqFromDate'"
+                  ></span>
+                </label>
+                <div class="input-group input-group-md">
+                  <input
+                    type="text"
+                    class="form-control uppercase"
+                    bsDatepicker
+                    (keydown.arrowdown)="rfqFromDate.click()"
+                    formControlName="rfqFromDate"
+                    #rfqFromDate
+                    [bsConfig]="{
+                      dateInputFormat: 'DD-MMM-YYYY',
+                      containerClass: 'theme-dark-blue',
+                      adaptivePosition: true
+                    }"
+                    [ngClass]="{
+                      redBorderCalender:
+                        startPeriodSmallerThanCurrent ||
+                        startPeriodSmallerThanEnd ||
+                        (submittedSearch &&
+                          editSaveFormSearchControls['rfqFromDate'].errors) ||
+                        (editSaveFormSearchControls['rfqFromDate'].errors &&
+                          (editSaveFormSearchControls['rfqFromDate'].dirty ||
+                            editSaveFormSearchControls['rfqFromDate'].touched))
+                    }"
+                    (ngModelChange)="validatePeriodRFQ('rfqFromDate', $event)"
+                  />
+                  <span class="input-group-btn">
+                    <button
+                      class="btn custom-button"
+                      type="button"
+                      (click)="rfqFromDate.click()"
+                      tabindex="-1"
+                    >
+                      <app-svg-calender-icon></app-svg-calender-icon>
+                    </button>
+                  </span>
+                </div>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      editSaveFormSearchControls['rfqFromDate'].errors) ||
+                    (editSaveFormSearchControls['rfqFromDate'].errors &&
+                      (editSaveFormSearchControls['rfqFromDate'].dirty ||
+                        editSaveFormSearchControls['rfqFromDate'].touched))
+                  "
+                >
+                  <div
+                    *ngIf="editSaveFormSearchControls['rfqFromDate'].errors?.['bsDate']?.['invalid']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.rfqFrom.invalid'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    *ngIf="editSaveFormSearchControls['rfqFromDate'].errors?.['customError']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.rfqFromGreaterThanCurrent'
+                      "
+                    ></span>
+                    {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                  </div>
+                  <div
+                    *ngIf="editSaveFormSearchControls['rfqFromDate'].errors?.['customErrorDates']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.rfqFromLesserThanRfqTo'
+                      "
+                    ></span>
+                    {{
+                      editSaveFormSearchControls["rfqToDate"].value
+                        | date : "dd-MMM-yyyy"
+                        | uppercase
+                    }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                <label for="rfqToDate" class="labelText">
+                  <span
+                    [translate]="'operations.purchaseOrder.label.rfqToDate'"
+                  ></span>
+                </label>
+                <div class="input-group input-group-md">
+                  <input
+                    type="text"
+                    class="form-control uppercase"
+                    bsDatepicker
+                    (keydown.arrowdown)="rfqToDate.click()"
+                    formControlName="rfqToDate"
+                    #rfqToDate
+                    [bsConfig]="{
+                      dateInputFormat: 'DD-MMM-YYYY',
+                      containerClass: 'theme-dark-blue',
+                      adaptivePosition: true
+                    }"
+                    [ngClass]="{
+                      redBorderCalender:
+                        startPeriodSmallerThanCurrent ||
+                        startPeriodSmallerThanEnd ||
+                        (submittedSearch &&
+                          editSaveFormSearchControls['rfqToDate'].errors) ||
+                        (editSaveFormSearchControls['rfqToDate'].errors &&
+                          (editSaveFormSearchControls['rfqToDate'].dirty ||
+                            editSaveFormSearchControls['rfqToDate'].touched))
+                    }"
+                    (ngModelChange)="validatePeriodRFQ('rfqToDate', $event)"
+                  />
+                  <span class="input-group-btn">
+                    <button
+                      class="btn custom-button"
+                      type="button"
+                      (click)="rfqToDate.click()"
+                      tabindex="-1"
+                    >
+                      <app-svg-calender-icon></app-svg-calender-icon>
+                    </button>
+                  </span>
+                </div>
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submittedSearch &&
+                      editSaveFormSearchControls['rfqToDate'].errors) ||
+                    (editSaveFormSearchControls['rfqToDate'].errors &&
+                      (editSaveFormSearchControls['rfqToDate'].dirty ||
+                        editSaveFormSearchControls['rfqToDate'].touched))
+                  "
+                >
+                  <div
+                    *ngIf="editSaveFormSearchControls['rfqToDate'].errors?.['bsDate']?.['invalid']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.rfqTo.invalid'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    *ngIf="editSaveFormSearchControls['rfqToDate'].errors?.['customErrorDate']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.rfqToLesserThanRfqFrom'
+                      "
+                    ></span>
+                    {{
+                      editSaveFormSearchControls["rfqFromDate"].value
+                        | date : "dd-MMM-yyyy"
+                        | uppercase
+                    }}
+                  </div>
+                  <div
+                    *ngIf="editSaveFormSearchControls['rfqToDate'].errors?.['customErrorTo']"
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseOrder.errors.rfqToGreaterThanCurrent'
+                      "
+                    ></span>
+
+                    {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                <label for="partName" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.label.prNoRfqNoQuoteNo'
+                    "
+                  ></span>
+                </label>
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control new-form-control-input"
+                  id="partName"
+                  formControlName="prNoRfqNoQuoteNo"
+                  maxlength="100"
+                  alphanumeric
+                  spaceatfirst
+                  placeholder="{{
+                    'operations.purchaseOrder.placeholder.prNoRfqNoQuoteNo'
+                      | translate
+                  }}"
+                />
+              </div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2"></div>
+              <div class="form-group col-lg-2 col-md-2 col-sm-2"></div>
+
+              <div
+                class="btn-col col col-md-2 offset-md-0.5 col-lg-2 offset-lg-0.5 col-sm-2 offset-sm-0.5"
+              >
+                <div class="action-row-buttons">
+                  <button
+                    [disabled]="clickedSearchBtn"
+                    (click)="searchRecordsList()"
+                    class="btn first-action-btn custom-button-search search-button-color"
+                  >
+                    <div class="icon-container">
+                      <app-svg-search-icon></app-svg-search-icon>
+                    </div>
+                    Search
+                  </button>
+                  <button
+                    (click)="resetForm()"
+                    class="btn custom-button-search reset-button-color"
+                  >
+                    <div class="reset-icon-container">
+                      <i class="fa-solid fa-arrows-spin"></i>
+                    </div>
+                    Reset
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="line"></div>
+
+          <!-- purchase-order-list -->
+          <!-- #purchaseOrderListGrid -->
+          <app-purchase-order-list
+            #purchaseOrderList
+            (getServerSideTable)="getServerSideTableList($event)"
+            [poMode]="mode"
+            [editSavePOForm]="editSaveForm"
+            (addNewGridIcon)="handleAddRecordIcon($event)"
+            [tableTitle]="tableTitle"
+            [showTableByColumn]="showTableByColumn"
+            (exportToExcel)="exportToExcel($event)"
+            (sendSelectedRowData)="receiveSelectedRowData($event)"
+            (sendSelectedRowFromList)="receiveSelectedRowFromList($event)"
+            (handleCancel)="handleCancelIcon($event)"
+            [disableAddNewIcons]="disableAddNewIcons"
+            [disableSendForApprovalIcons]="disableSendForApprovalIcons"
+            [disableCancelPOIcons]="disableCancelPOIcons"
+            [disableReopenIcons]="disableReopenIcons"
+            [disablePrintPOIcons]="disablePrintPOIcons"
+            [disableEmailPOIcons]="disableEmailPOIcons"
+            [currentStatusId]="currentStatusId"
+            (handleCancelPOSuccess)="handleCancelPOSuccess($event)"
+          >
+          </app-purchase-order-list>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Purchase Order Form -->
+  <div *ngIf="!showList">
+    <div
+      class="alert alert-warning"
+      role="alert"
+      *ngIf="showWarningMessageForRoleRightsForm"
+    >
+      <i class="fa-fw fa fa-warning"></i>
+      <strong
+        ><span [translate]="'common.roleRightsMessages.warning'"></span
+      ></strong>
+      {{ warningMessageForRoleRightsForm | translate }}
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading clearfix">
+        <div class="panel-title panelHeading pull-left">
+          <div class="nopaddingbottom">
+            <b>
+              <span
+                [translate]="'operations.purchaseOrder.titles.purchaseOrder'"
+                class="main-title"
+              ></span
+            ></b>
+            <label class="linebadge"> {{ mode | translate | uppercase }}</label>
+          </div>
+          <div *ngIf="mode == 'edit'">
+            <span class="panelSubHeading-Pr redIcon">
+              {{ "operations.purchaseOrder.label.poNo" | translate }}
+              {{ poNumber }}
+            </span>
+          </div>
+        </div>
+        <div class="pull-right buttonGroup">
+          <div class="row">
+            <button
+              (click)="handleFormPrintIcon()"
+              [hidden]="mode === 'new'"
+              [disabled]="disableFormPrintPOIcons"
+              class="capsule-button light-blue"
+              [class.unclickable]="disableFormPrintPOIcons"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-print"></i>
+              </div>
+              {{ "operations.purchaseOrder.buttons.printPo" | translate }}
+            </button>
+            <button
+              [class.unclickable]="disableFormCancelPOIcons"
+              [hidden]="mode === 'new' || hideCancelPO"
+              [disabled]="disableFormCancelPOIcons"
+              class="capsule-button brown"
+              (click)="handleCancelIcon('button')"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-xmark"></i>
+              </div>
+              {{ "operations.purchaseOrder.buttons.cancelPo" | translate }}
+            </button>
+            <button
+              [class.unclickable]="disableFormAddNewIcons"
+              [disabled]="disableFormAddNewIcons"
+              class="capsule-button navyBlue"
+              (click)="handleFormNewPOIcon()"
+            >
+              <div class="icon-circle">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+              {{ "operations.purchaseOrder.buttons.addNewPo" | translate }}
+            </button>
+            <button
+              [class.unclickable]="disableFormSendForApprovalIcons"
+              [hidden]="hideSendForApproval || mode === 'new'"
+              [disabled]="disableFormSendForApprovalIcons"
+              class="capsule-button light-green"
+              (click)="handleSendForApprovalIcon($event)"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-check"></i>
+              </div>
+              {{
+                "operations.purchaseRequisition.buttons.sendForApproval"
+                  | translate
+              }}
+            </button>
+
+            <button
+              [class.unclickable]="disableFormSubmitIcons"
+              [disabled]="disableFormSubmitIcons"
+              class="capsule-button green"
+              (click)="handleFormSubmit()"
+              [hidden]="hidesave"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-light fa-floppy-disk"></i>
+              </div>
+              {{ "operations.purchaseOrder.buttons.savePo" | translate }}
+            </button>
+
+            <!-- <button
+          [class.unclickable]="disableFormResetIcons"
+          *ngIf="mode == 'edit'"
+          [disabled]="disableFormResetIcons"
+          class="capsule-button grey"
+          (click)="handleFormResetIcon()"
+          [hidden]="hideResetPR"
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </div>
+          {{ "operations.purchaseRequisition.buttons.reset" | translate }}
+        </button> -->
+            <button
+              class="capsule-button pale-orange"
+              title="{{ 'Back To List' | translate }}"
+              (click)="handleBackToList()"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-arrow-left"></i>
+              </div>
+              {{ "operations.purchaseOrder.buttons.backToList" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <app-purchase-order-form
+        #purchaseOrderForm
+        [poMode]="mode"
+        [editSavePOForm]="editSaveForm"
+        [enableRights]="poFormEnableRights"
+        [selectedPoRowData]="selectedPoRowData"
+        [additionalChargesList]="additionalChargesList"
+        [selectedPoId]="selectedPoId"
+        [currentStatusId]="currentStatusId"
+      >
+      </app-purchase-order-form>
+    </div>
+  </div>
+</div>
+<div>
+  <app-generate-po-pdf
+    #generatePdfComponent
+  ></app-generate-po-pdf>
+</div>
+<div
+  bsModal
+  #cancelPopup="bs-modal"
+  class="modal remark-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+>
+  <form [formGroup]="cancelRemarkForm" autocomplete="off">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content border-radius-8">
+        <div class="cancel-modal-body">
+          <div class="cancel-modal-header">
+            <div
+              class="cancel-txt-remarks"
+              [translate]="'operations.common.cancelPurchase.title.cancelPO'"
+            ></div>
+          </div>
+          <div class="canel-modal-body">
+            <div class="cancel-txt-area-container">
+              <h3 class="margin-padding-0">
+                <label for="city" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.common.cancelPurchase.title.cancellationRemarks'
+                    "
+                  ></span>
+                  <span class="redIcon"> *</span>
+                </label>
+              </h3>
+              <textarea
+                class="form-control remarks-textarea"
+                formControlName="remarks"
+              ></textarea>
+
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.cancelRemarkForm.controls['remarks'].errors) ||
+                  (this.cancelRemarkForm.controls['remarks'].errors &&
+                    (this.cancelRemarkForm.controls['remarks'].dirty ||
+                      this.cancelRemarkForm.controls['remarks'].touched))
+                "
+              >
+                <p
+                  class="red"
+                  *ngIf="
+                    this.cancelRemarkForm.controls['remarks'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.common.cancelPurchase.errors.remarks.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+              <div class="cancel-modal-footer">
+                <div class="row">
+                  <button
+                    class="capsule-button green"
+                    (click)="handleRemarkFormClear()"
+                  >
+                    <div class="icon-circle">
+                      <i
+                        class="fas fa-fw fa-eraser navy"
+                        aria-hidden="true"
+                        title="{{
+                          'common.grid.tooltip.clearFilter' | translate
+                        }}"
+                      ></i>
+                    </div>
+                    {{ "common.buttons.clear" | translate }}
+                  </button>
+                  <button
+                    class="capsule-button green"
+                    (click)="handleFormCancelPRAction()"
+                  >
+                    <div class="icon-circle">
+                      <i class="fas fa-light fa-floppy-disk"></i>
+                    </div>
+
+                    {{ "common.buttons.save" | translate }}
+                  </button>
+                  <button
+                    class="capsule-button reset-button-color"
+                    (click)="cancelPopupClose()"
+                  >
+                    <div class="icon-circle">
+                      <i class="fa-regular fa-circle-xmark"></i>
+                    </div>
+
+                    {{ "common.buttons.close" | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

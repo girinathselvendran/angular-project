@@ -1,0 +1,8 @@
+.layout-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    height: 1.5rem;
+    border-top: 1px solid #dfe7ef;
+}

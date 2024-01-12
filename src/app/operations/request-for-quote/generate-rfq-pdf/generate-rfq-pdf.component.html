@@ -1,0 +1,305 @@
+<div class="off-screen" #pdfContent>
+  <!--   -->
+
+  <div>
+    <div class="pdf-content-specific-hight"  >
+      <div class="pdf-container bottom-border">
+        <div class="pdf-header mar-pad-bottom-0">
+          <!-- depot info -->
+          <div class="row margin-padding-0">
+            <div class="col">
+              <div class="po-left-info-container">
+                <strong>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.titles.depot"
+                      | translate
+                  }}
+                </strong>
+                <strong>{{ pdfData.depotName }}</strong>
+                <span> {{ pdfData.depotStreetAddress }} </span>
+                <span
+                  >{{ pdfData.depotCityName }} {{ pdfData.depotCountryName }}
+                </span>
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.titles.depotTrn"
+                      | translate
+                  }}
+                  <u> {{ pdfData.depotRegistrationNo }} </u>
+                </span>
+              </div>
+            </div>
+            <div class="col custom-pdf-po-header">
+              <strong class="bolder-txt-output-title"
+                ><u>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.titles.po-title"
+                      | translate
+                  }}</u
+                ></strong
+              >
+            </div>
+
+            <div class="col-lg-2 col-md-2 col-sm-2 p-3">
+              <div class="po-right-logo">
+                <img
+                  class="logo-right"
+                  src="assets/img/iDepoLogo1.png"
+                  alt="Logo 2"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- supplier info -->
+          <div class="row margin-padding-0 supplier-info">
+            <div class="col-lg-8 col-md-8 col-sm-8 right-border">
+              <div class="po-left-info-container-no-padding">
+                <strong>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.titles.supplier"
+                      | translate
+                  }}
+                </strong>
+                <strong>{{ pdfData.supplierCode }}</strong>
+
+                <span> {{ pdfData.address }} </span>
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.city"
+                      | translate
+                  }}
+
+                  {{ pdfData.cityName }}
+                </span>
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.email"
+                      | translate
+                  }}
+
+                  {{ pdfData.countryName }}
+                </span>
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.phone"
+                      | translate
+                  }}
+                  {{ pdfData.mobileNo }}
+                </span>
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.fax"
+                      | translate
+                  }}
+                  {{ pdfData.fax }}
+                </span>
+
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.attn"
+                      | translate
+                  }}
+
+                  {{ pdfData.contactName }}
+                </span>
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.supplierTrn"
+                      | translate
+                  }}
+                  {{ pdfData.mobileNo }}
+                </span>
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.supplierTin"
+                      | translate
+                  }}
+                  {{ pdfData.tinNo }}
+                </span>
+              </div>
+            </div>
+
+            <div class="col padding-bottom">
+              <strong class="bold-text-alignment">
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.quotationNo"
+                      | translate
+                  }}
+                </span>
+                <span>: {{ pdfData.quotationRefNo }}</span>
+                
+              </strong>
+              <strong class="bold-text-alignment">
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.quotationDate"
+                      | translate
+                  }}
+                </span>
+                <span>: {{ pdfData.quotationDate }}</span>
+                
+              </strong>
+              <strong class="bold-text-alignment">
+                <span>
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.quotationValidTill"
+                      | translate
+                  }}
+                </span>
+                <span>: {{ pdfData.quotationValidTill }}</span>
+               
+              </strong>
+            </div>
+          </div>
+          <!-- supplier info end -->
+        </div>
+
+        <div>
+          <table class="rfq-pdf-table mar-pad-top-0">
+            <thead>
+              <tr>
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.sNo"
+                      | translate
+                  }}
+                </th>
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.supplierPartRefNo"
+                      | translate
+                  }}
+                </th>
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.partCode"
+                      | translate
+                  }}
+                </th>
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.partName"
+                      | translate
+                  }}
+                </th>
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.partSpecification"
+                      | translate
+                  }}
+                </th>
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.uom"
+                      | translate
+                  }}
+                </th>
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.quantity"
+                      | translate
+                  }}
+                </th>
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.partRate"
+                      | translate
+                  }}
+                </th>
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.totalCost"
+                      | translate
+                  }}
+                </th>
+
+                <th class="rfqTbColumnTh">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.field.remarks"
+                      | translate
+                  }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="po-table">
+                <td class="poTbcolumTd">1</td>
+                <td class="poTbcolumTd">
+                  {{ pdfData.supplierPartReferenceNo }}
+                </td>
+                <td class="poTbcolumTd">{{ pdfData.partName }}</td>
+                <td class="poTbcolumTd">{{ pdfData.partCode }}</td>
+                <td class="poTbcolumTd">{{ pdfData.partSpecification }}</td>
+                <td class="poTbcolumTd">{{ pdfData.uom }}</td>
+                <td class="poTbcolumTd numberColum">{{ pdfData.quantity }}</td>
+                <td class="poTbcolumTd numberColum">{{ pdfData.partRate }}</td>
+                <td class="poTbcolumTd numberColum">{{ pdfData.totalCost }}</td>
+                <td class="poTbcolumTd">{{ pdfData.remarks }}</td>
+              </tr>
+              <tr class="po-table">
+                <td class="rfq-right-no-border"></td>
+                <td class="rfq-right-and-left-no-border"></td>
+                <td class="rfq-right-and-left-no-border"></td>
+                <td class="rfq-right-and-left-no-border"></td>
+                <td class="rfq-right-no-border"></td>
+                <td class="fw-bold rfq-right-and-left-no-border">
+                  {{
+                    "operations.requestForQuote.requestForQuoteOutput.titles.total"
+                      | translate
+                  }}
+                </td>
+                <td class="numberColum numberColum">{{ pdfData.quantity }}</td>
+                <td class="numberColum numberColum">{{ pdfData.partRate }}</td>
+                <td class="numberColum numberColum">{{ pdfData.totalCost }}</td>
+                <td class="numberColum"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="po-pdf-total mar-pad-bottom-0">
+          <div class="row margin-padding-0 right-border empty-row"></div>
+        </div>
+
+        <div class="left-right-border rfq-output-footer">
+          <div class="row rfq-output-footer-row">
+            <div class="col right-border rfq-info-generation">
+              <small>
+                {{
+                  "operations.purchaseRequisition.purchaseRequisitionReport.message"
+                    | translate
+                }}
+              </small>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 p-0 m-0">
+              <div>
+                <strong class="bold-text-alignment bottom-border p-1">
+                  <span>
+                    {{
+                      "operations.requestForQuote.requestForQuoteOutput.field.generatedBy"
+                        | translate
+                    }}
+                  </span>
+                  <span>:</span>
+                  <span> {{ generatedBy }}</span>
+                </strong>
+                <strong class="bold-text-alignment">
+                  <span>
+                    {{
+                      "operations.requestForQuote.requestForQuoteOutput.field.generatedDate"
+                        | translate
+                    }}
+                  </span>
+                  <span>:</span>
+                  <span>{{ generatedDate }}</span>
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

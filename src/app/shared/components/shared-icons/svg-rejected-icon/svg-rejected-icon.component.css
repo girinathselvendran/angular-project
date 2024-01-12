@@ -1,0 +1,21 @@
+.file-minus,
+.file-minus * {
+  box-sizing: border-box;
+}
+.file-minus {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.remove-circle {
+  height: auto;
+  position: absolute;
+  right: 0%;
+  left: 0%;
+  width: 100%;
+  bottom: 0%;
+  top: 0%;
+  height: 100%;
+  overflow: visible;
+}

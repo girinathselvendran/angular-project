@@ -1,0 +1,612 @@
+<div [class]="showTableHeader && removeHeaderBorder ? 'panel panel-info' : ''">
+  <!-- <div> -->
+  <div *ngIf="this.isPanelHeading" class="panel-heading clearfix">
+    <div class="panel-title panelSubHeading pull-left" *ngIf="isGridTittle">
+      {{ tableTitle }}
+    </div>
+    <!-- <div class="tableGlobalSearch pull-left">
+      <div class="globalSearchInputDiv" *ngIf="this.globalSearch">
+        <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            trim="blur"
+            placeholder="{{
+              'common.grid.placeholder.globalFilter' | translate
+            }}"
+            class="form-control globalSearchTextBox"
+            [formControl]="globalFilter"
+            id="globalFilter"
+            name="globalFilter"
+            (input)="applyFilterGlobal($event, 'contains')"
+          />
+        </span>
+      </div>
+    </div> -->
+    <div
+      *ngIf="tableHeader == false ? false : true"
+      class="panel-title panelSubHeading pull-right"
+      style="margin-right: 40px"
+      [innerHTML]="tableHeaderData"
+    ></div>
+    <div class="pull-right ml-auto second-div">
+      <!-- ...............................................upload........................................................ -->
+      <span
+        class="tableIconSizeNew"
+        [class.unclickable]="false"
+        [hidden]="hideIcon"
+        *ngIf="this.uploadFileIcon"
+      >
+        <i
+          title="{{ 'common.grid.tooltip.upload' | translate }}"
+          style="color: dodgerblue"
+          class="fas fa-upload"
+          aria-hidden="true"
+          [class.unclickable]="!addButton"
+          (click)="addButton && uploadEquipmentType()"
+        ></i>
+      </span>
+      <!-- .................................................delete........................................................... -->
+      <span
+        label="Tariff Group"
+        class="tableIconSizeNew"
+        [hidden]="hideIcon"
+        title="{{ 'common.buttons.delete' | translate }}"
+        *ngIf="this.deleteGnIcon"
+        (click)="handleDeleteGnIcon(selectedValue)"
+      >
+        <div class="custom-icon-container-delete">
+          <i class="far fa-trash-alt"></i>
+        </div>
+      </span>
+      <!-- ........................................add new................................................................. -->
+      <span
+        label="Tariff Group"
+        class="tableIconSizeNew"
+        title="{{ 'common.buttons.addNew' | translate }}"
+        *ngIf="this.addRecordIcon"
+        (click)="handleAddRecordIcon()"
+      >
+        <div
+          class="custom-icon-container-green"
+          (click)="addButton && addList()"
+          [class.unclickable]="!addButton"
+        >
+          <i class="fas fa-plus"></i>
+        </div>
+      </span>
+      <!-- .....................................refresh......................................................................... -->
+      <span
+        label="Refresh"
+        title="{{ 'common.grid.tooltip.refresh' | translate }}"
+        class="tableIconSizeNew"
+        *ngIf="this.refreshIcon"
+        (click)="refreshList()"
+      >
+        <div class="custom-icon-container-normalblue" (click)="refreshList()">
+          <i class="fa-solid fa-arrows-rotate white"></i>
+        </div>
+      </span>
+      <!-- ..............................................print...................................................... -->
+      <span
+        label="Print"
+        class="tableIconSizeNew"
+        [hidden]="hideIcon"
+        title="{{ 'common.grid.tooltip.print' | translate }}"
+        *ngIf="this.printIcon"
+      >
+        <div class="custom-icon-container-blue" (click)="print(sharedTable)">
+          <i class="fa-regular fa-print"></i>
+        </div>
+      </span>
+      <!-- ..............................................cancel...................................................... -->
+      <span
+        label="Cancel"
+        class="tableIconSizeNew"
+        [hidden]="hideIcon"
+        title="{{ 'common.grid.tooltip.cancel' | translate }}"
+        *ngIf="this.cancelIcon"
+      >
+        <div class="custom-icon-container-grey" (click)="cancel(sharedTable)">
+          <i class="fa-sharp fa-regular fa-xmark"></i>
+        </div>
+      </span>
+      <!-- ..............................................excel...................................................... -->
+      <span
+        label="Export to Excel"
+        class="tableIconSizeNew"
+        [hidden]="hideIcon"
+        title="{{ 'common.grid.tooltip.excelDownload' | translate }}"
+        *ngIf="this.excelIcon"
+      >
+        <div
+          class="custom-icon-container-green"
+          (click)="exporttoExcel(sharedTable)"
+        >
+          <i class="fa-regular fa-file-excel"></i>
+        </div>
+      </span>
+      <!-- ..............................................reopen...................................................... -->
+      <span
+        label="Re Open"
+        class="tableIconSizeNew"
+        [hidden]="hideIcon"
+        title="{{ 'common.grid.tooltip.reopen' | translate }}"
+        *ngIf="this.reopenIcon"
+      >
+        <div class="custom-icon-container-orange" (click)="reopen(sharedTable)">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </div>
+      </span>
+      <!-- ..............................................email...................................................... -->
+      <span
+        label="E-mail"
+        class="tableIconSizeNew"
+        [hidden]="hideIcon"
+        title="{{ 'common.grid.tooltip.email' | translate }}"
+        *ngIf="this.emailIcon"
+      >
+        <div
+          class="custom-icon-container-navyBlue"
+          (click)="email(sharedTable)"
+        >
+          <i class="fa-regular fa-envelope"></i>
+        </div>
+      </span>
+      <!-- ..............................................approval...................................................... -->
+      <span
+        label="approval"
+        class="tableIconSizeNew"
+        [hidden]="hideIcon"
+        title="{{ 'common.grid.tooltip.aproval' | translate }}"
+        *ngIf="this.approvalIcon"
+      >
+        <div
+          class="custom-icon-container-navyBlue"
+          (click)="approval(sharedTable)"
+        >
+          <i class="fa-regular fa-circle-check"></i>
+        </div>
+      </span>
+      <!-- ..............................................send for approval...................................................... -->
+      <span
+        label="Send for approval"
+        class="tableIconSizeNew"
+        [hidden]="hideIcon"
+        title="{{ 'common.grid.tooltip.sendForApproval' | translate }}"
+        *ngIf="this.sendForApprovalIcon"
+      >
+        <div
+          class="custom-icon-container-navyBlue"
+          (click)="sendForApproval(sharedTable)"
+        >
+          <i class="fa-light fa-paper-plane"></i>
+        </div>
+      </span>
+      <!-- ..............................................create...................................................... -->
+      <span
+        label="create"
+        class="tableIconSizeNew"
+        [hidden]="hideIcon"
+        title="{{ 'common.grid.tooltip.create' | translate }}"
+        *ngIf="this.createIcon"
+      >
+        <div
+          class="custom-icon-container-navyBlue"
+          (click)="create(sharedTable)"
+        >
+          <i class="fa-light fa-money-check-pen"></i>
+        </div>
+      </span>
+      <!-- ..............................................filter...................................................... -->
+      <span
+        label="Filter"
+        class="tableIconSizeNew"
+        title="{{ 'common.grid.tooltip.filter' | translate }}"
+        [hidden]="hideIcon"
+        *ngIf="this.filter"
+      >
+        <div class="custom-icon-container" (click)="toggleFilter()">
+          <i class="far fa-filter"></i>
+        </div>
+      </span>
+      <!-- ..............................................Clear filter...................................................... -->
+      <span
+        class="Clear Filter"
+        class="tableIconSizeNew"
+        title="{{ 'common.grid.tooltip.clearFilter' | translate }}"
+        *ngIf="this.selectedColumns?.length !== 0"
+        [hidden]="!showFilter"
+      >
+        <i
+          class="fas fa-fw fa-eraser"
+          aria-hidden="true"
+          style="color: navy"
+          title="{{ 'common.grid.tooltip.clearFilter' | translate }}"
+          (click)="clearFilter(sharedTable)"
+        ></i>
+      </span>
+      <div class="pull-right showhidestyle" *ngIf="this.showHide">
+        <p-multiSelect
+          [options]="columnData"
+          [(ngModel)]="selectedColumns"
+          class="tableIconSizeNew"
+          [ngModelOptions]="{ standalone: true }"
+          optionLabel="header"
+          (click)="changeHideShowColumns(sharedTable)"
+          [style]="{ minWidth: '200px' }"
+          defaultLabel="{{ 'common.grid.showHide.showHide' | translate }}"
+          [filter]="false"
+          [maxSelectedLabels]="0"
+          selectedItemsLabel="{{ 'common.grid.showHide.showHide' | translate }}"
+          (ngModelChange)="onchangeMultiSelect()"
+        >
+        </p-multiSelect>
+      </div>
+    </div>
+  </div>
+  <div [class]="showTableHeader ? 'panel-body' : ''">
+    <div
+      [ngClass]="
+        isMasterComp == true ? 'container-fluid bordered-container' : ''
+      "
+    >
+      <p-table
+        #sharedTable
+        [columns]="selectedColumns"
+        [value]="tableData"
+        [paginator]="showPaginator"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 15, 20]"
+        (onFilter)="onFiltering($event)"
+        (onPage)="onPagination($event)"
+        [globalFilterFields]="selectedColumnsKeys"
+        [customSort]="true"
+        (sortFunction)="customSort($event)"
+        [selectionMode]="IsRecordHighlights ? 'single' : undefined"
+        [(selection)]="IsRecordHighlights ? selectedValue : defaultSelectedList"
+        [dataKey]="IsRecordHighlights ? undefined : 'id'"
+        (selectionChange)="onSelectionChange($event)"
+      >
+        <!-- <ng-template pTemplate="caption" *ngIf="this.headerIcons">
+            <div>
+              <div class="tableGlobalSearch flex">
+                <div class="globalSearchInputDiv" *ngIf="this.globalSearch">
+                 
+                  <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input
+                      pInputText
+                      type="text"
+                      trim="blur"
+                      class="form-control globalSearchTextBox"
+                      id="globalFilter"
+                      name="globalFilter"
+                      [formControl]="globalFilter"
+                      placeholder="{{
+                        'common.grid.placeholder.globalFilter' | translate
+                      }}"
+                      (input)="applyFilterGlobal($event, 'contains')"
+                    />
+                  </span>
+                </div>
+               
+  
+                
+              </div>
+            </div>
+          </ng-template> -->
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th
+              *ngIf="isCheckBox"
+              rowspan="2"
+              [ngStyle]="{ width: checkboxWidth == true ? '2%' : '1%' }"
+            >
+              <p-tableHeaderCheckbox
+                id="dtHeaderCheckBox"
+              ></p-tableHeaderCheckbox>
+            </th>
+            <th
+              *ngFor="let col of selectedColumns"
+              [pSortableColumn]="
+                col.field != 'checkbox' ? col.field : undefined
+              "
+              pResizableColumn
+              [style.width]="col.width"
+              [attr.colspan]="col.colspan"
+              [attr.rowspan]="col.rowspan"
+              [style.text-align]="col.isSubHeader ? 'center' : ''"
+              [class.gridCenterAlign]="col.isCenterAlign"
+            >
+              <span *ngIf="col.field === 'delete'">
+                <i class="far fa-trash-alt" title="Delete"></i>
+              </span>
+              <span *ngIf="col.field === 'attachments'">
+                <i class="far fa-fw fa-paperclip" title="Attachment"></i>
+              </span>
+              <span
+                *ngIf="col.field === 'remarks' && col.showHeaderIcon == true"
+              >
+                <i class="pi pi-comments" style="font-size: 2rem"></i>
+              </span>
+              <span *ngIf="col.field === 'hold'">
+                <i class="fas fa-lock-alt" aria-hidden="true"></i>
+              </span>
+              <span
+                *ngIf="
+                  col.field != 'delete' &&
+                  col.field != 'checkbox' &&
+                  !col.isSubHeader
+                "
+              >
+                <span *ngIf="!col.hideHeader"> {{ col.header }} </span>
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </span>
+
+              <span *ngIf="col.isSubHeader">
+                <span> {{ col.header }}</span>
+              </span>
+            </th>
+          </tr>
+
+          <tr>
+            <ng-container *ngFor="let col of selectedColumns">
+              <th *ngIf="col?.subHeader?.length === 0" colspan="1"></th>
+              <th
+                *ngFor="let sub of col.subHeader"
+                [pSortableColumn]="sub.field"
+                pResizableColumn
+                colspan="1"
+                style="text-align: center"
+              >
+                <p>
+                  <p-sortIcon [field]="sub.field"></p-sortIcon>
+                </p>
+              </th>
+            </ng-container>
+          </tr>
+          <tr [hidden]="!showFilter">
+            <th *ngIf="isCheckBox" style="width: 1.5em"></th>
+            <ng-container *ngFor="let col of selectedColumns">
+              <th *ngIf="!col.isSubHeader; else elseCondition">
+                <span *ngIf="col.field !== 'delete'; else deleteIconCondition">
+                  <input
+                    type="text"
+                    class="filter-input"
+                    [(ngModel)]="inputValueTax[col.field]"
+                    pInputText
+                    [ngModelOptions]="{ standalone: true }"
+                    style="width: 100%; color: black"
+                    (input)="applyFilterFields($event, col.field, 'contains')"
+                  />
+                </span>
+
+                <ng-template #deleteIconCondition> <th></th> </ng-template>
+              </th>
+              <ng-template #elseCondition>
+                <th *ngFor="let sub of col.subHeader; let j = index">
+                  <input
+                    type="text"
+                    class="filter-input"
+                    [(ngModel)]="inputValueTax[sub.field]"
+                    pInputText
+                    [ngModelOptions]="{ standalone: true }"
+                    style="width: 100%; color: black"
+                    (input)="applyFilterFields($event, sub.field, 'contains')"
+                  />
+                </th>
+              </ng-template>
+            </ng-container>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-index="rowIndex">
+          <tr [pSelectableRow]="rowData">
+            <td *ngIf="isCheckBox">
+              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+            <ng-container *ngFor="let col of selectedColumns">
+              <td
+                [class.gridCenterAlign]="col.isCenterAlign"
+                (click)="
+                  col.field !== 'delete' && col.field !== 'checkbox'
+                    ? onSelected(rowData, index)
+                    : deleteIcon && handleDeleteIcon(rowData, index)
+                "
+                *ngIf="!col.isSubHeader; else elseCondition"
+                [ngClass]="
+                  rowData['activeStatus']?.toString()?.toUpperCase() == 'NO'
+                    ? 'redIcon'
+                    : ''
+                "
+                [title]="rowData[col.field] ? rowData[col.field] : ''"
+                [class.gridRightAlign]="col.isRightAlign"
+              >
+                <div *ngIf="col.field === 'partSpecificationIcon'">
+                  <a (click)="handlePartSpecificationIcon($event, rowData)">
+                    <i
+                      class="far fa-eye"
+                      title="{{ col.header | translate }}"
+                      style="display: table-caption"
+                    ></i>
+                  </a>
+                </div>
+                <div
+                  *ngIf="col.field === 'partIcon'"
+                  [class.gridCenterAlign]="col.isCenterAlign"
+                >
+                  <a (click)="handlePartIcon($event, rowData)">
+                    <i
+                      class="fa-solid fa-gear"
+                      title="{{ col.header | translate }}"
+                      style="display: table-caption"
+                    ></i>
+                  </a>
+                </div>
+                <div
+                  *ngIf="col.field === 'compareIcon'"
+                  [class.gridCenterAlign]="col.isCenterAlign"
+                >
+                  <a (click)="handleCompareIcon($event, rowData)">
+                    <i
+                      class="fa-solid fa-arrow-right-arrow-left"
+                      title="{{ col.header | translate }}"
+                      style="display: table-caption"
+                    ></i>
+                  </a>
+                </div>
+                <div
+                  style="width: 100"
+                  [class.text-align-right]="col.isRightAlign"
+                  *ngIf="
+                    col.field !== 'delete' &&
+                    col.field !== 'checkbox' &&
+                    col.field !== 'remarks' &&
+                    !col.isHyperLink
+                  "
+                >
+                  {{ rowData[col.field] }}
+                </div>
+
+                <div *ngIf="col.field == 'delete'">
+                  <a>
+                    <i
+                      class="far fa-trash-alt redIcon"
+                      [title]="col.header"
+                      style="display: table-caption"
+                      [class.unclickable]="disableDeleteIcon"
+                    ></i>
+                  </a>
+                </div>
+                <!-- HyperLink Activity -->
+                <div *ngIf="col.isHyperLink">
+                  <a
+                    style="color: rgb(48, 48, 228)"
+                    (click)="handleHyperLink(rowData, $event)"
+                  >
+                    {{ rowData[col.field] }}
+                  </a>
+                </div>
+                <div
+                  class="gridCenterAlign"
+                  *ngIf="col.field === 'remarks' && col.isIcon === true"
+                  (click)="handleRemarksIcon(rowData, $event)"
+                >
+                  <a>
+                    <i
+                      *ngIf="rowData[col.field]"
+                      class="fas fa-comments"
+                      style="color: steelblue"
+                    ></i>
+                    <i
+                      *ngIf="!rowData[col.field]"
+                      class="fas fa-comments"
+                      style="color: gray; cursor: not-allowed"
+                    ></i>
+                  </a>
+                </div>
+              </td>
+
+              <!-- Template For SubHeader -->
+              <ng-template #elseCondition>
+                <td
+                  *ngFor="let sub of col.subHeader; let j = index"
+                  [ngClass]="
+                    rowData['activeStatus']?.toString()?.toUpperCase() == 'NO'
+                      ? 'redIcon'
+                      : ''
+                  "
+                  [title]="rowData[sub.field] ? rowData[sub.field] : ''"
+                  [class.gridRightAlign]="col.isRightAlign"
+                >
+                  <div
+                    (click)="onSelected(rowData, index)"
+                    style="width: 100%"
+                    *ngIf="!col.isHyperLink"
+                  >
+                    {{ rowData[sub.field] }}
+                  </div>
+                </td>
+              </ng-template>
+            </ng-container>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr *ngIf="this.selectedColumns?.length !== 0">
+            <td [attr.colspan]="selectedColumnsKeys?.length">
+              <span
+                *ngIf="tableData?.length == 0"
+                [translate]="'common.grid.noRecordsFound'"
+              ></span>
+              <span
+                *ngIf="tableData?.length != 0"
+                [translate]="'common.grid.searchCompletedNoRecordFound'"
+              >
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="summary">
+          <tr *ngIf="filteredListCount > 0 && selectedColumns?.length != 0">
+            <td>
+              <span
+                [translate]="'common.grid.summary.footerSummaryShowing'"
+              ></span>
+              {{ recordsFirstIndex + 1 }}
+              <span [translate]="'common.grid.summary.footerSummaryTo'"></span>
+              {{ recordsLastIndex }}
+              <span [translate]="'common.grid.summary.footerSummaryOf'"></span>
+              {{ filteredListCount }}
+              <span
+                [translate]="'common.grid.summary.footerSummaryRecords'"
+              ></span>
+            </td>
+            <td *ngIf="filteredListCount < tableData?.length">
+              &nbsp;(<span
+                [translate]="'common.grid.summary.footerSummaryFiltered'"
+              ></span>
+              <span
+                [translate]="'common.grid.summary.footerSummaryFrom'"
+              ></span>
+              {{ tableData.length }}
+              <span
+                [translate]="'common.grid.summary.footerSummaryRecords'"
+              ></span>
+              )
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div
+    #uploadModal="bs-modal"
+    bsModal
+    class="modal attachment-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="repairDetailsModalLabel"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+  >
+    <sa-upload
+      [uploadHeader]="uploadHeader"
+      [successCount]="successCount"
+      [failedCount]="failedCount"
+      [failedPercentage]="failedPercentage"
+      [successPercentage]="successPercentage"
+      [totalProcessed]="totalProcessed"
+      [hrefDynamic]="hrefDynamic"
+      [uploadDynamic]="uploadDynamic"
+      [uploadFileName]="uploadFileName"
+      (closeUploadButton)="closeUploadButton($event)"
+      [uploadColumns]="uploadColumns"
+      [excelDocument]="excelDocument"
+    ></sa-upload>
+  </div>
+</div>

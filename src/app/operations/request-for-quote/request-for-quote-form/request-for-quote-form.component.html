@@ -1,0 +1,1587 @@
+<div class="panel-body">
+  <div class="widget-body fuelux">
+    <div class="container-fluid">
+      <div class="row">
+        <form
+          [formGroup]="editSaveRFQForm"
+          autocomplete="off"
+          class="container-new-ui"
+        >
+          <div class="row">
+            <!-- RFQ No -->
+            <div class="form-group col-lg-2 col-md-2 col-sm-3">
+              <label for="rfqNumber" class="labelText">
+                <span
+                  [translate]="'operations.requestForQuote.label.rfqNumber'"
+                ></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="rfqNumber"
+                formControlName="rfqNumber"
+                maxlength="100"
+                placeholder="{{
+                  'operations.requestForQuote.placeholder.rfqNumber' | translate
+                }}"
+              />
+            </div>
+            <!-- RFQ Date -->
+            <div class="form-group col-lg-2 col-md-2 col-sm-3">
+              <label for="rfqDate" class="labelText">
+                <span
+                  [translate]="'operations.requestForQuote.label.rfqDate'"
+                ></span>
+                <i class="red"> *</i>
+              </label>
+              <div class="input-group input-group-md">
+                <input
+                  type="text"
+                  class="form-control uppercase"
+                  bsDatepicker
+                  (keydown.arrowdown)="rfqDate.click()"
+                  formControlName="rfqDate"
+                  #rfqDate
+                  [bsConfig]="{
+                    dateInputFormat: 'DD-MMM-YYYY',
+                    containerClass: 'theme-dark-blue',
+                    adaptivePosition: true
+                  }"
+                  [ngClass]="{
+                    redBorderCalender:
+                      (submitted &&
+                        editSaveRFQFormController['rfqDate'].errors) ||
+                      (editSaveRFQFormController['rfqDate'].errors &&
+                        (editSaveRFQFormController['rfqDate'].dirty ||
+                          editSaveRFQFormController['rfqDate'].touched))
+                  }"
+                />
+
+                <span class="input-group-btn">
+                  <button
+                    class="btn custom-button"
+                    type="button"
+                    (click)="rfqDate.click()"
+                    tabindex="-1"
+                  >
+                    <app-svg-calender-icon></app-svg-calender-icon>
+                  </button>
+                </span>
+              </div>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted && editSaveRFQFormController['rfqDate'].errors) ||
+                  (editSaveRFQFormController['rfqDate'].errors &&
+                    (editSaveRFQFormController['rfqDate'].dirty ||
+                      editSaveRFQFormController['rfqDate'].touched))
+                "
+              >
+                <div
+                  *ngIf="editSaveRFQFormController['rfqDate'].errors?.['invalid']"
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqDate.invalid'
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="editSaveRFQFormController['rfqDate'].errors?.['customError']"
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqDateGreaterThanCurrent'
+                    "
+                  ></span>
+                  {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                </div>
+                <div
+                  *ngIf="editSaveRFQFormController['rfqDate'].errors?.['bsDate']"
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqDate.invalid'
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="
+                    editSaveRFQFormController['rfqDate'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqDate.required'
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="editSaveRFQFormController['rfqDate'].errors?.['invalidToDate']"
+                >
+                  <span
+                    [translate]="
+                      'gateMovesReport.error.endPeriodGreaterThanToDate'
+                    "
+                  >
+                  </span>
+                  {{
+                    editSaveRFQFormController["rfqDate"].value
+                      | date : "dd-MMM-yyyy"
+                      | uppercase
+                  }}
+                </div>
+
+                <div
+                  *ngIf="editSaveRFQFormController['rfqDate'].errors?.['inValidCurrentDate']"
+                >
+                  <span
+                    [translate]="
+                      'gateMovesReport.error.endPeriodSmallerThanCurrent'
+                    "
+                  ></span>
+                  {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                </div>
+                <div
+                  *ngIf="editSaveRFQFormController['rfqDate'].errors?.['inValidDateString']"
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqDate.invalid'
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <!-- RFQ Status -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="rfqStatus" class="labelText">
+                <span
+                  [translate]="'operations.requestForQuote.label.rfqStatus'"
+                ></span>
+              </label>
+
+              <ng-select
+                [items]="rfqStatusDDList"
+                [searchFn]="dropdownSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'rfqStatus')"
+                bindLabel="statusCode"
+                formControlName="rfqStatus"
+                notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+                (change)="onRfqStatusSelected($event)"
+                placeholder="{{
+                  'operations.requestForQuote.placeholder.rfqStatus' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSaveRFQFormController['rfqStatus'].errors) ||
+                    (this.editSaveRFQFormController['rfqStatus'].errors &&
+                      (this.editSaveRFQFormController['rfqStatus'].dirty ||
+                        this.editSaveRFQFormController['rfqStatus'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div class="card-body" title="{{ item?.statusCode }}">
+                    <div>
+                      <small
+                        ><b>{{ item?.statusCode }}</b></small
+                      >
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.editSaveRFQFormController['rfqStatus'].errors) ||
+                  (this.editSaveRFQFormController['rfqStatus'].errors &&
+                    (this.editSaveRFQFormController['rfqStatus'].dirty ||
+                      this.editSaveRFQFormController['rfqStatus'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSaveRFQFormController['rfqStatus'].errors[
+                      'invalid'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqStatus.invalid'
+                    "
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSaveRFQFormController['rfqStatus'].errors[
+                      'required'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqStatus.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- RFQ End Date -->
+            <div class="form-group col-lg-2 col-md-2 col-sm-3">
+              <label for="rfqEndDate" class="labelText">
+                <span
+                  [translate]="'operations.requestForQuote.label.rfqEndDate'"
+                ></span>
+              </label>
+              <div class="input-group input-group-md">
+                <input
+                  type="text"
+                  class="form-control uppercase"
+                  bsDatepicker
+                  (keydown.arrowdown)="rfqEndDate.click()"
+                  formControlName="rfqEndDate"
+                  #rfqEndDate
+                  [bsConfig]="{
+                    dateInputFormat: 'DD-MMM-YYYY',
+                    containerClass: 'theme-dark-blue',
+                    adaptivePosition: true
+                  }"
+                  [ngClass]="{
+                    redBorderCalender:
+                      (submitted &&
+                        editSaveRFQFormController['rfqEndDate'].errors) ||
+                      (editSaveRFQFormController['rfqEndDate'].errors &&
+                        (editSaveRFQFormController['rfqEndDate'].dirty ||
+                          editSaveRFQFormController['rfqEndDate'].touched))
+                  }"
+                  (ngModelChange)="validateRFQEndDate('rfqEndDate', $event)"
+                />
+
+                <span class="input-group-btn">
+                  <button
+                    class="btn custom-button"
+                    type="button"
+                    (click)="rfqEndDate.click()"
+                    tabindex="-1"
+                  >
+                    <app-svg-calender-icon></app-svg-calender-icon>
+                  </button>
+                </span>
+              </div>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    editSaveRFQFormController['rfqEndDate'].errors) ||
+                  (editSaveRFQFormController['rfqEndDate'].errors &&
+                    (editSaveRFQFormController['rfqEndDate'].dirty ||
+                      editSaveRFQFormController['rfqEndDate'].touched))
+                "
+              >
+                <div
+                  *ngIf="editSaveRFQFormController['rfqEndDate'].errors?.['invalid']"
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqEndDate.invalid'
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="editSaveRFQFormController['rfqEndDate'].errors?.['customError']"
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.endDateGreaterThanRFQDate'
+                    "
+                  ></span>
+                  <!-- {{ currentDate | date : "dd-MMM-yyyy" | uppercase }} -->
+                </div>
+                <div
+                  *ngIf="editSaveRFQFormController['rfqEndDate'].errors?.['bsDate']"
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqEndDate.invalid'
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="
+                    editSaveRFQFormController['rfqEndDate'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqEndDate.required'
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="editSaveRFQFormController['rfqEndDate'].errors?.['invalidToDate']"
+                >
+                  <span
+                    [translate]="
+                      'gateMovesReport.error.endPeriodGreaterThanToDate'
+                    "
+                  >
+                  </span>
+                  {{
+                    editSaveRFQFormController["rfqEndDate"].value
+                      | date : "dd-MMM-yyyy"
+                      | uppercase
+                  }}
+                </div>
+
+                <div
+                  *ngIf="editSaveRFQFormController['rfqEndDate'].errors?.['inValidCurrentDate']"
+                >
+                  <span
+                    [translate]="
+                      'gateMovesReport.error.endPeriodSmallerThanCurrent'
+                    "
+                  ></span>
+                  {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                </div>
+                <div
+                  *ngIf="editSaveRFQFormController['rfqEndDate'].errors?.['inValidDateString']"
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqEndDate.invalid'
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <!-- RFQ Source -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="rfqSource" class="labelText">
+                <span
+                  [translate]="'operations.requestForQuote.label.rfqSource'"
+                ></span>
+              </label>
+
+              <ng-select
+                [items]="rfqSourceDDList"
+                [searchFn]="dropdownSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'rfqSource')"
+                bindLabel="sourceCode"
+                formControlName="rfqSource"
+                notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+                placeholder="{{
+                  'operations.requestForQuote.placeholder.rfqSource' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSaveRFQFormController['rfqSource'].errors) ||
+                    (this.editSaveRFQFormController['rfqSource'].errors &&
+                      (this.editSaveRFQFormController['rfqSource'].dirty ||
+                        this.editSaveRFQFormController['rfqSource'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div title="{{ item?.sourceCode }}">
+                    <small
+                      ><b>{{ item?.sourceCode }}</b></small
+                    ><br />
+                  </div>
+                </ng-template>
+              </ng-select>
+
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.editSaveRFQFormController['rfqSource'].errors) ||
+                  (this.editSaveRFQFormController['rfqSource'].errors &&
+                    (this.editSaveRFQFormController['rfqSource'].dirty ||
+                      this.editSaveRFQFormController['rfqSource'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSaveRFQFormController['rfqSource'].errors[
+                      'invalid'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqSource.invalid'
+                    "
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSaveRFQFormController['rfqSource'].errors[
+                      'required'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.rfqSource.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- Depot -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="depot" class="labelText">
+                <span
+                  [translate]="'operations.requestForQuote.label.depot'"
+                ></span>
+                <span class="redIcon"> *</span>
+              </label>
+
+              <ng-select
+                [items]="associatedDepots"
+                [searchFn]="dropdownDepotSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'depot')"
+                bindLabel="depotCode"
+                formControlName="depot"
+                notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+                placeholder="{{
+                  'operations.requestForQuote.placeholder.depot' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSaveRFQFormController['depot'].errors) ||
+                    (this.editSaveRFQFormController['depot'].errors &&
+                      (this.editSaveRFQFormController['depot'].dirty ||
+                        this.editSaveRFQFormController['depot'].touched))
+                }"
+                (change)="handleDepotChangeDD($event)"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div title="{{ item?.depotCode }} - {{ item?.depotName }}">
+                    <small
+                      ><b>{{ item?.depotCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.depotName
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.editSaveRFQFormController['depot'].errors) ||
+                  (this.editSaveRFQFormController['depot'].errors &&
+                    (this.editSaveRFQFormController['depot'].dirty ||
+                      this.editSaveRFQFormController['depot'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSaveRFQFormController['depot'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.depot.invalid'
+                    "
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSaveRFQFormController['depot'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.depot.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- City -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="city" class="labelText">
+                <span
+                  [translate]="'operations.requestForQuote.label.city'"
+                ></span>
+              </label>
+
+              <ng-select
+                [items]="cityDDList"
+                [searchFn]="dropdownSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'city')"
+                bindLabel="cityCode"
+                formControlName="city"
+                notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+                placeholder="{{
+                  'operations.requestForQuote.placeholder.city' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSaveRFQFormController['city'].errors) ||
+                    (this.editSaveRFQFormController['city'].errors &&
+                      (this.editSaveRFQFormController['city'].dirty ||
+                        this.editSaveRFQFormController['city'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div
+                    title="{{ item?.cityCode }} - {{ item?.cityDescription }}"
+                  >
+                    <small
+                      ><b>{{ item?.cityCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.cityDescription
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.editSaveRFQFormController['city'].errors) ||
+                  (this.editSaveRFQFormController['city'].errors &&
+                    (this.editSaveRFQFormController['city'].dirty ||
+                      this.editSaveRFQFormController['city'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSaveRFQFormController['city'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.city.invalid'
+                    "
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSaveRFQFormController['city'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.requestForQuote.errors.city.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- PR Number -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="prNumber" class="labelText">
+                <span
+                  [translate]="'operations.requestForQuote.label.prNumber'"
+                ></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="prNumber"
+                formControlName="prNumber"
+                placeholder="{{
+                  'operations.requestForQuote.placeholder.prNumber' | translate
+                }}"
+              />
+            </div>
+            <div class="form-group col-lg-2 col-md-2 col-sm-3">
+              <label for="rfqRemarks" class="labelText">
+                <span
+                  [translate]="'operations.requestForQuote.label.rfqRemarks'"
+                ></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="rfqRemarks"
+                formControlName="rfqRemarks"
+                maxlength="500"
+                placeholder="{{
+                  'operations.requestForQuote.placeholder.rfqRemarks'
+                    | translate
+                }}"
+              />
+            </div>
+          </div>
+          <div class="row" *ngIf="showPartDetails">
+            <div>
+              <div class="panel-title panelHeading pull-left">
+                <div class="nopaddingbottom">
+                  <b>
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.titles.partDetail'
+                      "
+                      class="main-title"
+                    >
+                    </span
+                  ></b>
+                </div>
+              </div>
+              <div class="pull-right buttonGroup">
+                <div class="row">
+                  <button
+                    class="capsule-button green"
+                    (click)="savePartDetails()"
+                  >
+                    <div class="icon-circle">
+                      <i class="fas fa-light fa-floppy-disk"></i>
+                    </div>
+                    {{
+                      "operations.requestForQuote.partDetails.buttons.save"
+                        | translate
+                    }}
+                  </button>
+                  <button (click)="resetForm()" class="capsule-button grey">
+                    <div class="icon-circle">
+                      <i class="fa-solid fa-arrows-rotate"></i>
+                    </div>
+                    {{
+                      "operations.requestForQuote.partDetails.buttons.reset"
+                        | translate
+                    }}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="line"></div>
+            <!-- <hr style="height: 2px; border-width: 100%; color: gray; background-color: gray" /> -->
+            <form
+              class="container-new-ui"
+              [formGroup]="editSaveRFQPartForm"
+              autocomplete="off"
+              style="padding-top: 5px"
+            >
+              <div class="row">
+                <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                  <label for="partType" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.partType'
+                      "
+                    ></span>
+                    <i class="red"> *</i>
+                  </label>
+
+                  <ng-select
+                    [items]="partTypeDDList"
+                    [searchFn]="dropdownSearchFn"
+                    [selectOnTab]="true"
+                    (input)="checkNgSelectValue($event, 'partType')"
+                    bindLabel="code"
+                    formControlName="partType"
+                    notFoundText="{{
+                      'common.dropdown.notFoundText' | translate
+                    }}"
+                    placeholder="{{
+                      'operations.requestForQuote.partDetails.placeholder.partType'
+                        | translate
+                    }}"
+                    (change)="onPartTypeSelected($event)"
+                    [ngClass]="{
+                      redBorder:
+                        (submitted &&
+                          editSaveRFQPartFormController['partType'].errors) ||
+                        (editSaveRFQPartFormController['partType'].errors &&
+                          (editSaveRFQPartFormController['partType'].dirty ||
+                            editSaveRFQPartFormController['partType'].touched))
+                    }"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div title="{{ item?.code }} - {{ item?.description }}">
+                        <small
+                          ><b>{{ item?.code }}</b></small
+                        ><br />
+                        <span class="dropDownDescription">{{
+                          item?.description
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        editSaveRFQPartFormController['partType'].errors) ||
+                      (editSaveRFQPartFormController['partType'].errors &&
+                        (editSaveRFQPartFormController['partType'].dirty ||
+                          editSaveRFQPartFormController['partType'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        editSaveRFQPartFormController['partType'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.partType.required'
+                        "
+                      ></span>
+                    </p>
+                    <p
+                      *ngIf="
+                        editSaveRFQPartFormController['partType'].errors[
+                          'invalid'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.partType.invalid'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Part Code -->
+                <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                  <label for="partCode" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.partCode'
+                      "
+                    ></span>
+                    <i class="red"> *</i>
+                  </label>
+
+                  <ng-select
+                    [items]="partCodeDDList"
+                    [searchFn]="dropdownPartCodeSearchFn"
+                    [selectOnTab]="true"
+                    (input)="checkNgSelectValue($event, 'partCode')"
+                    bindLabel="partCode"
+                    formControlName="partCode"
+                    notFoundText="{{
+                      'common.dropdown.notFoundText' | translate
+                    }}"
+                    placeholder="{{
+                      'operations.requestForQuote.partDetails.placeholder.partCode'
+                        | translate
+                    }}"
+                    (change)="onPartCodeSelected($event)"
+                    [ngClass]="{
+                      redBorder:
+                        (submitted &&
+                          editSaveRFQPartFormController['partCode'].errors) ||
+                        (editSaveRFQPartFormController['partCode'].errors &&
+                          (editSaveRFQPartFormController['partCode'].dirty ||
+                            editSaveRFQPartFormController['partCode'].touched))
+                    }"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div title="{{ item?.partCode }} - {{ item?.partName }}">
+                        <small
+                          ><b>{{ item?.partCode }}</b></small
+                        ><br />
+                        <span class="dropDownDescription">{{
+                          item?.partName
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                  <div *ngIf="isShowPartExistErr" class="help-block red">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.errors.part.exist'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        editSaveRFQPartFormController['partCode'].errors) ||
+                      (editSaveRFQPartFormController['partCode'].errors &&
+                        (editSaveRFQPartFormController['partCode'].dirty ||
+                          editSaveRFQPartFormController['partCode'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        editSaveRFQPartFormController['partCode'].errors[
+                          'invalid'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.partCode.invalid'
+                        "
+                      ></span>
+                    </p>
+                    <p
+                      *ngIf="
+                        editSaveRFQPartFormController['partCode'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.partCode.required'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+                <!-- Part Name -->
+                <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                  <label for="partName" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.partName'
+                      "
+                    ></span>
+                  </label>
+
+                  <ng-select
+                    [items]="partNameDDList"
+                    [searchFn]="dropdownSearchFn"
+                    [selectOnTab]="true"
+                    (input)="checkNgSelectValue($event, 'partName')"
+                    bindLabel="partName"
+                    formControlName="partName"
+                    notFoundText="{{
+                      'common.dropdown.notFoundText' | translate
+                    }}"
+                    placeholder="{{
+                      'operations.requestForQuote.partDetails.placeholder.partName'
+                        | translate
+                    }}"
+                    [ngClass]="{
+                      redBorder:
+                        (submitted &&
+                          editSaveRFQPartFormController['partName'].errors) ||
+                        (editSaveRFQPartFormController['partName'].errors &&
+                          (editSaveRFQPartFormController['partName'].dirty ||
+                            editSaveRFQPartFormController['partName'].touched))
+                    }"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div title="{{ item?.code }} - {{ item?.description }}">
+                        <small
+                          ><b>{{ item?.code }}</b></small
+                        ><br />
+                        <span class="dropDownDescription">{{
+                          item?.description
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        editSaveRFQPartFormController['partName'].errors) ||
+                      (editSaveRFQPartFormController['partName'].errors &&
+                        (editSaveRFQPartFormController['partName'].dirty ||
+                          editSaveRFQPartFormController['partName'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        editSaveRFQPartFormController['partName'].errors[
+                          'invalid'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.partName.invalid'
+                        "
+                      ></span>
+                    </p>
+                    <p
+                      *ngIf="
+                        editSaveRFQPartFormController['partName'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.partName.required'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+                <!-- Part Category -->
+                <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                  <label for="partCategory" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.partCategory'
+                      "
+                    ></span>
+                  </label>
+
+                  <ng-select
+                    [items]="partCategoryDDList"
+                    [searchFn]="dropdownSearchFn"
+                    [selectOnTab]="true"
+                    (input)="checkNgSelectValue($event, 'partCategory')"
+                    bindLabel="partCategoryCode"
+                    formControlName="partCategory"
+                    notFoundText="{{
+                      'common.dropdown.notFoundText' | translate
+                    }}"
+                    placeholder="{{
+                      'operations.requestForQuote.partDetails.placeholder.partCategory'
+                        | translate
+                    }}"
+                    [ngClass]="{
+                      redBorder:
+                        (submitted &&
+                          editSaveRFQPartFormController['partCategory']
+                            .errors) ||
+                        (editSaveRFQPartFormController['partCategory'].errors &&
+                          (editSaveRFQPartFormController['partCategory']
+                            .dirty ||
+                            editSaveRFQPartFormController['partCategory']
+                              .touched))
+                    }"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div title="{{ item?.code }} - {{ item?.description }}">
+                        <small
+                          ><b>{{ item?.code }}</b></small
+                        ><br />
+                        <span class="dropDownDescription">{{
+                          item?.description
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        editSaveRFQPartFormController['partCategory'].errors) ||
+                      (editSaveRFQPartFormController['partCategory'].errors &&
+                        (editSaveRFQPartFormController['partCategory'].dirty ||
+                          editSaveRFQPartFormController['partCategory']
+                            .touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        editSaveRFQPartFormController['partCategory'].errors[
+                          'invalid'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.partCategory.invalid'
+                        "
+                      ></span>
+                    </p>
+                    <p
+                      *ngIf="
+                        editSaveRFQPartFormController['partCategory'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.partCategory.required'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+                <div class="form-group col-lg-2 col-md-2 col-sm-3">
+                  <label for="partSpecification" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.partSpecification'
+                      "
+                    ></span>
+                  </label>
+                  <br />
+                  <p class="margin-left-10 font-20">
+                    <i
+                      class="far fa-eye clickable"
+                      (click)="handleOpenPartSpecification()"
+                    ></i>
+                  </p>
+                </div>
+                <!-- Requisition Quantity -->
+                <div
+                  class="form-group col-lg-2 col-md-2 col-sm-3"
+                  [ngClass]="{
+                    'has-error':
+                      (submitted &&
+                        this.editSaveRFQPartFormController[
+                          'requisitionQuantity'
+                        ].errors) ||
+                      (this.editSaveRFQPartFormController['requisitionQuantity']
+                        .errors &&
+                        (this.editSaveRFQPartFormController[
+                          'requisitionQuantity'
+                        ].dirty ||
+                          this.editSaveRFQPartFormController[
+                            'requisitionQuantity'
+                          ].touched))
+                  }"
+                >
+                  <label for="requisitionQuantity" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.requisitionQuantity'
+                      "
+                    ></span>
+                    <i class="red"> *</i>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control amountInput new-form-control-input"
+                    id="requisitionQuantity"
+                    formControlName="requisitionQuantity"
+                    maxlength="15"
+                    [scale]="2"
+                    numericType="decimal"
+                    numeric
+                    placeholder="{{
+                      'operations.requestForQuote.partDetails.placeholder.requisitionQuantity'
+                        | translate
+                    }}"
+                    (input)="handleAmountCalculation('requisitionQuantity')"
+                  />
+
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        editSaveRFQPartFormController['requisitionQuantity']
+                          .errors) ||
+                      (editSaveRFQPartFormController['requisitionQuantity']
+                        .errors &&
+                        (editSaveRFQPartFormController['requisitionQuantity']
+                          .dirty ||
+                          editSaveRFQPartFormController['requisitionQuantity']
+                            .touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        editSaveRFQPartFormController['requisitionQuantity']
+                          .errors['required']
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.requisitionQuantity.required'
+                        "
+                      ></span>
+                    </p>
+                    <div
+                      *ngIf="
+                        editSaveRFQPartFormController['requisitionQuantity']
+                          .errors['min']
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.requisitionQuantity.limit'
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      *ngIf="
+                        editSaveRFQPartFormController['requisitionQuantity']
+                          .errors['max']
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.requisitionQuantity.limit'
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+                <!-- partRate -->
+                <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                  <label for="partRate" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.partRate'
+                      "
+                    ></span>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control amountInput new-form-control-input"
+                    id="partRate"
+                    formControlName="partRate"
+                    [scale]="2"
+                    numericType="decimal"
+                    numeric
+                    placeholder="{{
+                      'operations.requestForQuote.partDetails.placeholder.partRate'
+                        | translate
+                    }}"
+                    (input)="handleAmountCalculation('partRate')"
+                  />
+                </div>
+
+                <!-- estimatedCost -->
+                <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                  <label for="estimatedCost" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.estimatedCost'
+                      "
+                    ></span>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control amountInput new-form-control-input"
+                    id="estimatedCost"
+                    formControlName="estimatedCost"
+                    maxlength="100"
+                    [scale]="2"
+                    numericType="decimal"
+                    numeric
+                    placeholder="{{
+                      'operations.requestForQuote.partDetails.placeholder.estimatedCost'
+                        | translate
+                    }}"
+                  />
+                </div>
+
+                <!-- Stock UOM -->
+                <div class="form-group col-lg-2 col-md-2 col-sm-3">
+                  <label for="stockUom" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.stockUOM'
+                      "
+                    ></span>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="stockUom"
+                    formControlName="stockUom"
+                    maxlength="100"
+                    placeholder="{{
+                      'operations.requestForQuote.partDetails.placeholder.stockUOM'
+                        | translate
+                    }}"
+                  />
+                </div>
+
+                <div class="form-group col-lg-2 col-md-2 col-sm-3">
+                  <label for="requiredDate" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.partDetails.label.requiredDate'
+                      "
+                    ></span>
+                    <i class="red"> *</i>
+                  </label>
+                  <div class="input-group input-group-md">
+                    <input
+                      type="text"
+                      class="form-control uppercase"
+                      bsDatepicker
+                      (keydown.arrowdown)="requiredDate.click()"
+                      formControlName="requiredDate"
+                      #requiredDate
+                      [bsConfig]="{
+                        dateInputFormat: 'DD-MMM-YYYY',
+                        containerClass: 'theme-dark-blue',
+                        adaptivePosition: true
+                      }"
+                      [ngClass]="{
+                        redBorderCalender:
+                          (submitted &&
+                            editSaveRFQPartFormController['requiredDate']
+                              .errors) ||
+                          (editSaveRFQPartFormController['requiredDate']
+                            .errors &&
+                            (editSaveRFQPartFormController['requiredDate']
+                              .dirty ||
+                              editSaveRFQPartFormController['requiredDate']
+                                .touched))
+                      }"
+                      (ngModelChange)="
+                        validateRequiredDate('requiredDate', $event)
+                      "
+                    />
+
+                    <span class="input-group-btn">
+                      <button
+                        class="btn custom-button"
+                        type="button"
+                        (click)="requiredDate.click()"
+                        tabindex="-1"
+                      >
+                        <app-svg-calender-icon></app-svg-calender-icon>
+                      </button>
+                    </span>
+                  </div>
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        editSaveRFQPartFormController['requiredDate'].errors) ||
+                      (editSaveRFQPartFormController['requiredDate'].errors &&
+                        (editSaveRFQPartFormController['requiredDate'].dirty ||
+                          editSaveRFQPartFormController['requiredDate']
+                            .touched))
+                    "
+                  >
+                    <div
+                      *ngIf="editSaveRFQPartFormController['requiredDate'].errors?.['invalid']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.requiredDate.invalid'
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      *ngIf="editSaveRFQPartFormController['requiredDate'].errors?.['customError']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.requiredDateGreaterThanCurrent'
+                        "
+                      ></span>
+                      {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                    </div>
+                    <div
+                      *ngIf="editSaveRFQPartFormController['requiredDate'].errors?.['bsDate']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.requiredDate.invalid'
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      *ngIf="
+                        editSaveRFQPartFormController['requiredDate'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.requiredDate.required'
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      *ngIf="editSaveRFQPartFormController['requiredDate'].errors?.['inValidDateString']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.requiredDate.invalid'
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- supplier start-->
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                  <label for="supplier" class="labelText">
+                    <a class="light-blue-part">
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.label.supplier'
+                        "
+                      ></span>
+                    </a>
+                    <span class="redIcon"> *</span>
+                  </label>
+                  <div (click)="handleOpenSupplierPopup()">
+                    <input
+                      type="text"
+                      class="form-control new-form-control-input link-style"
+                      id="supplier"
+                      formControlName="supplier"
+                      maxlength="100"
+                      placeholder="{{
+                        'operations.requestForQuote.partDetails.placeholder.supplier'
+                          | translate
+                      }}"
+                      [readonly]="true"
+                      [style.background-color]="'#eeeeee'"
+                    />
+                  </div>
+                  <div class="help-block red">
+                    <div *ngIf="isShowSupplierRequiredErr">
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.partDetails.errors.supplier.required'
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+                <!-- supplier end -->
+
+                <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                  <label for="remarks" class="labelText"
+                    ><span [translate]="'Remarks'"></span>
+                  </label>
+                  <textarea
+                    placeholder="{{
+                      'operations.requestForQuote.partDetails.placeholder.remarks'
+                        | translate
+                    }}"
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="remarks"
+                    formControlName="remarks"
+                    maxlength="500"
+                    spaceatfirst
+                  ></textarea>
+                </div>
+              </div>
+              <!-- class="col-lg-12 col-md-12 col-sm-12" -->
+              <div>
+                <label>
+                  <b>Total Estimate Cost: {{ totalEstimatedCode }}</b>
+                </label>
+              </div>
+              <app-shared-table-new
+                #sharedTableNew
+                [headerColumnList]="partDetailColumnList"
+                [tableInitialData]="partDetailList"
+                [isGridTittle]="false"
+                [showTableHeader]="false"
+                [filter]="false"
+                [excelIcon]="false"
+                [refreshIcon]="false"
+                [tableTitle]="'RFQ Supplier Detail List Grid'"
+                (handlePartSpecificationRowData)="
+                  handlePartSpecificationRowData($event)
+                "
+                (sendRemarksIconAction)="handleRemarksIcon($event)"
+                (handleHyperLinkRowData)="
+                  receiveTablePartDetailList($event); handleOpenSupplierPopup()
+                "
+                (sendTableRowData)="receiveTablePartDetailList($event)"
+                (getTableDataService)="refreshPartDetailList($event)"
+                [excelFileName]="'RFQ Supplier Detail List'"
+              ></app-shared-table-new>
+              <!--  handleHyperLinkRowData and sendTableRowData both are calling same function -->
+            </form>
+          </div>
+          <div class="row" *ngIf="!this.showPartDetails">
+            <app-request-for-quote-supplier
+              [requestForQuoteId]="requestForQuoteId"
+              [screenId]="screenId"
+              [editSaveRFQForm]="editSaveRFQForm"
+            ></app-request-for-quote-supplier>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- <app-part-specifications
+    #partSpecification
+    [partSpecificationData]="partSpecificationData"
+    [tableTitle]="'Part Specification'"
+  ></app-part-specifications> -->
+
+  <app-add-rfqsupplier
+    #addRFQSupplier
+    [editSaveSupplierForm]="editSaveSupplierForm"
+  ></app-add-rfqsupplier>
+</div>
+
+<!-- RFQRemarks popup -->
+<div
+  bsModal
+  #remarksPopup="bs-modal"
+  class="modal remark-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="floatleft-part">
+          <h4 class="modal-title">
+            <span [translate]="'operations.common.titles.remarks'"></span>
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right-part">
+          <!-- <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="closeRemarksPopUp()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+          <button
+            class="capsule-button"
+            type="button"
+            aria-label="Close"
+            (click)="closeRemarksPopUp()"
+            style="background-color: #ec5656"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            {{ "common.buttons.cancel" | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <textarea
+          class="form-control"
+          [value]="remarks"
+          disabled="true"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  Part specification -->
+
+<div
+  bsModal
+  #partSpecificationModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            {{ tableTitle }}
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right">
+          <div class="custom-button-close" (click)="handleCloseSpecification()">
+            <i class="fas fa-fw fa-times white-icon" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <app-shared-table-new
+          [headerColumnList]="tableColumnsPartSpecification"
+          [filter]="true"
+          [excelIcon]="true"
+          [refreshIcon]="true"
+          [showHide]="true"
+          [globalSearch]="true"
+          [isPanelHeading]="false"
+          [addRecordIcon]="false"
+          [tableInitialData]="partSpecificationData"
+          [isMasterComp]="false"
+          [tableTitle]="tableTitle"
+          [excelFileName]="excelFileName"
+        ></app-shared-table-new>
+      </div>
+
+      <div class="cancel-modal-footer">
+        <div class="row">
+          <button
+            class="capsule-button reset-button-color"
+            (click)="handleCloseSpecification()"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            {{ "common.buttons.close" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

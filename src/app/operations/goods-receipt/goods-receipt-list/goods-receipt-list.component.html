@@ -1,0 +1,56 @@
+<div *ngIf="currentCard == 1">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderPending"
+    [tableInitialData]="goodsReceiptData"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    [refreshIcon]="true"
+    [addRecordIcon]="false"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+    (sendTableRowData)="receiveTableRowData($event,currentCard)"
+  >
+  <!-- (addRecordIconFn)="handleAddRecordIcon($event)" -->
+  </app-shared-lazy-table-new>
+</div>
+<div *ngIf="currentCard == 2">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderSubmitted"
+    [tableInitialData]="goodsReceiptData"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    [refreshIcon]="true"
+    [addRecordIcon]="false"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+    (sendTableRowData)="receiveTableRowData($event,currentCard)"
+    (exportExcel)="exportToExcelData($event)"
+  >
+  <!-- (addRecordIconFn)="handleAddRecordIcon($event)" -->
+  </app-shared-lazy-table-new>
+</div>
+
+<!-- 
+{
+  "partTypeId": 311,
+  "partTypeCode": "STORES",
+  "partId": 166,
+  "partCode": "AS1",
+  "partName": "2323e",
+  "stockUOMCode": "QTY",
+  "partCategory": "12RE, 12RE, 12RE, 12RE, 20DC, 20DV",
+  "deliveryDate": "29-DEC-2023",
+  "purchaseOrderQuantity": 234,
+  "created": "2023-12-18T12:24:47.02239",
+  "createdBy": "ADMIN",
+  "modified": "2023-12-18T12:24:47.022389",
+  "modifiedBy": "ADMIN"
+} -->

@@ -1,0 +1,1003 @@
+<form class="container-new-ui" autocomplete="off" [formGroup]="editSaveStoreInformationForm">
+  <div class="panel-body">
+    <div class="row">
+      <div class="form-group col-lg-3 col-md-3 col-sm-3">
+        <label for="depot" class="labelText">
+          <span [translate]="'master.store.label.depot'"></span>
+          <i style="color: red"> *</i>
+        </label>
+        <ng-select
+          [items]="depotTypes"
+          [selectOnTab]="true"
+          bindLabel="depotCode"
+          placeholder="{{ 'master.store.placeholder.depot' | translate }}"
+          formControlName="depot"
+          [ngClass]="{
+            redBorder:
+              (submitted && editSaveFormControls.depot.errors) ||
+              (editSaveFormControls.depot.errors &&
+                (editSaveFormControls.depot.dirty ||
+                  editSaveFormControls.depot.touched))
+          }"
+          notFoundText="{{ 'common.Information.notFound' | translate }}"
+          (input)="checkNgSelectValue($event, 'depot')"
+        >
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-index="index"
+            let-search="searchTerm"
+          >
+            <div class="card-body" title="{{ item.depotCode }}">
+              <div>
+                <small
+                  ><b>{{ item?.depotCode }}</b></small
+                ><br />
+              </div>
+            </div>
+          </ng-template>
+        </ng-select>
+        <div
+          class="help-block red"
+          *ngIf="
+            (submitted && editSaveFormControls.depot.errors) ||
+            (editSaveFormControls.depot.errors &&
+              (editSaveFormControls.depot.dirty ||
+                editSaveFormControls.depot.touched))
+          "
+        >
+          <p *ngIf="editSaveFormControls.depot.errors.required">
+            <span [translate]="'master.store.errors.depot.required'"></span>
+          </p>
+          <p *ngIf="editSaveFormControls.depot.errors.invalid">
+            <span [translate]="'master.store.errors.depot.invalid'"></span>
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="form-group col-lg-3 col-md-3 col-sm-3"
+        [ngClass]="{
+          'has-error':
+            (submitted && editSaveFormControls.storeCode.errors) ||
+            (editSaveFormControls.storeCode.errors &&
+              (editSaveFormControls.storeCode.dirty ||
+                editSaveFormControls.storeCode.touched))
+        }"
+      >
+        <label for="storeCode" class="labelText"
+          ><span [translate]="'master.store.label.storeCode'"> </span>
+          <span class="redIcon"> *</span>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control new-form-control-input"
+          id="storeCode"
+          formControlName="storeCode"
+          maxlength="20"
+          uppercase
+          saTrimSpaceAtFirst
+          [ngClass]="{
+            redBorder:
+              (submitted && editSaveFormControls.storeCode.errors) ||
+              (editSaveFormControls.storeCode.errors &&
+                (editSaveFormControls.storeCode.dirty ||
+                  editSaveFormControls.storeCode.touched))
+          }"
+          placeholder="{{ 'master.store.placeholder.storeCode' | translate }}"
+          (input)="validateCode('storeCode')"
+        />
+
+        <div
+          class="help-block red"
+          *ngIf="
+            (submitted && editSaveFormControls.storeCode.errors) ||
+            (editSaveFormControls.storeCode.errors &&
+              (editSaveFormControls.storeCode.dirty ||
+                editSaveFormControls.storeCode.touched))
+          "
+        >
+          <p *ngIf="editSaveFormControls['storeCode'].errors['duplicateCode']">
+            <span
+              [translate]="'master.store.errors.storeCode.duplicate'"
+            ></span>
+          </p>
+          <p *ngIf="editSaveFormControls.storeCode.errors.required">
+            <span [translate]="'master.store.errors.storeCode.required'"></span>
+          </p>
+        </div>
+      </div>
+      <div class="form-group col-lg-3 col-md-3 col-sm-3">
+        <label for="storeName" class="labelText"
+          ><span [translate]="'master.store.label.storeName'"> </span>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control new-form-control-input"
+          id="storeName"
+          formControlName="storeName"
+          maxlength="100"
+          saTrimSpaceAtFirst
+          placeholder="{{ 'master.store.placeholder.storeName' | translate }}"
+        />
+
+        <div class="help-block red">
+          <p *ngIf="false">
+            <span [translate]="'master.store.errors.storeName.required'"></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        <label for="remarks" class="labelText">
+          <span [translate]="'master.store.label.remarks'"></span>
+        </label>
+        <input
+          type="text"
+          trim="blur"
+          class="form-control new-form-control-input"
+          id="remarks"
+          formControlName="remarks"
+          placeholder="{{ 'master.store.placeholder.remarks' | translate }}"
+          maxlength="500"
+          saTrimSpaceAtFirst
+        />
+      </div>
+
+      <div class="form-group col-lg-3 col-md-3 col-sm-3" class="onoffswitch">
+        <fieldset>
+          <label [for]="'active'" class="labelText">
+            <span [translate]="'master.store.label.active'"></span>
+          </label>
+          <div class="onoffswitch">
+            <input
+              type="checkbox"
+              [formControlName]="'active'"
+              [id]="'active'"
+              class="onoffswitch-checkbox"
+              [readonly]="false"
+              [disabled]="false"
+              (input)="onChangeActiveToggle($event)"
+            />
+            <label
+              class="onoffswitch-label"
+              [for]="'active'"
+              style="color: white"
+            >
+              <span
+                class="onoffswitch-inner"
+                data-swchon-text="YES"
+                data-swchoff-text="NO"
+              ></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- Zone and bin Details -->
+<fieldset>
+  <div class="panel panel-info">
+    <div class="panel-heading clearfix">
+      <span class="panel-title panelSubHeading pull-left">
+        <b>
+          <span [translate]="'master.store.titles.zoneAndBinDetails'"></span>
+        </b>
+      </span>
+      <div class="pull-right buttonGroup">
+        <button
+          type="button"
+          class="capsule-button navyBlue"
+          id="btnClear"
+          title="{{ 'master.store.button.addNewZone' | translate }}"
+          (click)="!disableZoneAndBinAddButton && openStoreRateDialog('new')"
+          [disabled]="disableZoneAndBinAddButton"
+          [ngClass]="{ disabled: disableZoneAndBinAddButton }"
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          <span [translate]="'master.store.button.addNewZone'"></span>
+        </button>
+      </div>
+    </div>
+    <app-shared-table-new
+      [filter]="true"
+      [excelIcon]="true"
+      [refreshIcon]="true"
+      [showHide]="false"
+      [globalSearch]="false"
+      [excelFileName]="excelFileNameZoneAndBinDetails"
+      [isPanelHeading]="true"
+      [addRecordIcon]="false"
+      [headerColumnList]="zoneGridcolumnHeaderList"
+      [tableInitialData]="zoneGridTableInitialData"
+      (sendTableRowData)="receiveTableRowDataZone($event)"
+      [isMasterComp]="false"
+      [deleteIcon]="true"
+      (handleDeleteRowData)="deleteRowDataZone($event)"
+      (refreshTableData)="refreshZoneAndBinIconClick($event)"
+      [tableTitle]="''"
+      [removeHeaderBorder]="false"
+    ></app-shared-table-new>
+  </div>
+</fieldset>
+
+<!-- Store Keeper Information -->
+<fieldset>
+  <div class="panel panel-info">
+    <div class="panel-heading clearfix">
+      <span class="panel-title panelSubHeading pull-left">
+        <b>
+          <span [translate]="'master.store.titles.storeKeeperDetails'"></span>
+        </b>
+      </span>
+      <div class="pull-right buttonGroup">
+        <button
+          type="button"
+          class="capsule-button navyBlue"
+          id="btnClear"
+          title="{{ 'master.store.button.addStoreKeeper' | translate }}"
+          (click)="!disableStoreKeeperAddButton && openStoreKeeperModal('new')"
+          [disabled]="disableStoreKeeperAddButton"
+          [ngClass]="{ disabled: disableStoreKeeperAddButton }"
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          <span [translate]="'master.store.button.addStoreKeeper'"></span>
+        </button>
+      </div>
+    </div>
+    <!-- .......................................sore keeerp grid.................................................... -->
+    <app-shared-table-new
+      [headerColumnList]="storeKeeperColumnHeaderList"
+      [filter]="true"
+      [excelIcon]="true"
+      [refreshIcon]="true"
+      [showHide]="false"
+      [globalSearch]="false"
+      [excelFileName]="excelFileNameStoreKeeperDetails"
+      [isPanelHeading]="true"
+      [addRecordIcon]="false"
+      [tableInitialData]="storeKeeperGridData"
+      (sendTableRowData)="receiveTableRowDataStoreKeeper($event)"
+      [isMasterComp]="false"
+      [deleteIcon]="true"
+      [tableTitle]="'Store Keeper Details'"
+      (handleDeleteRowData)="deleteRowDataStoreKeeper($event)"
+      (refreshTableData)="refreshStoreKeeperIconClick($event)"
+      [tableTitle]="''"
+      [removeHeaderBorder]="false"
+    ></app-shared-table-new>
+  </div>
+</fieldset>
+
+<!-- Modal components-->
+<div
+  bsModal
+  #binZoneModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+>
+  <div class="bin-modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="store-modal-header-new">
+          <b style="float: left">
+            <h4 class="modal-title">
+              <span
+                [translate]="'master.store.titles.zoneAndBinDetails'"
+              ></span>
+              <label class="linebadge">
+                {{ zoneBinMode | translate | uppercase }}</label
+              >
+            </h4>
+          </b>
+          <div
+            class="row gridRightAlign"
+            style="float: right !important"
+          >
+            <button
+              type="submit"
+              appPreventDoubleClick
+              (debounceClick)="storeRateDetails && addZoneAndBin()"
+              [debounceTime]="500"
+              class="capsule-button green"
+              id="btnSaveContact"
+              title="{{ 'master.store.button.saveZone' | translate }}"
+              [ngClass]="{ disabled: !storeRateDetails }"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-light fa-floppy-disk"></i>
+              </div>
+              <span [translate]="'master.store.button.saveZone'"></span>
+            </button>
+            <button
+              type="button"
+              class="capsule-button reset-button-color"
+              id="btnClsoe"
+              (click)="closeZoneBinDialog()"
+              title="{{ 'master.store.button.cancel' | translate }}"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-xmark"></i>
+              </div>
+              <span [translate]="'master.store.button.cancel'"></span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-body" style="padding-bottom: 100px">
+          <form [formGroup]="zoneDetailsForm" autocomplete="off">
+            <div class="panel panel-info">
+              <div class="panel-heading clearfix">
+                <div class="panel-title panelSubHeading pull-left">
+                  <span [translate]="'master.store.titles.zoneDetails'"></span>
+                </div>
+                <div class="pull-right row buttonGroup">
+                  <button
+                    type="button"
+                    class="capsule-button reset-button-color"
+                    title="{{ 'master.store.button.clear' | translate }}"
+                    (click)="clearZoneDetail()"
+                  >
+                    <div class="icon-circle">
+                      <i
+                        class="fas fa-fw fa-eraser"
+                        aria-hidden="true"
+                      ></i>
+                    </div>
+                    <span [translate]="'master.store.button.clear'"></span>
+                  </button>
+                  <button
+                    (click)="addNewZone()"
+                    type="submit"
+                    class="capsule-button navyBlue"
+                    title="{{ 'master.store.button.addNew' | translate }}"
+                  >
+                    <div class="icon-circle">
+                      <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <span [translate]="'master.store.button.addNew'"></span>
+                  </button>
+                </div>
+              </div>
+              <br />
+              <div class="panel-body">
+                <div class="row">
+                  <!-- zone code start -->
+                  <div
+                    class="form-group col-lg-4 col-md-4 col-sm-4"
+                    [ngClass]="{
+                      'has-error':
+                        (submitted &&
+                          zoneDetailsFormControls.zoneCode.errors) ||
+                        (zoneDetailsFormControls.zoneCode.errors &&
+                          (zoneDetailsFormControls.zoneCode.dirty ||
+                            zoneDetailsFormControls.zoneCode.touched))
+                    }"
+                  >
+                    <label for="zoneCode" class="labelText"
+                      ><span [translate]="'master.store.label.zoneCode'">
+                      </span>
+                      <span class="redIcon"> *</span>
+                    </label>
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="zoneCode"
+                      formControlName="zoneCode"
+                      maxlength="20"
+                      saTrimSpaceAtFirst
+                      placeholder="{{
+                        'master.store.placeholder.zoneCode' | translate
+                      }}"
+                      [ngClass]="{
+                        redBorder:
+                          (submitted &&
+                            zoneDetailsFormControls.zoneCode.errors) ||
+                          (zoneDetailsFormControls.zoneCode.errors &&
+                            (zoneDetailsFormControls.zoneCode.dirty ||
+                              zoneDetailsFormControls.zoneCode.touched))
+                      }"
+                    />
+
+                    <div
+                      class="help-block red"
+                      *ngIf="
+                        (submitted &&
+                          zoneDetailsFormControls.zoneCode.errors) ||
+                        (zoneDetailsFormControls.zoneCode.errors &&
+                          (zoneDetailsFormControls.zoneCode.dirty ||
+                            zoneDetailsFormControls.zoneCode.touched))
+                      "
+                    >
+                      <p
+                        *ngIf="zoneDetailsFormControls.zoneCode.errors.required"
+                      >
+                        <span
+                          [translate]="'master.store.errors.zoneCode.required'"
+                        ></span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- zone code end -->
+                  <!-- zone name start -->
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                    <label for="zoneName" class="labelText"
+                      ><span [translate]="'master.store.label.zoneName'">
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="zoneName"
+                      formControlName="zoneName"
+                      maxlength="100"
+                      saTrimSpaceAtFirst
+                      placeholder="{{
+                        'master.store.placeholder.zoneName' | translate
+                      }}"
+                    />
+
+                    <div class="help-block red">
+                      <p *ngIf="false">
+                        <span
+                          [translate]="'master.store.errors.zoneName.required'"
+                        ></span>
+                      </p>
+                    </div>
+                  </div>
+                  <!-- zone name  end -->
+                  <!-- remarks start -->
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                    <label for="remarks" class="labelText"
+                      ><span [translate]="'master.store.label.remarks'"> </span>
+                    </label>
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="remarks"
+                      formControlName="remarks"
+                      maxlength="500"
+                      saTrimSpaceAtFirst
+                      placeholder="{{
+                        'master.store.placeholder.remarks' | translate
+                      }}"
+                    />
+                  </div>
+
+                  <!-- remarks end -->
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <br />
+          <form [formGroup]="binDetailsForm" autocomplete="off">
+            <!-- next section -->
+            <div>
+              <div class="row">
+                <div class="col-lg-5 col-md-5 col-sm-5">
+                  <div class="panel panel-info">
+                    <div class="panel-heading clearfix">
+                      <div class="panel-title panelSubHeading pull-left">
+                        <span
+                          [translate]="'master.store.titles.binDetails'"
+                        ></span>
+                      </div>
+                      <div class="pull-right row buttonGroup">
+                        <button
+                          type="button"
+                          class="capsule-button reset-button-color"
+                          title="{{ 'master.store.button.clear' | translate }}"
+                          (click)="clearBinDetails()"
+                        >
+                          <div class="icon-circle">
+                            <i class="fa-regular fa-circle-xmark"></i>
+                          </div>
+                          <span
+                            [translate]="'master.store.button.clear'"
+                          ></span>
+                        </button>
+                        <button
+                          type="submit"
+                          [disabled]="disableSaveButton"
+                          class="capsule-button navyBlue"
+                          title="{{ 'master.store.button.addBin' | translate }}"
+                          (click)="!disableSaveButton && saveBinDetails()"
+                        >
+                          <div class="icon-circle">
+                            <i class="fa-solid fa-plus"></i>
+                          </div>
+                          <span
+                            [translate]="'master.store.button.addBin'"
+                          ></span>
+                        </button>
+                      </div>
+                    </div>
+                    <br />
+                    <div class="panel-body">
+                      <div class="row">
+                        <!-- Bin Code start -->
+                        <div
+                          class="form-group col-lg-6 col-md-6 col-sm-6"
+                          [ngClass]="{
+                            'has-error':
+                              (submitted &&
+                                binDetailsFormControls.binCode.errors) ||
+                              (binDetailsFormControls.binCode.errors &&
+                                (binDetailsFormControls.binCode.dirty ||
+                                  binDetailsFormControls.binCode.touched))
+                          }"
+                        >
+                          <label for="binCode" class="labelText"
+                            ><span [translate]="'master.store.label.binCode'">
+                            </span>
+                            <span class="redIcon"> *</span>
+                          </label>
+                          <input
+                            type="text"
+                            trim="blur"
+                            class="form-control new-form-control-input"
+                            id="binCode"
+                            formControlName="binCode"
+                            maxlength="20"
+                            saTrimSpaceAtFirst
+                            placeholder="{{
+                              'master.store.placeholder.binCode' | translate
+                            }}"
+                            [ngClass]="{
+                              redBorder:
+                                (submitted &&
+                                  binDetailsFormControls.binCode.errors) ||
+                                (binDetailsFormControls.binCode.errors &&
+                                  (binDetailsFormControls.binCode.dirty ||
+                                    binDetailsFormControls.binCode.touched))
+                            }"
+                            (input)="validateBinCode('binCode')"
+                          />
+
+                          <div
+                            class="help-block red"
+                            *ngIf="
+                              (submitted &&
+                                binDetailsFormControls.binCode.errors) ||
+                              (binDetailsFormControls.binCode.errors &&
+                                (binDetailsFormControls.binCode.dirty ||
+                                  binDetailsFormControls.binCode.touched))
+                            "
+                          >
+                            <p
+                              *ngIf="
+                                binDetailsFormControls['binCode'].errors[
+                                  'duplicateCode'
+                                ]
+                              "
+                            >
+                              <span
+                                [translate]="
+                                  'master.store.errors.binCode.duplicate'
+                                "
+                              ></span>
+                            </p>
+                            <p
+                              *ngIf="
+                                binDetailsFormControls.binCode.errors.required
+                              "
+                            >
+                              <span
+                                [translate]="
+                                  'master.store.errors.binCode.required'
+                                "
+                              ></span>
+                            </p>
+                          </div>
+                        </div>
+
+                        <!-- Bin Code end -->
+                        <!-- Bin Name input -->
+                        <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                          <label for="binName" class="labelText"
+                            ><span [translate]="'master.store.label.binName1'">
+                            </span>
+                          </label>
+                          <input
+                            type="text"
+                            trim="blur"
+                            class="form-control new-form-control-input"
+                            id="binName"
+                            formControlName="binName"
+                            maxlength="100"
+                            saTrimSpaceAtFirst
+                            placeholder="{{
+                              'master.store.placeholder.binName1' | translate
+                            }}"
+                          />
+                        </div>
+                        <!-- Bin Name end -->
+                        <!-- Remarks start -->
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                          <label for="remarks" class="labelText"
+                            ><span [translate]="'master.store.label.remarks'">
+                            </span>
+                          </label>
+                          <input
+                            type="text"
+                            trim="blur"
+                            class="form-control new-form-control-input"
+                            id="remarks"
+                            formControlName="remarks"
+                            maxlength="500"
+                            saTrimSpaceAtFirst
+                            placeholder="{{
+                              'master.store.placeholder.remarks' | translate
+                            }}"
+                          />
+                        </div>
+
+                        <!-- Remarks end -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-7 col-md-7 col-sm-7">
+                  <app-shared-table-new
+                    [headerColumnList]="columnHeaderList"
+                    [filter]="true"
+                    [excelIcon]="true"
+                    [refreshIcon]="true"
+                    [showHide]="false"
+                    [globalSearch]="false"
+                    [isPanelHeading]="true"
+                    [addRecordIcon]="false"
+                    (sendTableRowData)="receiveBinRowData($event)"
+                    [isMasterComp]="false"
+                    [tableTitle]="'Bin  List View'"
+                    [deleteIcon]="true"
+                    (handleDeleteRowDataWithIndex)="deleteBinRowData($event)"
+                    [tableInitialData]="StoreBinDetails"
+                    (refreshTableData)="refreshBinIconClick($event)"
+                  ></app-shared-table-new>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal components-->
+<div
+  bsModal
+  #storeKeeperModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+>
+  <form [formGroup]="storeKeeperDetailsForm" autocomplete="off">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="store-modal-header-new">
+          <b style="float: left">
+            <h4 class="modal-title">
+              <span
+                [translate]="'master.store.titles.storeKeeperDetails'"
+              ></span>
+              <label class="linebadge">
+                {{ storeKeeperMode | translate | uppercase }}</label
+              >
+            </h4>
+          </b>
+          <div
+            class="row gridRightAlign"
+            style="float: right !important"
+          >
+            <button
+              type="button"
+              class="capsule-button reset-button-color"
+              id="btnClear"
+              title="{{ 'master.store.button.clear' | translate }}"
+              (click)="storeRateDetails && contactFormReset()"
+              [ngClass]="{ disabled: !storeRateDetails }"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-fw fa-eraser" aria-hidden="true"></i>
+              </div>
+              <span [translate]="'master.store.button.clear'"></span>
+            </button>
+            <button
+              type="submit"
+              appPreventDoubleClick
+              (debounceClick)="storeRateDetails && addStoreKeeperDetail()"
+              [debounceTime]="500"
+              class="capsule-button green"
+              id="btnSaveContact"
+              title="{{ 'master.store.button.saveStoreKeeper' | translate }}"
+              [ngClass]="{ disabled: !storeRateDetails }"
+            >
+            <div class="icon-circle">
+              <i class="fas fa-light fa-floppy-disk"></i>
+            </div>
+              <span [translate]="'master.store.button.saveStoreKeeper'"></span>
+            </button>
+            <button
+              type="button"
+              class="capsule-button reset-button-color"
+              id="btnClsoe"
+              (click)="closeStoreKeeperModal()"
+              title="{{ 'master.store.button.cancel' | translate }}"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-xmark"></i>
+              </div>
+              <span [translate]="'master.store.button.cancel'"></span>
+            </button>
+          </div>
+        </div>
+        <!-- showStoreKeeperCombination -->
+        <div
+          class="alert alert-warning"
+          role="alert"
+          *ngIf="showStoreKeeperCombination"
+        >
+          <i class="fa-fw fa fa-warning"></i>
+          <strong
+            ><span [translate]="'common.roleRightsMessages.warning'"></span
+          ></strong>
+          {{ "master.store.errors.storeKeeperdesignationExists" | translate }}
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div
+              class="form-group col-lg-4 col-md-4 col-sm-4"
+              [ngClass]="{
+                'has-error':
+                  (submitted &&
+                    storeKeeperDetailsFormControls.storeKeeper.errors) ||
+                  (storeKeeperDetailsFormControls.storeKeeper.errors &&
+                    (storeKeeperDetailsFormControls.storeKeeper.dirty ||
+                      storeKeeperDetailsFormControls.storeKeeper.touched))
+              }"
+            >
+              <label for="partCategory" class="labelText">
+                <span [translate]="'master.store.label.storeKeeper'"></span>
+                <span class="redIcon"> *</span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="storeKeeper"
+                formControlName="storeKeeper"
+                maxlength="20"
+                saTrimSpaceAtFirst
+                placeholder="{{
+                  'master.store.placeholder.storeKeeper' | translate
+                }}"
+                (input)="onInputDesignationStoreKeeper($event, 'storeKeeper')"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      storeKeeperDetailsFormControls.storeKeeper.errors) ||
+                    (storeKeeperDetailsFormControls.storeKeeper.errors &&
+                      (storeKeeperDetailsFormControls.storeKeeper.dirty ||
+                        storeKeeperDetailsFormControls.storeKeeper.touched))
+                }"
+              />
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    storeKeeperDetailsFormControls.storeKeeper.errors) ||
+                  (storeKeeperDetailsFormControls.storeKeeper.errors &&
+                    (storeKeeperDetailsFormControls.storeKeeper.dirty ||
+                      storeKeeperDetailsFormControls.storeKeeper.touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    storeKeeperDetailsFormControls['storeKeeper'].errors[
+                      'invalidStoreKeeperCombination'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'master.store.errors.storeKeeperdesignationExists'
+                    "
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    storeKeeperDetailsFormControls.storeKeeper.errors.required
+                  "
+                >
+                  <span
+                    [translate]="'master.store.errors.storeKeeper.required'"
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <div
+              class="form-group col-lg-4 col-md-4 col-sm-4"
+              [ngClass]="{
+                'has-error':
+                  (submitted &&
+                    storeKeeperDetailsFormControls.designation.errors) ||
+                  (storeKeeperDetailsFormControls.designation.errors &&
+                    (storeKeeperDetailsFormControls.designation.dirty ||
+                      storeKeeperDetailsFormControls.designation.touched))
+              }"
+            >
+              <label for="partCategory" class="labelText">
+                <span [translate]="'master.store.label.designation'"></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="partCategory"
+                formControlName="designation"
+                maxlength="50"
+                saTrimSpaceAtFirst
+                placeholder="{{
+                  'master.store.placeholder.designation' | translate
+                }}"
+                (input)="onInputDesignationStoreKeeper($event, 'designation')"
+              />
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    storeKeeperDetailsFormControls.designation.errors) ||
+                  (storeKeeperDetailsFormControls.designation.errors &&
+                    (storeKeeperDetailsFormControls.designation.dirty ||
+                      storeKeeperDetailsFormControls.designation.touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    storeKeeperDetailsFormControls['designation'].errors[
+                      'invalidDesignationCombination'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'master.store.errors.storeKeeperdesignationExists'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- .................................................................................... -->
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="partCategory" class="labelText">
+                <span [translate]="'master.store.label.emailId'"></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="partCategory"
+                formControlName="emailId"
+                maxlength="100"
+                saTrimSpaceAtFirst
+                placeholder="{{
+                  'master.store.placeholder.emailId' | translate
+                }}"
+                (input)="validateEmail('emailId')"
+              />
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    storeKeeperDetailsFormControls['emailId'].errors) ||
+                  (storeKeeperDetailsFormControls['emailId'].errors &&
+                    (storeKeeperDetailsFormControls['emailId'].dirty ||
+                      storeKeeperDetailsFormControls['emailId'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    storeKeeperDetailsFormControls.emailId.errors['pattern']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'master.supplier.contactAndAddress.contactInformation.error.ccEmail.invalid'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="partCategory" class="labelText">
+                <span [translate]="'master.store.label.mobileNo'"></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="partCategory"
+                formControlName="mobileNo"
+                maxlength="20"
+                saTrimSpaceAtFirst
+                placeholder="{{
+                  'master.store.placeholder.mobileNo' | translate
+                }}"
+              />
+            </div>
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="partCategory" class="labelText">
+                <span [translate]="'master.store.label.landlineNo'"></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="landlineNo"
+                formControlName="landlineNo"
+                maxlength="20"
+                saTrimSpaceAtFirst
+                placeholder="{{
+                  'master.store.placeholder.landlineNo' | translate
+                }}"
+              />
+            </div>
+            <div
+              class="form-group col-lg-4 col-md-4 col-sm-4"
+              class="onoffswitch"
+            >
+              <fieldset>
+                <label [for]="'keyPerson'" class="labelText">
+                  <span [translate]="'master.store.label.keyPerson'"></span>
+                </label>
+                <div class="onoffswitch">
+                  <input
+                    type="checkbox"
+                    [formControlName]="'keyPerson'"
+                    [id]="'keyPerson'"
+                    class="onoffswitch-checkbox"
+                    [readonly]="false"
+                    [disabled]="false"
+                  />
+                  <label
+                    class="onoffswitch-label"
+                    [for]="'keyPerson'"
+                    style="color: white"
+                  >
+                    <span
+                      class="onoffswitch-inner"
+                      data-swchon-text="YES"
+                      data-swchoff-text="NO"
+                    ></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

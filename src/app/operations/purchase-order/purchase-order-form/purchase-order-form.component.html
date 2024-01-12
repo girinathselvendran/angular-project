@@ -1,0 +1,650 @@
+<div class="alert alert-warning" role="alert" *ngIf="showFormWarning">
+  <i class="fa-fw fa fa-warning"></i>
+  <strong
+    ><span [translate]="'common.roleRightsMessages.warning'"></span
+  ></strong>
+  {{ formWarningMessage | translate }}
+</div>
+
+<div class="panel-body">
+  <div class="widget-body fuelux">
+    <div class="container-fluid">
+      <div class="row">
+        <form
+          [formGroup]="editSavePOForm"
+          autocomplete="off"
+          class="container-new-ui"
+        >
+          <div class="row">
+            <!-- PO Number -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="poNumber" class="labelText">
+                <span
+                  [translate]="'operations.purchaseOrder.label.poNumber'"
+                ></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="poNumber"
+                formControlName="poNumber"
+                placeholder="{{
+                  'operations.purchaseOrder.placeholder.poNumber' | translate
+                }}"
+              />
+            </div>
+            <!-- PO Date -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="poDate" class="labelText">
+                <span
+                  [translate]="'operations.purchaseOrder.label.poDate'"
+                ></span>
+              </label>
+              <div class="input-group input-group-md">
+                <input
+                  type="text"
+                  class="form-control uppercase"
+                  bsDatepicker
+                  (keydown.arrowdown)="poDate.click()"
+                  formControlName="poDate"
+                  #poDate
+                  [bsConfig]="{
+                    dateInputFormat: 'DD-MMM-YYYY',
+                    containerClass: 'theme-dark-blue',
+                    adaptivePosition: true
+                  }"
+                  [ngClass]="{
+                    redBorderCalender:
+                      (submitted &&
+                        editSavePOFormController['poDate'].errors) ||
+                      (editSavePOFormController['poDate'].errors &&
+                        (editSavePOFormController['poDate'].dirty ||
+                          editSavePOFormController['poDate'].touched))
+                  }"
+                />
+                <!-- (ngModelChange)="validatepoDate('poDate', $event)" -->
+
+                <span class="input-group-btn">
+                  <button
+                    class="btn custom-button"
+                    type="button"
+                    (click)="poDate.click()"
+                    tabindex="-1"
+                  >
+                    <app-svg-calender-icon></app-svg-calender-icon>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <!-- Depot -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="depot" class="labelText">
+                <span
+                  [translate]="'operations.purchaseOrder.label.depot'"
+                ></span>
+                <span class="redIcon"> *</span>
+              </label>
+
+              <ng-select
+                [items]="associatedDepots"
+                [searchFn]="dropdownDepotSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'depot')"
+                bindLabel="depotCode"
+                formControlName="depot"
+                notFoundText="Not found"
+                placeholder="{{
+                  'operations.purchaseOrder.placeholder.depot' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSavePOFormController['depot'].errors) ||
+                    (this.editSavePOFormController['depot'].errors &&
+                      (this.editSavePOFormController['depot'].dirty ||
+                        this.editSavePOFormController['depot'].touched))
+                }"
+                (change)="handleDepotChangeDD($event)"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div title="{{ item?.depotCode }} - {{ item?.depotName }}">
+                    <small
+                      ><b>{{ item?.depotCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.depotName
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.editSavePOFormController['depot'].errors) ||
+                  (this.editSavePOFormController['depot'].errors &&
+                    (this.editSavePOFormController['depot'].dirty ||
+                      this.editSavePOFormController['depot'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSavePOFormController['depot'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.errors.depot.invalid'
+                    "
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSavePOFormController['depot'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.errors.depot.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- City -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="city" class="labelText">
+                <span
+                  [translate]="'operations.purchaseOrder.label.city'"
+                ></span>
+                <span class="redIcon"> *</span>
+              </label>
+
+              <ng-select
+                [items]="cityList"
+                [searchFn]="dropdownSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'city')"
+                bindLabel="cityCode"
+                formControlName="city"
+                notFoundText="Not found"
+                placeholder="{{
+                  'operations.purchaseOrder.placeholder.city' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSavePOFormController['city'].errors) ||
+                    (this.editSavePOFormController['city'].errors &&
+                      (this.editSavePOFormController['city'].dirty ||
+                        this.editSavePOFormController['city'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div
+                    title="{{ item?.cityCode }} - {{ item?.cityDescription }}"
+                  >
+                    <small
+                      ><b>{{ item?.cityCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.cityDescription
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted && this.editSavePOFormController['city'].errors) ||
+                  (this.editSavePOFormController['city'].errors &&
+                    (this.editSavePOFormController['city'].dirty ||
+                      this.editSavePOFormController['city'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSavePOFormController['city'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="'operations.purchaseOrder.errors.city.invalid'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSavePOFormController['city'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.errors.city.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- PO Status -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="poStatus" class="labelText">
+                <span
+                  [translate]="'operations.purchaseOrder.label.poStatus'"
+                ></span>
+              </label>
+              <ng-select
+                [items]="poStatusDDList"
+                [searchFn]="dropdownSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'poStatus')"
+                bindLabel="statusCode"
+                formControlName="poStatus"
+                notFoundText="Not found"
+                placeholder="{{
+                  'operations.purchaseOrder.placeholder.poStatus' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSavePOFormController['poStatus'].errors) ||
+                    (this.editSavePOFormController['poStatus'].errors &&
+                      (this.editSavePOFormController['poStatus'].dirty ||
+                        this.editSavePOFormController['poStatus'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div title="{{ item?.statusCode }}">
+                    <small
+                      ><b>{{ item?.statusCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.description
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.editSavePOFormController['poStatus'].errors) ||
+                  (this.editSavePOFormController['poStatus'].errors &&
+                    (this.editSavePOFormController['poStatus'].dirty ||
+                      this.editSavePOFormController['poStatus'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSavePOFormController['poStatus'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.errors.poStatus.invalid'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- PO Source -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="poSource" class="labelText">
+                <span
+                  [translate]="'operations.purchaseOrder.label.poSource'"
+                ></span>
+              </label>
+              <ng-select
+                [items]="poSourceDDList"
+                [searchFn]="dropdownSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'poSource')"
+                bindLabel="sourceCode"
+                formControlName="poSource"
+                notFoundText="Not found"
+                placeholder="{{
+                  'operations.purchaseOrder.placeholder.poSource' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSavePOFormController['poSource'].errors) ||
+                    (this.editSavePOFormController['poSource'].errors &&
+                      (this.editSavePOFormController['poSource'].dirty ||
+                        this.editSavePOFormController['poSource'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div title="{{ item?.sourceCode }}">
+                    <small
+                      ><b>{{ item?.sourceCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.poSourceName
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.editSavePOFormController['poSource'].errors) ||
+                  (this.editSavePOFormController['poSource'].errors &&
+                    (this.editSavePOFormController['poSource'].dirty ||
+                      this.editSavePOFormController['poSource'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSavePOFormController['poSource'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.errors.poSource.invalid'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- Supplier -->
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <label for="supplier" class="labelText">
+                <span
+                  [translate]="'operations.purchaseOrder.label.supplier'"
+                ></span>
+                <span class="redIcon"> *</span>
+              </label>
+
+              <ng-select
+                [items]="supplierDropDownList"
+                [searchFn]="dropdownSupplierSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'supplier')"
+                bindLabel="supplierCode"
+                formControlName="supplier"
+                notFoundText="Not found"
+                placeholder="{{
+                  'operations.purchaseOrder.placeholder.supplier' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSavePOFormController['supplier'].errors) ||
+                    (this.editSavePOFormController['supplier'].errors &&
+                      (this.editSavePOFormController['supplier'].dirty ||
+                        this.editSavePOFormController['supplier'].touched))
+                }"
+                (change)="handleChangeSupplierDD($event)"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div
+                    title="{{ item?.supplierCode }} - {{ item?.supplierName }}"
+                  >
+                    <small
+                      ><b>{{ item?.supplierCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.supplierName
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.editSavePOFormController['supplier'].errors) ||
+                  (this.editSavePOFormController['supplier'].errors &&
+                    (this.editSavePOFormController['supplier'].dirty ||
+                      this.editSavePOFormController['supplier'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSavePOFormController['supplier'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.errors.supplier.invalid'
+                    "
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSavePOFormController['supplier'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.errors.supplier.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <!-- Approve Or Reject Or Draft -->
+            <div class="form-group col-lg-2 col-md-2 col-sm-3">
+              <label for="approveOrRejectOrDraft" class="labelText">
+                <span
+                  [translate]="
+                    'operations.purchaseOrder.label.approveOrRejectOrDraft'
+                  "
+                ></span>
+              </label>
+              <ng-select
+                [items]="approveOrRejectOrDraftDDList"
+                [searchFn]="dropdownSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSelectValue($event, 'approveOrRejectOrDraft')"
+                bindLabel="approveOrRejectOrDraft"
+                formControlName="approveOrRejectOrDraft"
+                notFoundText="Not found"
+                placeholder="{{
+                  'operations.purchaseOrder.placeholder.approveOrRejectOrDraft'
+                    | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSavePOFormController['approveOrRejectOrDraft']
+                        .errors) ||
+                    (this.editSavePOFormController['approveOrRejectOrDraft']
+                      .errors &&
+                      (this.editSavePOFormController['approveOrRejectOrDraft']
+                        .dirty ||
+                        this.editSavePOFormController['approveOrRejectOrDraft']
+                          .touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div title="{{ item?.code }} - {{ item?.description }}">
+                    <small
+                      ><b>{{ item?.code }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.description
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.editSavePOFormController['approveOrRejectOrDraft']
+                      .errors) ||
+                  (this.editSavePOFormController['approveOrRejectOrDraft']
+                    .errors &&
+                    (this.editSavePOFormController['approveOrRejectOrDraft']
+                      .dirty ||
+                      this.editSavePOFormController['approveOrRejectOrDraft']
+                        .touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSavePOFormController['approveOrRejectOrDraft']
+                      .errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseOrder.errors.approveOrRejectOrDraft.invalid'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <div class="form-group col-lg-2 col-md-2 col-sm-3">
+              <label for="remarks" class="labelText">
+                <span
+                  [translate]="'operations.purchaseOrder.label.remarks'"
+                ></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="remarks"
+                formControlName="remarks"
+                maxlength="500"
+                placeholder="{{
+                  'operations.purchaseOrder.placeholder.remarks' | translate
+                }}"
+              />
+            </div>
+          </div>
+          <div class="row new-wizard">
+            <fuel-ux-wizard>
+              <div class="wizard">
+                <div class="steps-container">
+                  <ul class="steps">
+                    <li
+                      data-step="1"
+                      [class.active]="activeTab === 1"
+                      (click)="checkFileMode($event, 1)"
+                      #partDetailsTab
+                    >
+                      <span class="badge badge-info">1</span>
+                      <span
+                        [translate]="'operations.purchaseOrder.tabs.charges'"
+                      ></span>
+                      <span class="chevron"></span>
+                    </li>
+                    <li
+                      data-step="2"
+                      [class.active]="activeTab === 2"
+                      (click)="checkFileMode($event, 2)"
+                    >
+                      <span class="badge badge-info">2</span>
+                      <span
+                        [translate]="'operations.purchaseOrder.tabs.terms'"
+                      ></span>
+                      <span class="chevron"></span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- tab component render based on tab -->
+              <div class="step-content">
+                <div
+                  class="step-pane"
+                  data-step="1"
+                  [class.active]="activeTab === 1"
+                >
+                  <div>
+                    <app-parts-details
+                      #partDetailsComponent
+                      [editSavePartDetailsForm]="editSavePartDetailsForm"
+                      (sendPartDetailsData)="receivePartDetails($event)"
+                      [supplierCurrency]="supplierCurrency"
+                      [depotCurrency]="depotCurrency"
+                      [poExchangeRate]="poExchangeRate"
+                      [currentUserId]="currentUserId"
+                      [addButton]="addButton"
+                      [poScreenMode]="poMode"
+                      [selectedPoId]="selectedPoId"
+                      [currentStatusId]="currentStatusId"
+                      [editSavePOForm]="editSavePOForm"
+                      [screenId]="screenId"
+                    ></app-parts-details>
+                    <app-additional-charges
+                      #additionalCharges
+                      [editSaveAdditionalChargesForm]="
+                        editSaveAdditionalChargesForm
+                      "
+                      [poScreenMode]="poMode"
+                      [selectedPoId]="selectedPoId"
+                      (sendAdditionalChargesData)="receiveAddCharges($event)"
+                      [additionalChargesList]="additionalChargesList"
+                      [currentStatusId]="currentStatusId"
+                      [screenId]="screenId"
+                      [disableSaveButton]="disableSaveButtonTAndC"
+                    ></app-additional-charges>
+                  </div>
+                </div>
+                <div
+                  class="step-pane"
+                  data-step="2"
+                  [class.active]="activeTab === 2"
+                >
+                  <div>
+                    <app-add-terms-and-conditions
+                      #termsAndCondition
+                      (sendTermsAndConditionsData)="
+                        receiveTermsAndConditions($event)
+                      "
+                      [poScreenMode]="poMode"
+                      [selectedPoId]="selectedPoId"
+                      [currentStatusId]="currentStatusId"
+                      [screenId]="screenId"
+                      [disableSaveButton]="disableSaveButtonTAndC"
+                    ></app-add-terms-and-conditions>
+                    <app-billing-and-delivery-address
+                      #billingAndDelComponent
+                      [currentStatusId]="currentStatusId"
+                      [billingAddressForm]="billingAddressForm"
+                      [deliveryAddressForm]="deliveryAddressForm"
+                    ></app-billing-and-delivery-address>
+                  </div>
+                </div>
+              </div>
+            </fuel-ux-wizard>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

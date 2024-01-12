@@ -1,0 +1,436 @@
+<div class="modal-overlay" [class.active]="isModalOpen"></div>
+<fieldset>
+  <!-- <div class="panel panel-info"> -->
+  <!-- <div class="panel-heading clearfix">
+      <span class="panel-title panelSubHeading pull-left">
+        <b>
+          <span
+            [translate]="
+              'master.supplier.contactAndAddress.contactInformation.titles.contactInformation'
+            "
+          ></span>
+        </b>
+      </span>
+      <div class="pull-right buttonGroup">
+        <button
+          class="capsule-button navyBlue"
+          type="button"
+          id="btnClear"
+          [disabled]="disableAddButton"
+          title="{{
+            'master.supplier.contactAndAddress.contactInformation.button.addContact'
+              | translate
+          }}"
+          (click)="
+            !disableAddButton && !addContactBtn && openContactDialog('new')
+          "
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          {{
+            "master.supplier.contactAndAddress.contactInformation.button.addContact"
+              | translate
+          }}
+        </button>
+      </div>
+    </div> -->
+  <app-shared-table-new
+    [addRecordIcon]="true"
+    (addTableDataService)="openContactDialog('new')"
+    [tableTitle]="tableTitle"
+    [filter]="true"
+    [excelIcon]="true"
+    [refreshIcon]="true"
+    [showHide]="false"
+    [globalSearch]="true"
+    [excelFileName]="excelFileName"
+    [isPanelHeading]="true"
+    [headerColumnList]="columnHeaderList"
+    [tableInitialData]="contactInfoList"
+    (sendTableRowData)="receiveTableRowData($event)"
+    (refreshTableData)="refreshIconClick($event)"
+    [isMasterComp]="false"
+    [deleteIcon]="true"
+    (handleDeleteRowData)="handleDeleteContactIcon($event)"
+  ></app-shared-table-new>
+  <!-- </div> -->
+</fieldset>
+
+<!-- Modal components-->
+<div
+  bsModal
+  #contactModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <form [formGroup]="editSaveForm" autocomplete="off">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <b class="floatleft-part">
+            <h4 class="modal-title">
+              <span
+                [translate]="
+                  'master.supplier.contactAndAddress.contactInformation.titles.contactInformation'
+                "
+              ></span>
+              <label class="linebadge">
+                {{ contactMode | translate | uppercase }}</label
+              >
+            </h4>
+          </b>
+          <div class="gridRightAlign">
+            <div class="row">
+              <!-- ......................................................................................................................................................... -->
+              <button
+                type="button"
+                id="btnClear"
+                title="Clear"
+                (click)="editBit && contactDetails && contactFormGroupReset()"
+                [ngClass]="{ disabled: !contactDetails }"
+                [disabled]="!editBit"
+                class="capsule-button grey"
+              >
+                <div class="icon-circle">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                {{ "operations.purchaseOrder.buttons.reset" | translate }}
+              </button>
+              <button
+                class="capsule-button green"
+                type="submit"
+                appPreventDoubleClick
+                (debounceClick)="editBit && contactDetails && addContact()"
+                [debounceTime]="500"
+                id="btnSaveContact"
+                title="{{
+                  'master.supplier.associateParts.button.save' | translate
+                }}"
+                [disabled]="!editBit"
+                [ngClass]="{ disabled: !contactDetails }"
+              >
+                <div class="icon-circle">
+                  <i class="fas fa-light fa-floppy-disk"></i>
+                </div>
+                {{ "operations.purchaseRequisition.buttons.save" | translate }}
+              </button>
+              <button
+                class="capsule-button"
+                type="button"
+                id="btnClsoe"
+                (click)="closeContactDialog()"
+                title="{{
+                  'master.supplier.associateParts.button.cancel' | translate
+                }}"
+                [ngClass]="{ disabled: saveButton }"
+                style="background-color: #ec5656"
+              >
+                <div class="icon-circle">
+                  <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+                {{ "operations.purchaseRequisition.buttons.close" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="IsCombinationErr"
+          class="alert alert-danger white"
+          role="alert"
+        >
+          <i class="fa fa-fw fa-times"></i>
+          <span
+            [translate]="
+              'master.supplier.contactAndAddress.contactInformation.error.contact.combination'
+            "
+          ></span>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-lg-12 col-md-12 col-sm-12">
+              <div class="row">
+                <!-- ........................................................................................................................................................................................ -->
+                <div
+                  class="form-group col-lg-4 col-md-4 col-sm-4"
+                  [ngClass]="{
+                    'has-error':
+                      (contactSubmitted &&
+                        contactFormGroupControls['contactName'].errors) ||
+                      (contactFormGroupControls['contactName'].errors &&
+                        (contactFormGroupControls['contactName'].dirty ||
+                          contactFormGroupControls['contactName'].touched))
+                  }"
+                >
+                  <label for="contactName" class="labelText">
+                    <span
+                      [translate]="
+                        'master.supplier.contactAndAddress.contactInformation.label.contactName'
+                      "
+                    ></span
+                    ><i class="red"> *</i>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="contactName"
+                    formControlName="contactName"
+                    (input)="onChangeInput()"
+                    maxlength="35"
+                    placeholder="{{
+                      'master.supplier.contactAndAddress.contactInformation.placeholder.contactName'
+                        | translate
+                    }}"
+                    spaceatfirst
+                  />
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (contactSubmitted &&
+                        contactFormGroupControls['contactName'].errors) ||
+                      (contactFormGroupControls['contactName'].errors &&
+                        (contactFormGroupControls['contactName'].dirty ||
+                          contactFormGroupControls['contactName'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        contactFormGroupControls['contactName'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'master.supplier.contactAndAddress.contactInformation.error.contactName.required'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+                <!-- ........................................................................................................................................................................................ -->
+                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                  <label for="designation" class="labelText">
+                    <span
+                      [translate]="
+                        'master.supplier.contactAndAddress.contactInformation.label.designation'
+                      "
+                    ></span>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    (input)="onChangeInput()"
+                    class="form-control new-form-control-input"
+                    id="designation"
+                    formControlName="designation"
+                    maxlength="50"
+                    placeholder="{{
+                      'master.supplier.contactAndAddress.contactInformation.placeholder.designation'
+                        | translate
+                    }}"
+                    spaceatfirst
+                  />
+                </div>
+                <!-- ........................................................................................................................................................................................ -->
+                <div
+                  class="form-group col-lg-4 col-md-4 col-sm-4"
+                  [ngClass]="{
+                    'has-error':
+                      (contactSubmitted &&
+                        contactFormGroupControls['email'].errors) ||
+                      (contactFormGroupControls['email'].errors &&
+                        (contactFormGroupControls['email'].dirty ||
+                          contactFormGroupControls['email'].touched))
+                  }"
+                >
+                  <label for="email" class="labelText">
+                    <span
+                      [translate]="
+                        'master.supplier.contactAndAddress.contactInformation.label.email'
+                      "
+                    ></span>
+                    <i class="red"> *</i>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    (input)="onChangeInput()"
+                    class="form-control new-form-control-input"
+                    id="email"
+                    formControlName="email"
+                    maxlength="500"
+                    placeholder="{{
+                      'master.supplier.contactAndAddress.contactInformation.placeholder.email'
+                        | translate
+                    }}"
+                    spaceatfirst
+                  />
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (contactSubmitted &&
+                        contactFormGroupControls['email'].errors) ||
+                      (contactFormGroupControls['email'].errors &&
+                        (contactFormGroupControls['email'].dirty ||
+                          contactFormGroupControls['email'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        contactFormGroupControls['email'].errors['required']
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'master.supplier.contactAndAddress.contactInformation.error.email.required'
+                        "
+                      ></span>
+                    </p>
+                    <p *ngIf="contactFormGroupControls.email.errors['pattern']">
+                      <span
+                        [translate]="
+                          'master.supplier.contactAndAddress.contactInformation.error.email.invalid'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- ................................................................................................................................................................................................... -->
+
+                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                  <label for="ccEmail" class="labelText">
+                    <span
+                      [translate]="
+                        'master.supplier.contactAndAddress.contactInformation.label.ccEmail'
+                      "
+                    ></span>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="ccEmail"
+                    formControlName="ccEmail"
+                    (input)="validateEmail('ccEmail')"
+                    maxlength="500"
+                    placeholder="{{
+                      'master.supplier.contactAndAddress.contactInformation.placeholder.ccEmail'
+                        | translate
+                    }}"
+                    spaceatfirst
+                  />
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (contactSubmitted &&
+                        contactFormGroupControls['ccEmail'].errors) ||
+                      (contactFormGroupControls['ccEmail'].errors &&
+                        (contactFormGroupControls['ccEmail'].dirty ||
+                          contactFormGroupControls['ccEmail'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="contactFormGroupControls.ccEmail.errors['pattern']"
+                    >
+                      <span
+                        [translate]="
+                          'master.supplier.contactAndAddress.contactInformation.error.ccEmail.invalid'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- ................................................................................................................................................................................................... -->
+                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                  <label for="mobileNo" class="labelText">
+                    <span
+                      [translate]="
+                        'master.supplier.contactAndAddress.contactInformation.label.mobileNo'
+                      "
+                    ></span>
+                  </label>
+                  <input
+                    type="text"
+                    (input)="onChangeInput()"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="mobileNo"
+                    formControlName="mobileNo"
+                    maxlength="20"
+                    placeholder="{{
+                      'master.supplier.contactAndAddress.contactInformation.placeholder.mobileNo'
+                        | translate
+                    }}"
+                    spaceatfirst
+                  />
+                </div>
+                <!-- ................................................................................................................................................................................................... -->
+
+                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                  <label for="landlineNo" class="labelText">
+                    <span
+                      [translate]="
+                        'master.supplier.contactAndAddress.contactInformation.label.landlineNo'
+                      "
+                    ></span>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    (input)="onChangeInput()"
+                    class="form-control new-form-control-input"
+                    id="landlineNo"
+                    formControlName="landlineNo"
+                    maxlength="20"
+                    placeholder="{{
+                      'master.supplier.contactAndAddress.contactInformation.placeholder.landlineNo'
+                        | translate
+                    }}"
+                    spaceatfirst
+                  />
+                </div>
+
+                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                  <label for="remarks" class="labelText"
+                    ><span
+                      [translate]="
+                        'master.supplier.contactAndAddress.contactInformation.label.keyContact'
+                      "
+                    ></span
+                  ></label>
+
+                  <br />
+                  <br />
+                  <div class="onoffswitch">
+                    <input
+                      type="checkbox"
+                      formControlName="keyContact"
+                      id="keyContact"
+                      class="onoffswitch-checkbox"
+                    />
+                    <label class="onoffswitch-label white" for="keyContact">
+                      <span
+                        class="onoffswitch-inner"
+                        data-swchon-text="YES"
+                        data-swchoff-text="NO"
+                      ></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

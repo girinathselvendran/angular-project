@@ -1,0 +1,6 @@
+{
+  "dev": "http://localhost:5333/api/",
+  "prod": "http://localhost:5333/api/",
+  "ServerTimeZone": "en-US",
+    "LocalTimeZone": "Asia/Kolkata"
+}

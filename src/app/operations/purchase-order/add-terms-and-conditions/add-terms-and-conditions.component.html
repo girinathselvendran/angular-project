@@ -1,0 +1,156 @@
+<div>
+  <div class="panel-title panelHeading pull-left">
+    <div class="nopaddingbottom">
+      <b>
+        <u>
+          <span
+            [translate]="
+              'operations.purchaseOrder.termsAndCondition.titles.termsAndCondition'
+            "
+            class="main-title"
+          ></span></u
+      ></b>
+    </div>
+  </div>
+  <br />
+  <hr
+    style="height: 2px; border-width: 100%; color: gray; background-color: gray"
+  />
+  <form class="container-new-ui" [formGroup]="editSaveForm" autocomplete="off">
+    <!-- T & C Code -->
+    <div class="col-lg-2 col-md-2 col-sm-3">
+      <label for="tACCode" class="labelText">
+        <span
+          [translate]="
+            'operations.purchaseOrder.termsAndCondition.label.tAcCode'
+          "
+        ></span>
+        <span class="redIcon"> *</span>
+      </label>
+      <ng-select
+        [items]="tACCodeDDList"
+        [searchFn]="dropdownSearchFn"
+        [selectOnTab]="true"
+        (input)="checkNgSelectValue($event, 'tACCode')"
+        bindLabel="code"
+        formControlName="tACCode"
+        notFoundText="Not found"
+        placeholder="{{
+          'operations.purchaseOrder.termsAndCondition.placeholder.tAcCode'
+            | translate
+        }}"
+        [ngClass]="{
+          redBorder:
+            (submitted && this.editSaveTACFormController['tACCode'].errors) ||
+            (this.editSaveTACFormController['tACCode'].errors &&
+              (this.editSaveTACFormController['tACCode'].dirty ||
+                this.editSaveTACFormController['tACCode'].touched))
+        }"
+        (change)="handleTACodeChange($event)"
+      >
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-index="index"
+          let-search="searchTerm"
+        >
+          <div title="{{ item?.code }} - {{ item?.description }}">
+            <small
+              ><b>{{ item?.code }}</b></small
+            ><br />
+            <span class="dropDownDescription">{{ item?.description }}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+      <div
+        class="help-block red"
+        *ngIf="
+          (submitted && this.editSaveTACFormController['tACCode'].errors) ||
+          (this.editSaveTACFormController['tACCode'].errors &&
+            (this.editSaveTACFormController['tACCode'].dirty ||
+              this.editSaveTACFormController['tACCode'].touched))
+        "
+      >
+        <p *ngIf="this.editSaveTACFormController['tACCode'].errors['required']">
+          <span
+            [translate]="
+              'operations.purchaseOrder.termsAndCondition.errors.tAcCode.required'
+            "
+          ></span>
+        </p>
+        <p *ngIf="this.editSaveTACFormController['tACCode'].errors['invalid']">
+          <span
+            [translate]="
+              'operations.purchaseOrder.termsAndCondition.errors.tAcCode.invalid'
+            "
+          ></span>
+        </p>
+        <p
+          *ngIf="
+            this.editSaveTACFormController['tACCode'].errors['invalidCode']
+          "
+        >
+          <span [translate]="'terms and condition code exists'"></span>
+        </p>
+      </div>
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="description" class="labelText">
+        <span
+          [translate]="
+            'operations.purchaseOrder.termsAndCondition.label.description'
+          "
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control new-form-control-input"
+        id="description"
+        formControlName="description"
+        placeholder="{{
+          'operations.purchaseOrder.termsAndCondition.placeholder.description'
+            | translate
+        }}"
+      />
+    </div>
+    <span class="row" style="padding-top: 27px">
+      <button
+        class="capsule-button green"
+        (click)="saveTAC()"
+        [disabled]="disableSaveButton"
+        [class.unclickable]="disableSaveButton"
+      >
+        <div class="icon-circle">
+          <i class="fas fa-light fa-floppy-disk"></i>
+        </div>
+        {{ "operations.purchaseRequisition.buttons.save" | translate }}
+      </button>
+      <button (click)="resetForm()" class="capsule-button grey">
+        <div class="icon-circle">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </div>
+        {{ "operations.purchaseOrder.buttons.reset" | translate }}
+      </button>
+    </span>
+  </form>
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <app-shared-table-new
+      #sharedTableNew
+      [headerColumnList]="tAcListColumnList"
+      [tableInitialData]="tAcList"
+      [filter]="true"
+      [excelIcon]="false"
+      [refreshIcon]="true"
+      [globalSearch]="true"
+      [tableTitle]="'Terms and Conditions List View'"
+      (sendTableRowData)="receiveTableTACList($event)"
+      (refreshTableData)="refreshTACListList($event)"
+      (getTableDataService)="refreshTACListList($event)"
+      [deleteIcon]="true"
+      (handleDeleteRowData)="deleteTACRowData($event)"
+      [excelFileName]="'Terms and Conditions'"
+      [disableDeleteIcon]="disableSaveButton"
+    ></app-shared-table-new>
+  </div>
+</div>

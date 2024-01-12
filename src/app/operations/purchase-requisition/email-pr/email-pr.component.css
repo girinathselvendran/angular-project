@@ -1,0 +1,73 @@
+input {
+    border: none;
+    border-bottom: 1px solid;
+    border-radius: 0px !important;
+    padding: 0px;
+}
+input:focus {
+    background-color: white;
+    font-weight: normal;
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}
+
+.form-control:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}
+.has-error input {
+    background-color: white !important;
+}
+.bodySeperator{
+    border: 1px solid lightgray;
+}
+
+textarea{
+    border: none;
+    padding: 0px;
+    min-height: 100px  !important;
+}
+
+textarea:focus {
+    background-color: white;
+    font-weight: normal;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}
+label{
+    font-weight: 400 !important;
+    margin-bottom: 0px !important;
+}
+.emailPopupHeader{
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    background-color: #e9edee;
+}
+.trackingemailPopupHeader{
+    padding-top: 10px !important;
+    /* padding-bottom: 10px !important; */
+    background-color: #e9edee;
+}
+.emailContent {
+    padding-top: 15px;
+} 
+.labelButton{
+    color: #008af4;
+    font-size: 14px;
+    font-weight: bold !important;
+    cursor: pointer;
+}
+.labelHeader{
+    font-size: 18px;
+    font-weight: bold !important;
+}
+/* .emailmoadalWidth{
+    width: 450px !important;
+} */
+/* body .p-component{
+    width: 450px;
+} */

@@ -1,0 +1,314 @@
+<div class="modal-dialog modalWidth modal-lg" style="width: 85% !important">
+  <div class="modal-content">
+    <div class="modal-header-new header-blue">
+      <div class="panel-title panelHeading pull-left panel-heading clearfix">
+        <b>
+          <span>{{ uploadHeader | translate }}</span>
+        </b>
+      </div>
+
+      <!-- <div class="pull-right buttonGroup">
+        <button
+          type="button"
+          class="btn btn-default buttonMargin buttonBorder"
+          id="btnClose"
+          title=""
+          (click)="closeUploadDetailsImportDialog()"
+        >
+          <i class="fas fa-fw fa-times greenIcon" aria-hidden="true"></i>
+          <span>Close</span>
+        </button>
+      </div> -->
+      <div class="gridRightAlign">
+        <div class="row">
+          <button
+            class="capsule-button"
+            type="button"
+            id="btnClose"
+            title=""
+            (click)="closeUploadDetailsImportDialog()"
+            style="background-color: #ec5656"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            {{ "operations.purchaseRequisition.buttons.close" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="bar">
+        <p-progressBar
+          mode="indeterminate"
+          [style]="{ height: '6px' }"
+          *ngIf="percentDone == true"
+        ></p-progressBar>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4">
+          <ngx-dropzone (change)="onSelect($event)" [multiple]="false">
+            <ngx-dropzone-label
+              >Drag and Drop of Files or Click here to Upload
+            </ngx-dropzone-label>
+            <ngx-dropzone-preview
+              [removable]="true"
+              *ngFor="let f of files"
+              [removable]="true"
+              (removed)="onRemove(f)"
+            >
+              <ngx-dropzone-label>{{ f.name }}</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+          </ngx-dropzone>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8">
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3"></div>
+            <div class="col-lg-9 col-md-9 col-sm-9">
+              <ul class="list-inline clearfix mt-2 mb-0 text-center">
+                <li
+                  class="border-right-grey border-right-lighten-2 pr-2 text-center"
+                >
+                  <h2
+                    class="grey text-bold-400 font-large-2 pointer"
+                    (click)="uploadStatus('TotalProcessed')"
+                  >
+                    {{ totalProcessed }}
+                  </h2>
+                  <span class="danger darken-1">
+                    <span>Total Processed</span></span
+                  >
+                </li>
+                <li
+                  class="border-right-grey border-right-lighten-2 pr-2 text-center"
+                >
+                  <h2 class="grey text-bold-400 font-large-2">
+                    {{ successPercentage }}%
+                  </h2>
+                  <span class="success darken-1"> <span>Success</span></span>
+                </li>
+                <li class="pl-2 text-center">
+                  <h2 class="grey text-bold-400 font-large-2">
+                    {{ failedPercentage }}%
+                  </h2>
+                  <span class="danger darken-1"> <span>Error</span></span>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 text-right">
+              <button
+                type="button"
+                class="btn btn-sm btn-default buttonMargin buttonBorder"
+                id="btnClear"
+                (click)="excelTemplateDownload()"
+                title="{{
+                  'common.upload.buttons.downloadTemplate' | translate
+                }}"
+              >
+                <i
+                  class="fas fa-fw fa-download blueIcon"
+                  aria-hidden="true"
+                ></i>
+                <span
+                  [translate]="'common.upload.buttons.downloadTemplate'"
+                ></span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm btn-default buttonMargin buttonBorder"
+                id="btnClear"
+                (click)="uploadStatus('Success')"
+                [disabled]="failedCount == totalProcessed"
+                title="{{ 'common.upload.tooltip.success' | translate }}"
+              >
+                <i class="fas fa-fw fa-check blueIcon" aria-hidden="true"></i>
+                <span [translate]="'common.upload.buttons.success'"></span>
+                ({{ successCount }})
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm btn-default buttonMargin buttonBorder"
+                id="btnClear"
+                (click)="uploadStatus('Failure')"
+                [disabled]="successCount == totalProcessed"
+                title="{{ 'common.upload.tooltip.failure' | translate }}"
+              >
+                <i class="fas fa-fw fa-times red" aria-hidden="true"></i>
+                <span [translate]="'common.upload.buttons.failure'"></span>
+                ({{ failedCount }})
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm btn-default buttonMargin buttonBorder"
+                id="btnClear"
+                [disabled]="successCount == totalProcessed"
+                (click)="errorFileDownload()"
+                title="{{
+                  'common.upload.tooltip.downloadErrorFile' | translate
+                }}"
+              >
+                <i
+                  class="fas fa-fw fa-arrow-circle-down red"
+                  aria-hidden="true"
+                ></i>
+                <span
+                  [translate]="'common.upload.buttons.downloadErrorFile'"
+                ></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="showUploadResultGrid == true" class="row">
+        <p-table
+          #dtUpload
+          [value]="upload"
+          [columns]="uploadColumns"
+          [pageLinks]="3"
+          [rows]="10"
+          [rowsPerPageOptions]="[5, 10, 15]"
+          class="responsive"
+          [paginator]="uploadStatusTablepaginatorhide"
+          [responsive]="true"
+          sortMode="single"
+          (onFilter)="onFiltering($event)"
+        >
+          <ng-template pTemplate="caption">
+            <div>
+              <div class="tableGlobalSearch">
+                <div class="pull-left icon-addon addon-md">
+                  <input
+                    type="text"
+                    trim="blur"
+                    placeholder="Global Filter"
+                    class="form-control globalSearchTextBox"
+                    autocomplete="globalsearch"
+                    [formControl]="uploadGlobalFilter"
+                    id="uploadGlobalFilter"
+                    name="uploadGlobalFilter"
+                  />
+                  <!-- (input)="dtUpload.filterGlobal($event.target.value, 'contains')" -->
+                  <label
+                    class="fa fa-search"
+                    rel="tooltip"
+                    title="{{ 'common.buttons.search' | translate }}"
+                  ></label>
+                </div>
+              </div>
+            </div>
+            <br /><br />
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th
+                *ngFor="let col of uploadColumns"
+                [pSortableColumn]="col.field"
+                pReorderableColumn
+                pResizableColumn
+                [style.width]="col.width"
+              >
+                <div *ngIf="col.field != 'delete' && col.field != 'dppAmount'">
+                  {{ col.header | translate }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </div>
+                <div *ngIf="col.field == 'dppAmount'">
+                  {{ col.header | translate }}
+                  <!-- <span *ngIf="this.editSaveForm.getRawValue().linerCurrencyCode!=null">
+                    ({{editSaveForm.getRawValue().linerCurrencySymbol?editSaveForm.getRawValue().linerCurrencySymbol:editSaveForm.getRawValue().linerCurrencyCode}})
+                  </span> -->
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </div>
+                <div
+                  *ngIf="col.field == 'delete'"
+                  [class.gridCenterAlign]="col.field === 'delete'"
+                >
+                  <!-- [innerHTML]="deleteIcon" -->
+                  <span title="Delete Equipment Details"> </span>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData>
+            <tr [pSelectableRow]="rowData">
+              <td
+                *ngFor="let col of uploadColumns"
+                title="{{ rowData[col.field] }}"
+                [class.gridCenterAlign]="col.field === 'status'"
+                [class.amountInput]="col.field === 'dppAmount'"
+                [class.redIcon]="
+                  rowData['activeStatus']?.toString()?.toUpperCase() === 'NO'
+                "
+              >
+                <span
+                  class="uploadGridStyle"
+                  *ngIf="col.field != 'status'"
+                  [ngClass]="
+                    rowData.activeStatus?.toString()?.toUpperCase() == 'NO'
+                      ? 'UploadFail'
+                      : rowData.status == 'Success'
+                      ? 'successupload'
+                      : 'UploadFail'
+                  "
+                >
+                  {{ rowData[col.field] }}
+                </span>
+                <span
+                  class="uploadGridStyle"
+                  *ngIf="col.field == 'status' && rowData.status == 'Success'"
+                  class="fas fa-fw fa-check-circle fa-1-5x"
+                  title="Success"
+                  style="
+                    word-wrap: break-word;
+                    white-space: pre-line;
+                    text-align: left;
+                  "
+                  [ngClass]="
+                    rowData.activeStatus?.toString()?.toUpperCase() == 'NO'
+                      ? 'UploadFail'
+                      : rowData.status == 'Success'
+                      ? 'successupload'
+                      : 'UploadFail'
+                  "
+                >
+                </span>
+                <span
+                  class="uploadGridStyle"
+                  *ngIf="col.field == 'status' && rowData.status == 'Failure'"
+                  class="fas fa-fw fa-close"
+                  title="Failure"
+                  style="
+                    word-wrap: break-word;
+                    white-space: pre-line;
+                    text-align: left;
+                    padding-top: 7px;
+                  "
+                  [ngClass]="
+                    rowData.activeStatus?.toString()?.toUpperCase() == 'NO'
+                      ? 'UploadFail'
+                      : rowData.status == 'Success'
+                      ? 'successupload'
+                      : 'UploadFail'
+                  "
+                >
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length + 1">
+                <span *ngIf="upload.length > 0 && columns.length + 1">
+                  Search Complete and No matching records to display
+                </span>
+                <span *ngIf="upload?.length === 0 && columns.length + 1">
+                  No records to display
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>
