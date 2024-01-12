@@ -24,9 +24,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
-  // return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http);
   // return new TranslateHttpLoader(http,'./assets/i18n/', '.json');
-  return new TranslateHttpLoader(http, '../assets/i18n/', '.json');
+  // return new TranslateHttpLoader(http, '../assets/i18n/', '.json');
 }
 
 import {
