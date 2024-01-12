@@ -1,0 +1,222 @@
+<!-- <div class="panel panel-default"> -->
+<div>
+  <div class="panel-title panelHeading pull-left">
+    <div class="nopaddingbottom">
+      <b>
+        <span
+          [translate]="'operations.purchaseOrder.titles.partsDetails'"
+          class="main-title"
+        ></span
+      ></b>
+    </div>
+  </div>
+  <div class="pull-right buttonGroup">
+    <div class="row">
+      <span
+        label="Add New"
+        class="tableIconSizeNew"
+        title="{{ 'common.buttons.addNew' | translate }}"
+        (click)="!addButton && handleAddPartDetailsIcon()"
+        [class.unclickable]="addButton"
+      >
+        <div
+          class="custom-icon-container-green"
+          [class.unclickable]="addButton"
+        >
+          <i class="fas fa-plus white"></i>
+        </div>
+      </span>
+    </div>
+  </div>
+</div>
+<br />
+<hr
+  style="height: 2px; border-width: 100%; color: gray; background-color: gray"
+/>
+<form
+  class="container-new-ui"
+  [formGroup]="editSavePartDetailsForm"
+  autocomplete="off"
+>
+  <div class="row">
+    <!-- Depot Currency -->
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="depotCurrency" class="labelText">
+        <span
+          [translate]="'operations.purchaseOrder.label.depotCurrency'"
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control new-form-control-input"
+        id="depotCurrency"
+        formControlName="depotCurrency"
+        maxlength="100"
+        placeholder="{{
+          'operations.purchaseOrder.placeholder.depotCurrency' | translate
+        }}"
+      />
+    </div>
+    <!-- Total PO Amount -->
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="totalPOAmount" class="labelText">
+        <span
+          [translate]="'operations.purchaseOrder.label.totalPOAmount'"
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control amountInput new-form-control-input"
+        id="totalPOAmount"
+        formControlName="totalPOAmount"
+        [scale]="2"
+        numericType="decimal"
+        numeric
+        placeholder="{{
+          'operations.purchaseOrder.placeholder.totalPOAmount' | translate
+        }}"
+      />
+    </div>
+    <!-- Supplier Currency -->
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="supplierCurrency" class="labelText">
+        <span
+          [translate]="'operations.purchaseOrder.label.supplierCurrency'"
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control new-form-control-input"
+        id="supplierCurrency"
+        formControlName="supplierCurrency"
+        maxlength="100"
+        placeholder="{{
+          'operations.purchaseOrder.placeholder.supplierCurrency' | translate
+        }}"
+      />
+    </div>
+    <!-- Total PO Amount in Supplier Currency -->
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <label for="totPOAmtInSuppCur" class="labelText">
+        <span
+          [translate]="'operations.purchaseOrder.label.totPOAmtInSuppCur'"
+        ></span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control new-form-control-input"
+        id="totPOAmtInSuppCur"
+        formControlName="totPOAmtInSuppCur"
+        maxlength="100"
+        placeholder="{{
+          'operations.purchaseOrder.placeholder.totPOAmtInSuppCur' | translate
+        }}"
+      />
+    </div>
+  </div>
+</form>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <app-shared-table-new
+      #sharedTableNew
+      [headerColumnList]="poPartDetailsColumnList"
+      [tableInitialData]="purchaseOrderPartsList"
+      [filter]="true"
+      [excelIcon]="true"
+      [refreshIcon]="true"
+      [showTableHeader]="true"
+      [isPanelHeading]="true"
+      (sendTableRowData)="receiveTablePartList($event)"
+      (refreshTableData)="refreshPoPartList($event)"
+      (getTableDataService)="refreshPoPartList($event)"
+      [deleteIcon]="true"
+      (handleDeleteRowData)="deleteRowDataPoPart($event)"
+      [showHide]="true"
+      (handlePartSpecificationRowData)="handlePartSpecificationRowData($event)"
+      [tableTitle]="'Part Details List View'"
+      [excelFileName]="'Part Details'"
+      [disableDeleteIcon]="addButton"
+    ></app-shared-table-new>
+  </div>
+</div>
+
+<!-- Add Part Details popup -->
+<app-add-part-details
+  #addPartDetailsModel
+  (sendPartDetailsData)="receivePartDetailsData($event)"
+  [selectedColumnData]="selectedColumnData"
+  [partDetails]="purchaseOrderPartsList"
+  [currentStatusId]="currentStatusId"
+  [partDetailsMode]="selectedColumnData != null ? 'edit' : 'new'"
+  [screenId]="screenId"
+></app-add-part-details>
+
+<!-- Part Specification Popup -->
+<div
+  bsModal
+  #purchasePartSpecificationModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            <span
+              [translate]="
+                'operations.purchaseOrder.titles.purchasePartSpecification'
+              "
+            ></span>
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right">
+          <div
+            class="custom-button-close"
+            (click)="handleClosePurchaseSpecification()"
+          >
+            <i class="fas fa-fw fa-times white-icon" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <app-shared-table-new
+          [headerColumnList]="tableColumnsPartSpecification"
+          [filter]="true"
+          [excelIcon]="true"
+          [refreshIcon]="true"
+          [showHide]="true"
+          [globalSearch]="true"
+          [isPanelHeading]="false"
+          [addRecordIcon]="false"
+          [tableInitialData]="purchasePartSpecificationData"
+          [isMasterComp]="false"
+          [tableTitle]="'Purchase Part Specification'"
+          [excelFileName]="'Purchase Part Specification List'"
+        ></app-shared-table-new>
+      </div>
+
+      <div class="cancel-modal-footer">
+        <div class="row">
+          <button
+            class="capsule-button grey"
+            (click)="handleClosePurchaseSpecification()"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <span [translate]="'operations.purchaseOrder.buttons.close'"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

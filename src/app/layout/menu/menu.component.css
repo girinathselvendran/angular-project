@@ -1,0 +1,152 @@
+/* :host
+  ::ng-deep
+  .p-menubar
+  .p-menubar-root-list
+  .p-menuitem
+  .p-menuitem-content
+  .p-menuitem-link
+  .p-menuitem-text {
+  color: #fff !important;
+}
+:host
+  ::ng-deep
+  .p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-content
+  .p-menuitem-link
+  .p-menuitem-icon {
+  color: #fff !important;
+  margin-right: 0.5rem;
+}
+:host
+  ::ng-deep
+  .p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-content
+  .p-menuitem-link
+  .p-submenu-icon {
+  color: #fff;
+  margin-left: 0.5rem;
+}
+
+:host ::ng-deep .p-menubar {
+  padding: 0.5rem;
+  background: #2a3e4c;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  border-radius: 0px;
+}
+:host
+  ::ng-deep
+  .p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-content {
+  font-size: 15px !important;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-right: 0.5px solid black;
+  border-radius: 0px;
+  background: #2a3e4c;
+}
+
+:host
+  ::ng-deep.p-menubar
+  .p-menuitem
+  > .p-menuitem-content
+  .p-menuitem-link
+  .p-menuitem-icon {
+  color: #dee2e6;
+  margin-right: 0.5rem;
+}
+
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-content {
+  background-color: #0c4ca3 !important;
+}
+
+.p-menubar {
+  background-color: #0c4ca3 !important;
+} 
+*/ /* Styling for hover state */ /* Styling for hover state */ /* Styling for hover state */
+/* Styling for hover state */
+:host ::ng-deep .p-menubar .p-menuitem > .p-menuitem-content:hover {
+  background-color: #59626e !important;
+}
+
+:host
+  ::ng-deep
+  .p-menubar
+  .p-menuitem
+  > .p-menuitem-content:hover
+  .p-menuitem-text {
+  color: white !important;
+}
+
+:host
+  ::ng-deep
+  .p-menubar
+  .p-menuitem
+  > .p-menuitem-content:hover
+  .p-menuitem-icon {
+  color: white !important;
+}
+
+/* Additional styling for regular state */
+:host ::ng-deep .p-menubar .p-menuitem > .p-menuitem-content,
+:host ::ng-deep .p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-content {
+  background-color: #2a3e4c !important;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem > .p-menuitem-content .p-menuitem-text,
+:host
+  ::ng-deep
+  .p-menubar
+  .p-menuitem.p-menuitem-active
+  > .p-menuitem-content
+  .p-menuitem-text {
+  color: #fff !important;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem > .p-menuitem-content .p-menuitem-icon,
+:host
+  ::ng-deep
+  .p-menubar
+  .p-menuitem.p-menuitem-active
+  > .p-menuitem-content
+  .p-menuitem-icon {
+  color: #dee2e6 !important;
+  margin-right: 0.5rem;
+}
+
+/* Styling to prevent background color change for selected submenu items */
+:host
+  ::ng-deep
+  .p-menubar
+  .p-menuitem.p-menuitem-active
+  .p-submenu
+  .p-menuitem.p-menuitem-active
+  > .p-menuitem-content {
+  background-color: #2a3e4c !important;
+}
+:host ::ng-deep .p-menubar {
+  padding: 0.5rem;
+  background: #2a3e4c;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  border-radius: 0px;
+}
+:host
+  ::ng-deep
+  .p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-content {
+  font-size: 15px !important;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-right: 0.5px solid black;
+  border-radius: 0px;
+  background: #2a3e4c;
+}

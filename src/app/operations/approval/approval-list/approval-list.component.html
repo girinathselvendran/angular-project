@@ -1,0 +1,247 @@
+<div *ngIf="showGridByType == 1">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderPurchaseRequisition"
+    [tableInitialData]="tableInitialData"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    (printIconFn)="handlePrintIcon($event)"
+    [refreshIcon]="true"
+    [disableCancelPRIcons]="disableCancelPOIcons"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    (sendTableRowData)="receiveTableRowData($event)"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    (sendSelectedData)="receiveSelectedData($event, 'PR')"
+    [disablePrintPRIcons]="disablePrintPOIcons"
+    [disableEmailPRIcons]="disableEmailPOIcons"
+    (exportExcel)="exportToExcelData($event)"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+    [approvalIcon]="true"
+    [rejectIcon]="true"
+    (emailIconFn)="handleEmailIcon($event)"
+    (approvalIconFn)="handleApprovalIcon($event)"
+    (rejectIconFn)="handleRejectIcon($event)"
+    [emailIcon]="selectedTabStatus == 'APPROVED'"
+    (sendRemarksIconAction)="handleRemarksIcon($event)"
+  >
+  </app-shared-lazy-table-new>
+</div>
+<div *ngIf="showGridByType == 4">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderApprovedPurchaseRequisition"
+    [tableInitialData]="tableInitialData"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    (printIconFn)="handlePrintIcon($event)"
+    [refreshIcon]="true"
+    [cancelIcon]="showCancelIcon"
+    (cancelIconFn)="handleCancelIcon('icon')"
+    [disableCancelPRIcons]="disableCancelPOIcons"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    (sendTableRowData)="receiveTableRowData($event)"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    (sendSelectedData)="receiveSelectedData($event, 'PR')"
+    [disablePrintPRIcons]="disablePrintPOIcons"
+    [disableEmailPRIcons]="disableEmailPOIcons"
+    (exportExcel)="exportToExcelData($event)"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+    (emailIconFn)="handleEmailIcon($event)"
+    (approvalIconFn)="handleApprovalIcon($event)"
+    [emailIcon]="selectedTabStatus == 'APPROVED'"
+    [rejectIcon]="true"
+    (rejectIconFn)="handleRejectIcon($event)"
+    (sendRemarksIconAction)="handleRemarksIcon($event)"
+  >
+  </app-shared-lazy-table-new>
+</div>
+<div *ngIf="showGridByType == 2">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderRequestForQuote"
+    [tableInitialData]="tableInitialDataRFQ"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    (printIconFn)="handlePrintIcon($event)"
+    [refreshIcon]="true"
+    [disableCancelPRIcons]="disableCancelPOIcons"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    (sendTableRowData)="receiveTableRowData($event)"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    (sendSelectedData)="receiveSelectedData($event, 'RFQ')"
+    [disablePrintPRIcons]="disablePrintPOIcons"
+    [disableEmailPRIcons]="disableEmailPOIcons"
+    (exportExcel)="exportToExcelData($event)"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+    [approvalIcon]="true"
+    [rejectIcon]="true"
+    [emailIcon]="selectedTabStatus == 'APPROVED'"
+    (emailIconFn)="handleEmailIcon($event)"
+    (rejectIconFn)="handleRejectIcon($event)"
+    (approvalIconFn)="handleApprovalIcon($event)"
+  >
+  </app-shared-lazy-table-new>
+</div>
+<div *ngIf="showGridByType == 5">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderApprovedRequestForQuote"
+    [tableInitialData]="tableInitialDataRFQ"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    (printIconFn)="handlePrintIcon($event)"
+    [refreshIcon]="true"
+    [cancelIcon]="true"
+    (cancelIconFn)="handleCancelIcon('icon')"
+    [disableCancelPRIcons]="disableCancelPOIcons"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    (sendTableRowData)="receiveTableRowData($event)"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    (sendSelectedData)="receiveSelectedData($event, 'RFQ')"
+    [disablePrintPRIcons]="disablePrintPOIcons"
+    [disableEmailPRIcons]="disableEmailPOIcons"
+    (exportExcel)="exportToExcelData($event)"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+    [emailIcon]="true"
+    (emailIconFn)="handleEmailIcon($event)"
+    [emailIcon]="selectedTabStatus == 'APPROVED'"
+    (approvalIconFn)="handleApprovalIcon($event)"
+    [rejectIcon]="true"
+    (rejectIconFn)="handleRejectIcon($event)"
+  >
+  </app-shared-lazy-table-new>
+</div>
+<div *ngIf="showGridByType == 3">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderPurchaseOrder"
+    [tableInitialData]="tableInitialData"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    (printIconFn)="handlePrintIcon($event)"
+    [refreshIcon]="true"
+    [disableCancelPRIcons]="disableCancelPOIcons"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    (sendTableRowData)="receiveTableRowData($event)"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    (sendSelectedData)="receiveSelectedData($event, 'PO')"
+    [disablePrintPRIcons]="disablePrintPOIcons"
+    [disableEmailPRIcons]="disableEmailPOIcons"
+    (exportExcel)="exportToExcelData($event)"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+    [approvalIcon]="true"
+    [emailIcon]="true"
+    (emailIconFn)="handleEmailIcon($event)"
+    [rejectIcon]="true"
+    (rejectIconFn)="handleRejectIcon($event)"
+    [emailIcon]="selectedTabStatus == 'APPROVED'"
+    (approvalIconFn)="handleApprovalIcon($event)"
+  >
+  </app-shared-lazy-table-new>
+</div>
+<div *ngIf="showGridByType == 6">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderApprovedPurchaseOrder"
+    [tableInitialData]="tableInitialData"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    (printIconFn)="handlePrintIcon($event)"
+    [refreshIcon]="true"
+    [cancelIcon]="true"
+    (cancelIconFn)="handleCancelIcon('icon')"
+    [disableCancelPRIcons]="disableCancelPOIcons"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    (sendTableRowData)="receiveTableRowData($event)"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    (sendSelectedData)="receiveSelectedData($event, 'PO')"
+    [disablePrintPRIcons]="disablePrintPOIcons"
+    [disableEmailPRIcons]="disableEmailPOIcons"
+    (exportExcel)="exportToExcelData($event)"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+    [emailIcon]="true"
+    (emailIconFn)="handleEmailIcon($event)"
+    [emailIcon]="selectedTabStatus == 'APPROVED'"
+    (approvalIconFn)="handleApprovalIcon($event)"
+    [rejectIcon]="true"
+    (rejectIconFn)="handleRejectIcon($event)"
+  >
+  </app-shared-lazy-table-new>
+</div>
+
+<!-- Approval popup -->
+<div
+  bsModal
+  #remarksPopup="bs-modal"
+  class="modal remark-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="floatleft-part">
+          <h4 class="modal-title">
+            <span [translate]="'operations.common.titles.remarks'"></span>
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right-part">
+          <!-- <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="closeRemarksPopUp()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+          <button
+            class="capsule-button"
+            type="button"
+            aria-label="Close"
+            (click)="closeRemarksPopUp()"
+            style="background-color: #ec5656"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            {{ "common.buttons.cancel" | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <textarea
+          class="form-control"
+          [value]="remarks"
+          disabled="true"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,1239 @@
+<div class="container-fluid">
+  <div
+    class="pull-right buttonGroup"
+    style="padding: 0px 5px 0px 0px; margin: -9px 0px -18px 0px"
+  ></div>
+  <div class="row">
+    <form
+      class="container-new-ui"
+      [formGroup]="goodsReceiptForm"
+      autocomplete="off"
+    >
+      <div class="row pt-1 col-lg-12 col-md-12 col-sm-12">
+        <div class="form-group col-lg-2 col-md-2 col-sm-2">
+          <label for="goodsReceiptNo" class="labelText">
+            <span
+              [translate]="'operations.goodReceipt.label.goodsReceiptNo'"
+            ></span>
+          </label>
+          <input
+            type="text"
+            trim="blur"
+            class="form-control new-form-control-input"
+            id="goodsReceiptNo"
+            formControlName="goodsReceiptNo"
+            maxlength="100"
+            alphanumeric
+            spaceatfirst
+            placeholder="{{
+              'operations.goodReceipt.placeholder.goodsReceiptNo' | translate
+            }}"
+          />
+        </div>
+        <!-- For 'goodsReceiptDate' control -->
+        <div class="form-group col-lg-2 col-md-2 col-sm-2">
+          <label for="goodsReceiptDate" class="labelText">
+            <span
+              [translate]="'operations.goodReceipt.label.goodsReceiptDate'"
+            ></span>
+          </label>
+          <div class="input-group input-group-md">
+            <input
+              type="text"
+              class="form-control uppercase"
+              bsDatepicker
+              (keydown.arrowdown)="goodsReceiptDate.click()"
+              formControlName="goodsReceiptDate"
+              #goodsReceiptDate
+              [bsConfig]="{
+                dateInputFormat: 'DD-MMM-YYYY',
+                containerClass: 'theme-dark-blue',
+                adaptivePosition: true
+              }"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn custom-button"
+                type="button"
+                (click)="goodsReceiptDate.click()"
+                tabindex="-1"
+              >
+                <app-svg-calender-icon></app-svg-calender-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+        <!-- ........................................................................................................................................... -->
+        <div class="form-group col-lg-2 col-md-2 col-sm-2">
+          <label for="depot" class="labelText">
+            <span [translate]="'operations.goodReceipt.label.depot'"></span>
+          </label>
+
+          <ng-select
+            [selectOnTab]="true"
+            bindLabel="code"
+            [multiple]="false"
+            [closeOnSelect]="false"
+            [markFirst]="true"
+            placeholder="{{
+              'operations.goodReceipt.placeholder.depot' | translate
+            }}"
+            notFoundText="Record not found"
+            id="depot"
+            formControlName="depot"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+            >
+              <div title="{{ item?.code }}">
+                <small
+                  ><b>{{ item?.code }}</b></small
+                ><br />
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <!-- ........................................................................................................................................... -->
+        <div class="form-group col-lg-2 col-md-2 col-sm-2">
+          <label for="city" class="labelText">
+            <span [translate]="'operations.goodReceipt.label.city'"></span>
+          </label>
+
+          <!-- <ng-select
+            [selectOnTab]="true"
+            bindLabel="city"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            [markFirst]="true"
+            placeholder="{{
+              'operations.goodReceipt.placeholder.city' | translate
+            }}"
+            notFoundText="Record not found"
+            id="city"
+            formControlName="city"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+              let-clear="clear"
+            >
+            </ng-template>
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            </ng-template>
+          </ng-select> -->
+          <ng-select
+            [items]="cityDDList"
+            [searchFn]="dropdownSearchFn"
+            [selectOnTab]="true"
+            (input)="checkNgSelectValue($event, 'city')"
+            bindLabel="cityCode"
+            formControlName="city"
+            notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+            placeholder="{{
+              'operations.goodReceipt.placeholder.city' | translate
+            }}"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+            >
+              <div title="{{ item?.cityCode }} - {{ item?.cityDescription }}">
+                <small
+                  ><b>{{ item?.cityCode }}</b></small
+                ><br />
+                <span class="dropDownDescription">{{
+                  item?.cityDescription
+                }}</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <!-- ........................................................................................................................................... -->
+        <div class="form-group col-lg-2 col-md-2 col-sm-2">
+          <label for="goodsReceiptType" class="labelText">
+            <span
+              [translate]="'operations.goodReceipt.label.goodsReceiptType'"
+            ></span>
+          </label>
+
+          <ng-select
+            [items]="goodsReceiptType"
+            [selectOnTab]="true"
+            bindLabel="code"
+            [multiple]="false"
+            [closeOnSelect]="false"
+            [markFirst]="true"
+            placeholder="{{
+              'operations.goodReceipt.placeholder.goodsReceiptType' | translate
+            }}"
+            notFoundText="Record not found"
+            id="goodsReceiptType"
+            formControlName="goodsReceiptType"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+            >
+              <div title="{{ item?.code }}">
+                <small
+                  ><b>{{ item?.code }}</b></small
+                ><br />
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+    </form>
+    <div class="panel-title panelHeading pull-left">
+      <div class="nopaddingbottom">
+        <b>
+          <u>
+            <span
+              [translate]="'Supplier PO Detail'"
+              class="main-title"
+            ></span></u
+        ></b>
+      </div>
+    </div>
+
+    <form
+      class="container-new-ui"
+      [formGroup]="goodsReceiptForm"
+      autocomplete="off"
+    >
+      <div class="row pt-1 col-lg-12 col-md-12 col-sm-12">
+        <!-- ........................................................................................................................................... -->
+        <div class="form-group col-lg-2 col-md-2 col-sm-2">
+          <label for="supplier" class="labelText">
+            <span [translate]="'operations.goodReceipt.label.supplier'"></span>
+          </label>
+
+          <ng-select
+            [selectOnTab]="true"
+            [items]="supplierDDList"
+            bindLabel="supplierCode"
+            [multiple]="false"
+            [closeOnSelect]="false"
+            [markFirst]="true"
+            placeholder="{{
+              'operations.goodReceipt.placeholder.supplier' | translate
+            }}"
+            notFoundText="Record not found"
+            id="supplier"
+            formControlName="supplier"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+            >
+              <div title="{{ item?.supplierCode }}">
+                <small
+                  ><b>{{ item?.supplierCode }}</b></small
+                ><br />
+              </div>
+            </ng-template>
+          </ng-select>
+
+          <!-- 
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+              let-clear="clear"
+            >
+            </ng-template>
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            </ng-template>
+          </ng-select> -->
+        </div>
+        <!-- ........................................................................................................................................... -->
+        <div class="form-group col-lg-2 col-md-2 col-sm-2">
+          <label for="poNumber" class="labelText">
+            <span [translate]="'operations.goodReceipt.label.poNumber'"></span>
+          </label>
+
+          <!-- <ng-select
+            
+            [selectOnTab]="true"
+            bindLabel="depotCode"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            [markFirst]="true"
+            placeholder="{{
+              'operations.goodReceipt.placeholder.poNumber' | translate
+            }}"
+            notFoundText="Record not found"
+            id="poNumber"
+            formControlName="poNumber"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+              let-clear="clear"
+            >
+            </ng-template>
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            </ng-template>
+          </ng-select> -->
+          <ng-select
+            [selectOnTab]="true"
+            [items]="poDDList"
+            bindLabel="purchaseOrderNo"
+            [multiple]="false"
+            [closeOnSelect]="false"
+            [markFirst]="true"
+            placeholder="{{
+              'operations.goodReceipt.placeholder.supplier' | translate
+            }}"
+            notFoundText="Record not found"
+            id="poNumber"
+            formControlName="poNumber"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+            >
+              <div title="{{ item?.purchaseOrderNo }}">
+                <small
+                  ><b>{{ item?.purchaseOrderNo }}</b></small
+                ><br />
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <!-- ........................................................................................................................................... -->
+
+        <div class="form-group col-lg-2 col-md-2 col-sm-2">
+          <label for="remarks" class="labelText">
+            <span [translate]="'operations.goodReceipt.label.remarks'"></span>
+          </label>
+          <input
+            type="text"
+            trim="blur"
+            class="form-control new-form-control-input"
+            id="remarks"
+            formControlName="remarks"
+            maxlength="100"
+            alphanumeric
+            spaceatfirst
+            placeholder="{{
+              'operations.goodReceipt.placeholder.remarks' | translate
+            }}"
+          />
+        </div>
+      </div>
+      <div>
+        <div class="form-group col-lg-2 col-md-2 col-sm-2">
+          <label for="remarks" class="labelText">
+            <span
+              [translate]="'operations.goodReceipt.label.goodsReceiptCategory'"
+            ></span>
+            <i class="red"> *</i>
+          </label>
+          <ng-select
+            [items]="goodsReceiptCategory"
+            style="margin-top: 10px"
+            [selectOnTab]="true"
+            bindLabel="code"
+            formControlName="goodsReceiptCategory"
+            (input)="checkNgSelectValue($event, 'goodsReceiptCategory')"
+            (change)="onGoodsReceiptCategoryChange($event)"
+            notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+            placeholder="{{
+              'operations.goodReceipt.partDetails.placeholder.goodsReceiptCategory'
+                | translate
+            }}"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+            >
+              <div title="{{ item?.code }} - {{ item?.description }}">
+                <small
+                  ><b>{{ item?.code }}</b></small
+                ><br />
+                <span class="dropDownDescription">{{ item?.description }}</span>
+              </div>
+            </ng-template>
+          </ng-select>
+          <div
+            class="help-block red"
+            *ngIf="
+              (submitted &&
+                editSaveGoodsReceiptFormFormController['goodsReceiptCategory']
+                  .errors) ||
+              (editSaveGoodsReceiptFormFormController['goodsReceiptCategory']
+                .errors &&
+                (editSaveGoodsReceiptFormFormController['goodsReceiptCategory']
+                  .dirty ||
+                  editSaveGoodsReceiptFormFormController['goodsReceiptCategory']
+                    .touched))
+            "
+          >
+            <p
+              *ngIf="
+                editSaveGoodsReceiptFormFormController['goodsReceiptCategory']
+                  .errors['required']
+              "
+            >
+              <span
+                [translate]="
+                  'operations.goodReceipt.errors.goodsReceiptCategory.required'
+                "
+              ></span>
+            </p>
+
+            <p
+              *ngIf="
+                editSaveGoodsReceiptFormFormController['goodsReceiptCategory']
+                  .errors['invalid']
+              "
+            >
+              <span
+                [translate]="
+                  'operations.goodReceipt.errors.goodsReceiptCategory.invalid'
+                "
+              ></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row p-2 mt-3">
+    <div class="line"></div>
+
+    <div>
+      <div class="panel-title panelHeading pull-left">
+        <div class="nopaddingbottom">
+          <b>
+            <span
+              [translate]="
+                'operations.goodReceipt.partDetails.titles.goodsReceipt'
+              "
+              class="main-title"
+            >
+            </span
+          ></b>
+        </div>
+      </div>
+      <div style="margin-right: 10px" class="pull-right buttonGroup">
+        <div class="row">
+          <button
+            (click)="saveGoodsReceiptPartDetails()"
+            class="capsule-button green"
+          >
+            <div class="icon-circle">
+              <i class="fas fa-light fa-floppy-disk"></i>
+            </div>
+            {{ "operations.goodReceipt.partDetails.buttons.save" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="line"></div>
+    <!-- Part Details start-->
+
+    <div style="width: 100%">
+      <form
+        class="container-new-ui"
+        [formGroup]="editSavePartDetailForm"
+        autocomplete="off"
+        style="padding-top: 5px"
+      >
+        <div class="row">
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="partType" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.partType'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+            <ng-select
+              [items]="partTypeDDList"
+              [searchFn]="dropdownSearchFn"
+              [selectOnTab]="true"
+              (input)="checkNgSelectValue($event, '')"
+              bindLabel="code"
+              formControlName="partType"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.goodReceipt.partDetails.placeholder.partType'
+                  | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submitted &&
+                    editSavePartDetailFormController['partType'].errors) ||
+                  (editSavePartDetailFormController['partType'].errors &&
+                    (editSavePartDetailFormController['partType'].dirty ||
+                      editSavePartDetailFormController['partType'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="partCode" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.partCode'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+
+            <ng-select
+              [items]="partTypeDDList"
+              [searchFn]="dropdownSearchFn"
+              [selectOnTab]="true"
+              (input)="checkNgSelectValue($event, 'partCode')"
+              bindLabel="code"
+              formControlName="partCode"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.goodReceipt.partDetails.placeholder.partCode'
+                  | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submitted &&
+                    editSavePartDetailFormController['partCode'].errors) ||
+                  (editSavePartDetailFormController['partCode'].errors &&
+                    (editSavePartDetailFormController['partCode'].dirty ||
+                      editSavePartDetailFormController['partCode'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="partName" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.partName'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+
+            <input
+              type="text"
+              trim="blur"
+              class="form-control new-form-control-input"
+              id="partName"
+              formControlName="partName"
+              maxlength="100"
+              alphanumeric
+              spaceatfirst
+              placeholder="{{
+                'operations.goodReceipt.partDetails.placeholder.partName'
+                  | translate
+              }}"
+            />
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="partCategory" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.partCategory'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+
+            <ng-select
+              [searchFn]="dropdownSearchFn"
+              [selectOnTab]="true"
+              (input)="checkNgSelectValue($event, 'partCategory')"
+              bindLabel="code"
+              formControlName="partCategory"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.goodReceipt.partDetails.placeholder.partCategory'
+                  | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submitted &&
+                    editSavePartDetailFormController['partCategory'].errors) ||
+                  (editSavePartDetailFormController['partCategory'].errors &&
+                    (editSavePartDetailFormController['partCategory'].dirty ||
+                      editSavePartDetailFormController['partCategory'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-3">
+            <label for="partSpecification" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.partSpecification'
+                "
+              ></span>
+            </label>
+            <br />
+            <p class="margin-left-10 font-20">
+              <i
+                class="far fa-eye clickable"
+                (click)="handleOpenPartSpecification()"
+              ></i>
+            </p>
+          </div>
+
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="partType" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.purchaseQuantity'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+
+            <input
+              type="text"
+              trim="blur"
+              class="form-control amountInput new-form-control-input"
+              id="purchaseQuantity"
+              formControlName="purchaseQuantity"
+              maxlength="15"
+              [scale]="2"
+              numericType="decimal"
+              numeric
+              placeholder="{{
+                'operations.goodReceipt.partDetails.placeholder.purchaseQuantity'
+                  | translate
+              }}"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="partType" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.totalReceivedQuantity'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+
+            <input
+              type="text"
+              trim="blur"
+              class="form-control amountInput new-form-control-input"
+              id="totalReceivedQuantity"
+              formControlName="totalReceivedQuantity"
+              maxlength="15"
+              [scale]="2"
+              numericType="decimal"
+              numeric
+              placeholder="{{
+                'operations.goodReceipt.partDetails.placeholder.totalReceivedQuantity'
+                  | translate
+              }}"
+            />
+          </div>
+
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="balanceQuantity" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.balanceQuantity'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+
+            <input
+              type="text"
+              trim="blur"
+              class="form-control amountInput new-form-control-input"
+              id="balanceQuantity"
+              formControlName="balanceQuantity"
+              maxlength="15"
+              [scale]="2"
+              numericType="decimal"
+              numeric
+              placeholder="{{
+                'operations.goodReceipt.partDetails.placeholder.balanceQuantity'
+                  | translate
+              }}"
+            />
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="receivedQuantity" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.receivedQuantity'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+            <input
+              type="text"
+              trim="blur"
+              class="form-control amountInput new-form-control-input"
+              id="receivedQuantity"
+              formControlName="receivedQuantity"
+              (input)="handleAmountCalculation('receivedQuantity')"
+              maxlength="15"
+              [scale]="2"
+              numericType="decimal"
+              numeric
+              placeholder="{{
+                'operations.goodReceipt.partDetails.placeholder.receivedQuantity'
+                  | translate
+              }}"
+            />
+            <!-- <pre>{{editSavePartDetailFormController['receivedQuantity'].errors |  json}}</pre> -->
+
+            <!-- start -->
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submitted &&
+                  editSavePartDetailFormController['receivedQuantity']
+                    .errors) ||
+                (editSavePartDetailFormController['receivedQuantity'].errors &&
+                  (editSavePartDetailFormController['receivedQuantity'].dirty ||
+                    editSavePartDetailFormController['receivedQuantity']
+                      .touched))
+              "
+            >
+              <div
+                *ngIf="
+                  editSavePartDetailFormController['receivedQuantity'].errors[
+                    'receivedQuantityLess'
+                  ]
+                "
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.receivedQuantity.receivedQuantityLess'
+                  "
+                ></span>
+              </div>
+            </div>
+            <div
+              class="help-block red"
+              *ngIf="
+                (submitted &&
+                  editSavePartDetailFormController['receivedQuantity']
+                    .errors) ||
+                (editSavePartDetailFormController['receivedQuantity'].errors &&
+                  (editSavePartDetailFormController['receivedQuantity'].dirty ||
+                    editSavePartDetailFormController['receivedQuantity']
+                      .touched))
+              "
+            >
+              <div
+                *ngIf="
+                  editSavePartDetailFormController['receivedQuantity'].errors[
+                    'required'
+                  ]
+                "
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.receivedQuantity.required'
+                  "
+                ></span>
+              </div>
+            </div>
+
+            <!-- end -->
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="expectedDeliveryDate" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.expectedDeliveryDate'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+            <div class="input-group input-group-md">
+              <input
+                type="text"
+                class="form-control uppercase"
+                bsDatepicker
+                (keydown.arrowdown)="expectedDeliveryDate.click()"
+                formControlName="expectedDeliveryDate"
+                #expectedDeliveryDate
+                [bsConfig]="{
+                  dateInputFormat: 'DD-MMM-YYYY',
+                  containerClass: 'theme-dark-blue',
+                  adaptivePosition: true
+                }"
+                [ngClass]="{
+                  redBorderCalender:
+                    (submitted &&
+                      editSavePartDetailFormController['expectedDeliveryDate']
+                        .errors) ||
+                    (editSavePartDetailFormController['expectedDeliveryDate']
+                      .errors &&
+                      (editSavePartDetailFormController['expectedDeliveryDate']
+                        .dirty ||
+                        editSavePartDetailFormController['expectedDeliveryDate']
+                          .touched))
+                }"
+              />
+
+              <span class="input-group-btn">
+                <button
+                  class="btn custom-button"
+                  type="button"
+                  (click)="expectedDeliveryDate.click()"
+                  tabindex="-1"
+                >
+                  <app-svg-calender-icon></app-svg-calender-icon>
+                </button>
+              </span>
+            </div>
+            <div
+              class="help-block red"
+              *ngIf="
+                (submitted &&
+                  editSavePartDetailFormController['expectedDeliveryDate']
+                    .errors) ||
+                (editSavePartDetailFormController['expectedDeliveryDate']
+                  .errors &&
+                  (editSavePartDetailFormController['expectedDeliveryDate']
+                    .dirty ||
+                    editSavePartDetailFormController['expectedDeliveryDate']
+                      .touched))
+              "
+            >
+              <div
+                *ngIf="editSavePartDetailFormController['expectedDeliveryDate'].errors?.['invalid']"
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.expectedDeliveryDate.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSavePartDetailFormController['expectedDeliveryDate'].errors?.['customError']"
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.expectedDeliveryDateGreaterThanCurrent'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSavePartDetailFormController['expectedDeliveryDate'].errors?.['bsDate']"
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.expectedDeliveryDate.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="
+                  editSavePartDetailFormController['expectedDeliveryDate']
+                    .errors['required']
+                "
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.expectedDeliveryDate.required'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSavePartDetailFormController['expectedDeliveryDate'].errors?.['inValidDateString']"
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.expectedDeliveryDate.invalid'
+                  "
+                ></span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="expectedDeliveryDate" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.actualDeliveryDate'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+            <div class="input-group input-group-md">
+              <input
+                type="text"
+                class="form-control uppercase"
+                bsDatepicker
+                (keydown.arrowdown)="actualDeliveryDate.click()"
+                formControlName="actualDeliveryDate"
+                #actualDeliveryDate
+                [bsConfig]="{
+                  dateInputFormat: 'DD-MMM-YYYY',
+                  containerClass: 'theme-dark-blue',
+                  adaptivePosition: true
+                }"
+                [ngClass]="{
+                  redBorderCalender:
+                    (submitted &&
+                      editSavePartDetailFormController['actualDeliveryDate']
+                        .errors) ||
+                    (editSavePartDetailFormController['actualDeliveryDate']
+                      .errors &&
+                      (editSavePartDetailFormController['actualDeliveryDate']
+                        .dirty ||
+                        editSavePartDetailFormController['actualDeliveryDate']
+                          .touched))
+                }"
+                (ngModelChange)="
+                  validateActualDeliveryDate('actualDeliveryDate', $event)
+                "
+              />
+
+              <!-- <pre>{{editSavePartDetailFormController['actualDeliveryDate'].errors |  json}}</pre> -->
+
+              <span class="input-group-btn">
+                <button
+                  class="btn custom-button"
+                  type="button"
+                  (click)="actualDeliveryDate.click()"
+                  tabindex="-1"
+                >
+                  <app-svg-calender-icon></app-svg-calender-icon>
+                </button>
+              </span>
+            </div>
+            <div
+              class="help-block red"
+              *ngIf="
+                (submitted &&
+                  editSavePartDetailFormController['actualDeliveryDate']
+                    .errors) ||
+                (editSavePartDetailFormController['actualDeliveryDate']
+                  .errors &&
+                  (editSavePartDetailFormController['actualDeliveryDate']
+                    .dirty ||
+                    editSavePartDetailFormController['actualDeliveryDate']
+                      .touched))
+              "
+            >
+              <div
+                *ngIf="editSavePartDetailFormController['actualDeliveryDate'].errors?.['invalid']"
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.actualDeliveryDate.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSavePartDetailFormController['actualDeliveryDate'].errors?.['customError']"
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.actualDeliveryDateGreaterThanCurrent'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSavePartDetailFormController['actualDeliveryDate'].errors?.['bsDate']"
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.actualDeliveryDate.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="
+                  editSavePartDetailFormController['actualDeliveryDate'].errors[
+                    'required'
+                  ]
+                "
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.actualDeliveryDate.required'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSavePartDetailFormController['actualDeliveryDate'].errors?.['inValidDateString']"
+              >
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.errors.actualDeliveryDate.invalid'
+                  "
+                ></span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="stockUOM" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.partDetails.label.stockUom'
+                "
+              ></span>
+              <i class="red"> *</i>
+            </label>
+            <!-- <ng-select
+            [selectOnTab]="true"
+            bindLabel="code"
+            formControlName="stockUOM"
+            notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+            placeholder="{{
+              'operations.goodReceipt.partDetails.placeholder.stockUom'
+                | translate
+            }}"
+            [ngClass]="{
+              redBorder:
+                (submitted &&
+                  editSavePartDetailFormController['stockUOM'].errors) ||
+                (editSavePartDetailFormController['stockUOM'].errors &&
+                  (editSavePartDetailFormController['stockUOM'].dirty ||
+                    editSavePartDetailFormController['stockUOM'].touched))
+            }"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+            >
+              <div title="{{ item?.code }}">
+                <small
+                  ><b>{{ item?.code }}</b></small
+                ><br />
+                <span class="dropDownDescription">{{
+                  item?.description
+                }}</span>
+              </div>
+            </ng-template>
+          </ng-select> -->
+            <ng-select
+              [items]="stockUOMList"
+              [selectOnTab]="true"
+              (input)="checkNgSelectValue($event, 'stockUOM')"
+              bindLabel="code"
+              formControlName="stockUOM"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.goodReceipt.partDetails.placeholder.stockUom'
+                  | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submitted &&
+                    editSavePartDetailFormController['stockUOM'].errors) ||
+                  (editSavePartDetailFormController['stockUOM'].errors &&
+                    (editSavePartDetailFormController['stockUOM'].dirty ||
+                      editSavePartDetailFormController['stockUOM'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+              >
+                <div title="{{ item?.code }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-2 col-md-2 col-sm-2">
+            <label
+              for="storePartAllocation"
+              class="labelText"
+              (click)="openStorePartAllocationPopup()"
+            >
+              <a class="light-blue-part">
+                <span
+                  [translate]="
+                    'operations.goodReceipt.partDetails.label.storePartAllocation'
+                  "
+                ></span>
+              </a>
+              <span class="redIcon"> *</span>
+            </label>
+            <div>
+              <input
+                (click)="openStorePartAllocationPopup()"
+                type="text"
+                class="form-control new-form-control-input link-style"
+                id="storePartAllocation"
+                formControlName="storePartAllocation"
+                maxlength="100"
+                placeholder="{{
+                  'operations.goodReceipt.partDetails.placeholder.storePartAllocation'
+                    | translate
+                }}"
+                [readonly]="true"
+                [style.background-color]="'#eeeeee'"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <app-shared-table-new
+            #sharedTableNew
+            [headerColumnList]="partDetailColumnList"
+            [tableInitialData]="partDetailList"
+            [isGridTittle]="false"
+            (sendTableRowData)="receivePartTableRowData($event)"
+            [showTableHeader]="false"
+            (handlePartSpecificationRowData)="
+              handlePartSpecificationRowData($event)
+            "
+            (handleHyperLinkRowData)="openStorePartAllocationPopup()"
+            [filter]="false"
+            [excelIcon]="false"
+            [refreshIcon]="false"
+            [tableTitle]="'RFQ Supplier Detail List Grid'"
+            [excelFileName]="'RFQ Supplier Detail List'"
+          ></app-shared-table-new>
+        </div>
+      </form>
+
+      <!-- Part Details end-->
+    </div>
+  </div>
+</div>
+<div
+  bsModal
+  #partSpecificationModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            {{ tableTitle }}
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right">
+          <div class="custom-button-close" (click)="handleCloseSpecification()">
+            <i class="fas fa-fw fa-times white-icon" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <app-shared-table-new
+          [headerColumnList]="tableColumnsPartSpecification"
+          [filter]="true"
+          [excelIcon]="true"
+          [refreshIcon]="true"
+          [showHide]="true"
+          [globalSearch]="true"
+          [isPanelHeading]="false"
+          [addRecordIcon]="false"
+          [tableInitialData]="partSpecificationData"
+          [isMasterComp]="false"
+          [tableTitle]="tableTitle"
+          [excelFileName]="excelFileName"
+        ></app-shared-table-new>
+      </div>
+
+      <div class="cancel-modal-footer">
+        <div class="row">
+          <button
+            class="capsule-button reset-button-color"
+            (click)="handleCloseSpecification()"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            {{ "common.buttons.close" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-store-part-allocation-popup
+  #storePartAllocationpopup
+  [SelectedGoodsReceiptCategory]="SelectedGoodsReceiptCategory"
+></app-store-part-allocation-popup>

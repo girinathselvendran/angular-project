@@ -1,0 +1,48 @@
+<div
+  bsModal
+  #supplierComparisonModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            <span>
+              {{
+                "operations.requestForQuote.quoteAndOrderAllocation.titles.partWiseSupplier"
+                  | translate
+              }}
+              {{ partCode }}
+            </span>
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right">
+          <div class="custom-button-close" (click)="handleCloseComparison()">
+            <i class="fas fa-fw fa-times white-icon" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <app-shared-table-new
+          [headerColumnList]="tableColumnsSupplierComparison"
+          [filter]="true"
+          [excelIcon]="false"
+          [refreshIcon]="false"
+          [showHide]="false"
+          [globalSearch]="true"
+          [isGridTittle]="false"
+          [addRecordIcon]="false"
+          [showTableHeader]="false"
+          [tableInitialData]="supplierComparisonData"
+          [isMasterComp]="false"
+        ></app-shared-table-new>
+      </div>
+    </div>
+  </div>
+</div>

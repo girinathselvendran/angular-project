@@ -1,0 +1,10 @@
+.published-with-changes,
+.published-with-changes * {
+  box-sizing: border-box;
+}
+.published-with-changes {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  overflow: visible;
+}

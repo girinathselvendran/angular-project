@@ -1,0 +1,90 @@
+<div *ngIf="isStockMaintenance">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderStockMaintenance"
+    [tableInitialData]="stockMaintenanceData"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    [filter]="true"
+    [excelIcon]="false"
+    [refreshIcon]="false"
+    [isCheckBox]="false"
+    [checkboxWidth]="false"
+    [tableTitle]="tableTitle"
+    [showHide]="false"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    (sendTableRowData)="receiveTableRowData($event)"
+    (sendRemarksIconAction)="handleRemarksIcon($event)"
+    (handlePartSpecificationRowData)="handlePartSpecificationRowData($event)"
+    >
+  </app-shared-lazy-table-new>
+</div>
+<div *ngIf="!isStockMaintenance">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderStockSummary"
+    [tableInitialData]="stockMaintenanceData"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    [filter]="true"
+    [excelIcon]="true"
+    [refreshIcon]="true"
+    [isCheckBox]="false"
+    [checkboxWidth]="false"
+    [tableTitle]="'Stock Summary'"
+    [showHide]="false"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    (sendTableRowData)="receiveTableRowData($event)"
+    (sendRemarksIconAction)="handleRemarksIcon($event)"
+    (exportExcel)="exportToExcelData($event)"
+    (handlePartSpecificationRowData)="handlePartSpecificationRowData($event)"
+    >
+  </app-shared-lazy-table-new>
+</div>
+
+<div
+  bsModal
+  #remarksPopup="bs-modal"
+  class="modal remark-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="floatleft-part">
+          <h4 class="modal-title">
+            <span [translate]="'operations.common.titles.remarks'"></span>
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right-part">
+          <button
+            class="capsule-button"
+            type="button"
+            aria-label="Close"
+            (click)="closeRemarksPopUp()"
+            style="background-color: #ec5656"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            {{ "common.buttons.cancel" | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <textarea
+          class="form-control"
+          [value]="remarks"
+          disabled="true"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+<app-part-specifications
+  #partSpecification
+  [partSpecificationData]="partSpecificationData"
+  [tableTitle]="'Part Specification'"
+></app-part-specifications>

@@ -1,0 +1,228 @@
+<div>
+  <div class="panel-title panelHeading pull-left">
+    <div class="nopaddingbottom">
+      <b>
+        <span
+          [translate]="'operations.purchaseOrder.titles.additionalCharges'"
+          class="main-title"
+        ></span
+      ></b>
+    </div>
+  </div>
+</div>
+<br />
+<hr
+  style="height: 2px; border-width: 100%; color: gray; background-color: gray"
+/>
+<form
+  class="container-new-ui"
+  [formGroup]="editSaveAdditionalChargesForm"
+  autocomplete="off"
+>
+  <div class="row">
+    <!-- Charges -->
+    <div class="col-lg-2 col-md-2 col-sm-3">
+      <label for="charges" class="labelText">
+        <span [translate]="'operations.purchaseOrder.label.charges'"></span>
+        <span class="redIcon"> *</span>
+      </label>
+
+      <ng-select
+        [items]="chargesList"
+        [searchFn]="dropdownSearchFn"
+        [selectOnTab]="true"
+        (input)="checkNgSelectValue($event, 'charges')"
+        bindLabel="code"
+        formControlName="charges"
+        notFoundText="Not found"
+        placeholder="{{
+          'operations.purchaseOrder.placeholder.charges' | translate
+        }}"
+        (change)="handleChargesChange($event)"
+        [ngClass]="{
+          redBorder:
+            (submitted &&
+              this.editSaveAdditionalChargesFormController['charges'].errors) ||
+            (this.editSaveAdditionalChargesFormController['charges'].errors &&
+              (this.editSaveAdditionalChargesFormController['charges'].dirty ||
+                this.editSaveAdditionalChargesFormController['charges']
+                  .touched))
+        }"
+      >
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-index="index"
+          let-search="searchTerm"
+        >
+          <div title="{{ item?.code }} - {{ item?.description }}">
+            <small
+              ><b>{{ item?.code }}</b></small
+            ><br />
+            <span class="dropDownDescription">{{ item?.description }}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+      <div
+        class="help-block red"
+        *ngIf="
+          (submitted &&
+            this.editSaveAdditionalChargesFormController['charges'].errors) ||
+          (this.editSaveAdditionalChargesFormController['charges'].errors &&
+            (this.editSaveAdditionalChargesFormController['charges'].dirty ||
+              this.editSaveAdditionalChargesFormController['charges'].touched))
+        "
+      >
+        <p
+          *ngIf="
+            this.editSaveAdditionalChargesFormController['charges'].errors[
+              'invalid'
+            ]
+          "
+        >
+          <span
+            [translate]="'operations.purchaseOrder.errors.charges.invalid'"
+          ></span>
+        </p>
+        <p
+          *ngIf="
+            this.editSaveAdditionalChargesFormController['charges'].errors[
+              'required'
+            ]
+          "
+        >
+          <span
+            [translate]="'operations.purchaseOrder.errors.charges.required'"
+          ></span>
+        </p>
+        <p
+          *ngIf="
+            this.editSaveAdditionalChargesFormController['charges'].errors[
+              'invalidCode'
+            ]
+          "
+        >
+          <span [translate]="'Charges code exists'"></span>
+        </p>
+      </div>
+    </div>
+    <!-- Value -->
+    <div
+      class="form-group col-lg-2 col-md-2 col-sm-3"
+      [ngClass]="{
+        'has-error':
+          (submitted &&
+            editSaveAdditionalChargesFormController['value'].errors) ||
+          (editSaveAdditionalChargesFormController['value'].errors &&
+            (editSaveAdditionalChargesFormController['value'].dirty ||
+              editSaveAdditionalChargesFormController['value'].touched))
+      }"
+    >
+      <label for="value" class="labelText">
+        <span [translate]="'operations.purchaseOrder.label.value'"></span>
+        <span class="redIcon"> *</span>
+      </label>
+      <input
+        type="text"
+        trim="blur"
+        class="form-control amountInput new-form-control-input"
+        id="value"
+        formControlName="value"
+        [scale]="2"
+        numericType="decimal"
+        numeric
+        placeholder="{{
+          'operations.purchaseOrder.placeholder.value' | translate
+        }}"
+      />
+      <div
+        class="help-block red"
+        *ngIf="
+          (submitted &&
+            this.editSaveAdditionalChargesFormController['value'].errors) ||
+          (this.editSaveAdditionalChargesFormController['value'].errors &&
+            (this.editSaveAdditionalChargesFormController['value'].dirty ||
+              this.editSaveAdditionalChargesFormController['value'].touched))
+        "
+      >
+        <p
+          *ngIf="
+            this.editSaveAdditionalChargesFormController['value'].errors[
+              'invalid'
+            ]
+          "
+        >
+          <span
+            [translate]="'operations.purchaseOrder.errors.value.invalid'"
+          ></span>
+        </p>
+        <p
+          *ngIf="
+            this.editSaveAdditionalChargesFormController['value'].errors[
+              'required'
+            ]
+          "
+        >
+          <span
+            [translate]="'operations.purchaseOrder.errors.value.required'"
+          ></span>
+        </p>
+        <div
+          *ngIf="editSaveAdditionalChargesFormController['value'].errors['min']"
+        >
+          <span
+            [translate]="'operations.purchaseOrder.errors.value.limit'"
+          ></span>
+        </div>
+        <div
+          *ngIf="editSaveAdditionalChargesFormController['value'].errors['max']"
+        >
+          <span
+            [translate]="'operations.purchaseOrder.errors.value.limit'"
+          ></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+      <span class="row" style="padding-top: 27px">
+        <button
+          class="capsule-button green"
+          (click)="saveAdditionalCharges()"
+          [disabled]="disableSaveButton"
+          [class.unclickable]="disableSaveButton"
+        >
+          <div class="icon-circle">
+            <i class="fas fa-light fa-floppy-disk"></i>
+          </div>
+          {{ "operations.purchaseRequisition.buttons.save" | translate }}
+        </button>
+        <button (click)="resetForm()" class="capsule-button grey">
+          <div class="icon-circle">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </div>
+          {{ "operations.purchaseOrder.buttons.reset" | translate }}
+        </button>
+      </span>
+    </div>
+  </div>
+</form>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <app-shared-table-new
+      #sharedTableNew
+      [headerColumnList]="additionalChargesColumnList"
+      [tableInitialData]="additionalChargesList"
+      [filter]="false"
+      [excelIcon]="false"
+      [refreshIcon]="false"
+      [showTableHeader]="false"
+      [isPanelHeading]="false"
+      (sendTableRowData)="receiveTableAdditionalCharges($event)"
+      (refreshTableData)="refreshAdditionalChargesList($event)"
+      (getTableDataService)="refreshAdditionalChargesList($event)"
+      [deleteIcon]="true"
+      (handleDeleteRowData)="deleteAdditionalChargesRowData($event)"
+      [disableDeleteIcon]="disableSaveButton"
+    ></app-shared-table-new>
+  </div>
+</div>

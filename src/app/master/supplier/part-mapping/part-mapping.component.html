@@ -1,0 +1,361 @@
+<div class="modal-overlay" [class.active]="isModalOpen"></div>
+<fieldset>
+  <!-- <div class="panel panel-info"> -->
+  <!-- <div class="panel-heading clearfix">
+      <span class="panel-title panelSubHeading pull-left">
+        <span
+          [translate]="
+            'master.supplier.associateParts.title.supplierPartMapping'
+          "
+        ></span>
+      </span>
+      <div class="pull-right buttonGroup">
+        <button
+          class="capsule-button navyBlue"
+          type="button"
+          id="btnClear"
+          [disabled]="disableSaveButton"
+          title="{{
+            'master.supplier.associateParts.toolTip.associateParts' | translate
+          }}"
+          (click)="!addContactBtn && openContactDialog('new')"
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          {{ "master.supplier.associateParts.title.partMapping" | translate }}
+        </button>
+      </div>
+    </div> -->
+
+  <app-shared-lazy-table-new
+    #sharedLazyTablePartMapping
+    [addRecordIcon]="true"
+    (addTableDataService)="openContactDialog('new')"
+    [headerColumnList]="tableColumnHeaderList"
+    [filter]="true"
+    [excelIcon]="true"
+    [refreshIcon]="true"
+    [holdIcon]="false"
+    [showHide]="false"
+    [globalSearch]="false"
+    [isPanelHeading]="true"
+    [isCheckBox]="false"
+    [checkboxWidth]="false"
+    [tableInitialData]="partTableDataList"
+    (lazyLoadGetData)="getPartMappingListServerSide($event)"
+    (sendSelectedData)="receiveSelectedDataPartDetails($event)"
+    (exportExcel)="exportToExcel($event)"
+    (handleDeleteRowData)="handleDeletePartMappingIcon($event)"
+    [tableFilterFormGroup]="partTableFilterFormGroup"
+    (handlePartSpecificationRowData)="handlePartSpecificationRowData($event)"
+    [unClickableRow]="true"
+    [tableTitle]="tableTitle"
+  ></app-shared-lazy-table-new>
+  <!-- </div> -->
+</fieldset>
+
+<!-- Modal components-->
+<div
+  bsModal
+  #contactModal="bs-modal"
+  class="modal newmodal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <form
+    [formGroup]="associatePartsForm"
+    autocomplete="off"
+    class="container-new-ui"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <b class="float-left">
+            <h4 class="modal-title">
+              <span
+                [translate]="'master.supplier.associateParts.title.partMapping'"
+              ></span>
+            </h4>
+          </b>
+
+          <div class="gridRightAlign">
+            <div class="row">
+              <!-- ......................................................................................................................................................... -->
+              <button
+                class="capsule-button grey"
+                type="button"
+                id="btnClear"
+                title="{{ 'common.buttons.reset' | translate }}"
+                (click)="clearForm()"
+              >
+                <div class="icon-circle">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                {{ "common.buttons.reset" | translate }}
+              </button>
+              <button
+                class="capsule-button green"
+                type="submit"
+                appPreventDoubleClick
+                (debounceClick)="onSubmit()"
+                [debounceTime]="500"
+                id="btnSaveContact"
+                title="{{ 'common.buttons.save' | translate }}"
+              >
+                <div class="icon-circle">
+                  <i class="fas fa-light fa-floppy-disk"></i>
+                </div>
+                {{ "common.buttons.save" | translate }}
+              </button>
+              <button
+                class="capsule-button"
+                type="button"
+                id="btnClsoe"
+                (click)="closeContactDialog()"
+                title="{{ 'common.buttons.cancel' | translate }}"
+                style="background-color: #ec5656"
+              >
+                <div class="icon-circle">
+                  <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+                {{ "common.buttons.cancel" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-lg-12 col-md-12 col-sm-12">
+              <div class="row">
+                <!-- ........................................................................................................................................................................................ -->
+
+                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                  <label for="partType" class="labelText">
+                    <span
+                      [translate]="
+                        'master.supplier.associateParts.label.partType'
+                      "
+                    ></span>
+                  </label>
+                  <ng-select
+                    [items]="partTypeDDList"
+                    [selectOnTab]="true"
+                    bindLabel="code"
+                    (change)="onchangeSearchFields()"
+                    (input)="checkNgSelectValue($event, 'partType')"
+                    [searchFn]="dropdownSearchFn"
+                    [ngClass]="{
+                      redBorder:
+                        (submitted &&
+                          associatePartsFormControls['partType'].errors) ||
+                        (associatePartsFormControls['partType'].errors &&
+                          (associatePartsFormControls['partType'].dirty ||
+                            associatePartsFormControls['partType'].touched))
+                    }"
+                    placeholder="{{
+                      'master.supplier.associateParts.placeholder.selectPartType'
+                        | translate
+                    }}"
+                    formControlName="partType"
+                    notFoundText="Record not found"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div
+                        class="card-body"
+                        title="{{ item?.code }} - {{ item.description }}"
+                      >
+                        <div>
+                          <small
+                            ><b>{{ item?.code }}</b></small
+                          ><br />
+                          <span class="dropDownDescription">{{
+                            item?.description
+                          }}</span>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+
+                <!-- ........................................................................................................................................................................................ -->
+                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                  <label for="partCategory" class="labelText">
+                    <span
+                      [translate]="
+                        'master.supplier.associateParts.label.partCategory'
+                      "
+                    ></span>
+                  </label>
+                  <input
+                    type="text"
+                    (input)="onchangeSearchFields()"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="partCategory"
+                    formControlName="partCategory"
+                    maxlength="100"
+                    placeholder="{{
+                      'master.supplier.associateParts.placeholder.partCategory'
+                        | translate
+                    }}"
+                  />
+                </div>
+
+                <!-- ........................................................................................................................................................................................ -->
+                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                  <label for="partNo" class="labelText">
+                    <span
+                      [translate]="
+                        'master.supplier.associateParts.label.partNo'
+                      "
+                    ></span>
+                  </label>
+                  <input
+                    (input)="onchangeSearchFields()"
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="partNo"
+                    formControlName="partNo"
+                    maxlength="100"
+                    placeholder="{{
+                      'master.supplier.associateParts.placeholder.partNo'
+                        | translate
+                    }}"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-info">
+              <!-- <div class="panel-heading clearfix">
+                <span class="panel-title panelSubHeading pull-left">
+                  <span [translate]="partDetailsTitle"></span>
+                </span>
+              </div> -->
+              <!-- <app-shared-lazy-table-v2
+                #sharedLazyTableAllParts
+                [headerColumnList]="tableColumnHeaderListPartDetails"
+                [filter]="true"
+                [excelIcon]="true"
+                [refreshIcon]="true"
+                [holdIcon]="false"
+                [showHide]="true"
+                [globalSearch]="true"
+                [isPanelHeading]="false"
+                [isCheckBox]="true"
+                [checkboxWidth]="false"
+                [showPartSpecificationIcon]="true"
+                [excelFileName]="partDetailsTitle"
+                [tableInitialData]="tableInitialDataAssociateParts"
+                (lazyLoadGetData)="getAllAssociatePartsServerSide($event)"
+                (sendSelectedData)="receiveSelectedData($event)"
+                (exportExcel)="exportToExcelAllParts($event)"
+                [tableFilterFormGroup]="partDetailsTableFilterFormGroup"
+                (handlePartSpecificationRowData)="
+                  handlePartSpecificationRowData($event)
+                "
+              ></app-shared-lazy-table-v2> -->
+              <app-shared-lazy-table-new
+                #sharedLazyTableAllParts
+                [headerColumnList]="tableColumnHeaderListPartDetails"
+                [filter]="true"
+                [excelIcon]="true"
+                [refreshIcon]="true"
+                [holdIcon]="false"
+                [showHide]="true"
+                [globalSearch]="false"
+                [isPanelHeading]="true"
+                [isCheckBox]="true"
+                [checkboxWidth]="false"
+                [showPartSpecificationIcon]="true"
+                [excelFileName]="partDetailsTitle"
+                [tableInitialData]="tableInitialDataAssociateParts"
+                (lazyLoadGetData)="getAllAssociatePartsServerSide($event)"
+                (sendSelectedData)="receiveSelectedData($event)"
+                (exportExcel)="exportToExcelAllParts($event)"
+                [tableFilterFormGroup]="partDetailsTableFilterFormGroup"
+                (handlePartSpecificationRowData)="
+                  handlePartSpecificationRowData($event)
+                "
+                [tableTitle]="partDetailsTitle"
+              ></app-shared-lazy-table-new>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- </form> -->
+</div>
+
+<!-- Modal components-->
+<div
+  bsModal
+  #purchasePartSpecificationModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            <span
+              [translate]="
+                'master.supplier.associateParts.title.purchasePartSpecification'
+              "
+            ></span>
+          </h4>
+        </b>
+        <div class="gridRightAlign">
+          <div class="row">
+            <button
+              class="capsule-button"
+              type="button"
+              id="btnClsoe"
+              (click)="closePurchasePartSpecificationDialog()"
+              title="{{ 'common.buttons.close' | translate }}"
+              style="background-color: #ec5656"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-xmark"></i>
+              </div>
+              {{ "master.supplier.associateParts.button.close" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <app-shared-table-new
+          [headerColumnList]="tableColumnHeaderListPurchasePartSpecfication"
+          [filter]="true"
+          [excelIcon]="true"
+          [refreshIcon]="true"
+          [showHide]="true"
+          [globalSearch]="true"
+          [isPanelHeading]="true"
+          [addRecordIcon]="false"
+          [tableInitialData]="partSpecificationList"
+          [isMasterComp]="false"
+          [tableTitle]="'Purchase Part Specification'"
+          [excelFileName]="'Purchase Part Specification List'"
+        ></app-shared-table-new>
+      </div>
+    </div>
+  </div>
+</div>

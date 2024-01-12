@@ -1,0 +1,111 @@
+<div
+  bsModal
+  #cancelpopup="bs-modal"
+  class="modal remark-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+>
+  <form [formGroup]="cancelRejectionForm" autocomplete="off">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content border-radius-8">
+        <div class="cancel-modal-body">
+          <div class="cancel-modal-header">
+            <div class="cancel-txt-remarks">
+              <span
+                [translate]="'operations.approval.titles.cancelRejection'"
+              ></span>
+            </div>
+          </div>
+          <div class="canel-modal-body">
+            <div class="cancel-txt-area-container">
+              <h3 class="margin-padding-0">
+                {{
+                  "operations.approval.label.cancellationremarks" | translate
+                }}
+                <i class="red"> *</i>
+              </h3>
+              <textarea
+                class="form-control remarks-textarea"
+                formControlName="remarks"
+              ></textarea>
+
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.cancelRejectionForm.controls['remarks'].errors) ||
+                  (this.cancelRejectionForm.controls['remarks'].errors &&
+                    (this.cancelRejectionForm.controls['remarks'].dirty ||
+                      this.cancelRejectionForm.controls['remarks'].touched))
+                "
+              >
+                <p
+                  class="red"
+                  *ngIf="
+                    this.cancelRejectionForm.controls['remarks'].errors[
+                      'required'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.approval.errors.cancellationRemarks.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+              <div class="cancel-modal-footer">
+                <div class="row">
+                  <button
+                    class="capsule-button buttonRed"
+                    (click)="handleRemarkFormClear()"
+                  >
+                    <div class="icon-circle">
+                      <i
+                        class="fas fa-fw fa-eraser navy"
+                        aria-hidden="true"
+                        title="{{
+                          'common.grid.tooltip.clearFilter' | translate
+                        }}"
+                      ></i>
+                    </div>
+                    {{
+                      "operations.purchaseRequisition.buttons.clear" | translate
+                    }}
+                  </button>
+                  <button
+                    class="capsule-button green"
+                    (click)="handleFormCancelPRAction()"
+                  >
+                    <div class="icon-circle">
+                      <i class="fas fa-light fa-floppy-disk"></i>
+                    </div>
+
+                    {{
+                      "operations.purchaseRequisition.buttons.save" | translate
+                    }}
+                  </button>
+                  <button
+                    class="capsule-button reset-button-color"
+                    (click)="cancelPopupClose()"
+                  >
+                    <div class="icon-circle">
+                      <i class="fa-regular fa-circle-xmark"></i>
+                    </div>
+
+                    {{
+                      "operations.purchaseRequisition.buttons.close" | translate
+                    }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

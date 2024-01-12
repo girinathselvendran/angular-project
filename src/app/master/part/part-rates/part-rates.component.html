@@ -1,0 +1,510 @@
+<fieldset>
+  <!-- <div class="panel panel-info"> -->
+  <div class="panel-heading clearfix">
+    <span class="panel-title panelSubHeading pull-left">
+      <span [translate]="'master.part.titles.partRatesListView'"></span>
+    </span>
+    <div class="pull-right buttonGroup">
+      <button
+        class="capsule-button navyBlue"
+        [disabled]="disableSaveButton"
+        type="button"
+        id="btnClear"
+        title="{{ 'master.part.button.addPartRate' | translate }}"
+        (click)="!disableSaveButton && openAddSupplierDialog('new')"
+      >
+        <div class="icon-circle">
+          <i class="fa-solid fa-plus"></i>
+        </div>
+        <span [translate]="'master.part.button.addPartRate'"></span>
+      </button>
+    </div>
+  </div>
+
+  <app-shared-lazy-table-new
+    #sharedLazyTable
+    [headerColumnList]="tableColumnHeaderList"
+    [filter]="true"
+    [excelIcon]="true"
+    [refreshIcon]="true"
+    [holdIcon]="false"
+    [showHide]="true"
+    [globalSearch]="true"
+    [isPanelHeading]="true"
+    [isCheckBox]="false"
+    [checkboxWidth]="false"
+    [excelFileName]="excelFileName"
+    [tableInitialData]="tableInitialData"
+    (sendTableRowData)="receiveTableRowData($event)"
+    (lazyLoadGetData)="getPartRatesListServerSide($event)"
+    [tableFilterFormGroup]="PartRatesTableFilterFormGroup"
+    (exportExcel)="exportToExcel($event)"
+    (handleDeleteRowData)="deleteRowData($event)"
+    (sendRemarksIconAction)="handleRemarksIcon($event)"
+    [tableTitle]="''"
+  ></app-shared-lazy-table-new>
+  <!-- </div> -->
+</fieldset>
+
+<!-- Modal components-->
+
+<div
+  bsModal
+  #addsupplierModel="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+>
+  <form
+    [formGroup]="addPartRatesEditForm"
+    autocomplete="off"
+    class="container-new-ui"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <b class="floatleft-part">
+            <h4 class="modal-title">
+              <span [translate]="'Part Rates Configuration'"></span>
+              <label class="linebadge">
+                {{ partRateMode | translate | uppercase }}</label
+              >
+            </h4>
+          </b>
+
+          <div class="row" class="gridRightAlign float-right-part">
+            <div class="row">
+              <!-- ......................................................................................................................................................... -->
+              <button
+                class="capsule-button grey"
+                type="button"
+                id="btnClear"
+                title="Clear"
+                [ngClass]="{ disabled: false }"
+                (click)="clearForm()"
+              >
+                <div class="icon-circle">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                {{ "common.buttons.reset" | translate }}
+              </button>
+              <button
+                class="capsule-button green"
+                [disabled]="disableSaveButton"
+                type="submit"
+                appPreventDoubleClick
+                [debounceTime]="500"
+                id="btnSaveContact"
+                title="{{ 'master.part.button.saveRates' | translate }}"
+                [ngClass]="{ disabled: false }"
+                (click)="!disableSaveButton && onSubmit()"
+              >
+                <div class="icon-circle">
+                  <i class="fas fa-light fa-floppy-disk"></i>
+                </div>
+                {{ "common.buttons.save" | translate }}
+              </button>
+              <button
+                class="capsule-button"
+                type="button"
+                id="btnClsoe"
+                title="{{ 'common.buttons.cancel' | translate }}"
+                [ngClass]="{ disabled: false }"
+                (click)="closeAddSupplierDialog(2)"
+                style="background-color: #ec5656"
+              >
+                <div class="icon-circle">
+                  <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+                {{ "common.buttons.cancel" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="partCode" class="labelText">
+                <span [translate]="'master.part.label.partCode'"></span>
+                <i class="red"> *</i>
+              </label>
+              <ng-select
+                [items]="[]"
+                [selectOnTab]="true"
+                bindLabel="partCode"
+                formControlName="partCode"
+                notFoundText="Not found"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.addPartRatesEditFormControls['partCode'].errors) ||
+                    (this.addPartRatesEditFormControls['partCode'].errors &&
+                      (this.addPartRatesEditFormControls['partCode'].dirty ||
+                        this.addPartRatesEditFormControls['partCode'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div>
+                    <small
+                      ><b>{{ item?.supplierCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.supplierTypeDescription
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="depot" class="labelText">
+                <span [translate]="'master.part.label.depot'"></span>
+                <i class="red"> *</i>
+              </label>
+              <ng-select
+                [items]="depotTypes"
+                (change)="onChangeDepot($event)"
+                [selectOnTab]="true"
+                bindLabel="depotCode"
+                (input)="checkNgSelectValue($event, 'depot')"
+                [searchFn]="dropdownSearchFn"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.addPartRatesEditFormControls['depot'].errors) ||
+                    (this.addPartRatesEditFormControls['depot'].errors &&
+                      (this.addPartRatesEditFormControls['depot'].dirty ||
+                        this.addPartRatesEditFormControls['depot'].touched))
+                }"
+                placeholder="{{ 'master.part.placeholder.depot' | translate }}"
+                formControlName="depot"
+                notFoundText="Record not found"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div>
+                    <small
+                      ><b>{{ item?.depotCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.depotName
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.addPartRatesEditFormControls['depot'].errors) ||
+                  (this.addPartRatesEditFormControls['depot'].errors &&
+                    (this.addPartRatesEditFormControls['depot'].dirty ||
+                      this.addPartRatesEditFormControls['depot'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.addPartRatesEditFormControls['depot'].errors[
+                      'required'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="'master.part.errors.depot.required'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.addPartRatesEditFormControls['depot'].errors['invalid']
+                  "
+                >
+                  <span [translate]="'master.part.errors.depot.invalid'"></span>
+                </p>
+              </div>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="currency" class="labelText">
+                <span [translate]="'master.part.label.currency'"></span>
+                <i class="red"> *</i>
+              </label>
+              <ng-select
+                [items]="currencyTypes"
+                [selectOnTab]="true"
+                bindLabel="currencyCode"
+                formControlName="currency"
+                notFoundText="Not found"
+                placeholder="{{
+                  'master.part.placeholder.currency' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.addPartRatesEditFormControls['currency'].errors) ||
+                    (this.addPartRatesEditFormControls['currency'].errors &&
+                      (this.addPartRatesEditFormControls['currency'].dirty ||
+                        this.addPartRatesEditFormControls['currency'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div>
+                    <small
+                      ><b>{{ item?.currencyCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.currencyDescription
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <br />
+          <br />
+          <div class="row">
+            <div
+              class="col-lg-4 col-md-4 col-sm-4 form-group"
+              [ngClass]="{
+                'has-error':
+                  (submitted &&
+                    this.addPartRatesEditFormControls['rate'].errors) ||
+                  (this.addPartRatesEditFormControls['rate'].errors &&
+                    (this.addPartRatesEditFormControls['rate'].dirty ||
+                      this.addPartRatesEditFormControls['rate'].touched))
+              }"
+            >
+              <label for="rate" class="labelText">
+                <span [translate]="'master.part.label.rate'"></span>
+                <i class="red"> *</i>
+              </label>
+
+              <input
+                type="text"
+                trim="blur"
+                class="form-control amountInput new-form-control-input"
+                id="rate"
+                formControlName="rate"
+                [scale]="2"
+                numericType="decimal"
+                maxlength="9"
+                placeholder="{{ 'master.part.placeholder.rate' | translate }}"
+                numeric
+              />
+              <div
+                *ngIf="
+                  (submitted &&
+                    this.addPartRatesEditFormControls['rate'].errors) ||
+                  (this.addPartRatesEditFormControls['rate'].errors &&
+                    (this.addPartRatesEditFormControls['rate'].dirty ||
+                      this.addPartRatesEditFormControls['rate'].touched))
+                "
+                class="help-block red"
+              >
+                <div
+                  *ngIf="
+                    this.addPartRatesEditFormControls['rate'].errors['required']
+                  "
+                >
+                  <span [translate]="'master.part.errors.rate.required'"></span>
+                </div>
+                <div
+                  *ngIf="
+                    this.addPartRatesEditFormControls['rate'].errors['min']
+                  "
+                >
+                  <span [translate]="'master.part.errors.rate.limit'"></span>
+                </div>
+                <div
+                  *ngIf="
+                    this.addPartRatesEditFormControls['rate'].errors['max']
+                  "
+                >
+                  <span [translate]="'master.part.errors.rate.limit'"></span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="requestedDate" class="labelText"
+                ><span [translate]="'master.part.label.effectiveDate'"></span>
+                <i class="red"> *</i>
+              </label>
+              <div class="input-group input-group-md">
+                <input
+                  type="text"
+                  bsDatepicker
+                  placeholder="{{
+                    'master.part.label.effectiveDate' | translate
+                  }}"
+                  class="form-control new-form-control-input uppercase"
+                  bsDatepicker
+                  (keydown.arrowdown)="requestedDate.click()"
+                  formControlName="effectiveDate"
+                  #requestedDate
+                  [bsConfig]="{
+                    dateInputFormat: 'DD-MMM-YYYY',
+                    containerClass: 'theme-dark-blue',
+                    adaptivePosition: true
+                  }"
+                  [ngClass]="{
+                    redBorderCalender:
+                      (submitted &&
+                        addPartRatesEditFormControls.effectiveDate.errors) ||
+                      (addPartRatesEditFormControls.effectiveDate.errors &&
+                        (addPartRatesEditFormControls.effectiveDate.dirty ||
+                          addPartRatesEditFormControls.effectiveDate.touched))
+                  }"
+                  (bsValueChange)="handleDateInput($event)"
+                />
+
+                <span class="input-group-btn">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    (click)="requestedDate.click()"
+                    tabindex="-1"
+                  >
+                    <i class="fas fa-calendar-alt"></i>
+                  </button>
+                </span>
+              </div>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.addPartRatesEditFormControls['effectiveDate']
+                      .errors) ||
+                  (this.addPartRatesEditFormControls['effectiveDate'].errors &&
+                    (this.addPartRatesEditFormControls['effectiveDate'].dirty ||
+                      this.addPartRatesEditFormControls['effectiveDate']
+                        .touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.addPartRatesEditFormControls['effectiveDate'].errors[
+                      'required'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="'master.part.errors.effectiveDate.required'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.addPartRatesEditFormControls['effectiveDate'].errors[
+                      'invalid'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="'master.part.errors.effectiveDate.invalid'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.addPartRatesEditFormControls['effectiveDate'].errors[
+                      'invalidCombination'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'master.part.errors.effectiveDate.invalidCombination'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+              <label for="remarks" class="labelText">
+                <span [translate]="'master.part.label.remarks'"></span>
+              </label>
+
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="remarks"
+                placeholder="{{ 'master.part.label.remarks' | translate }}"
+                formControlName="remarks"
+                maxlength="100"
+                spaceatfirst
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Part Rate Remarks popup -->
+<div
+  bsModal
+  #remarksPopup="bs-modal"
+  class="modal remark-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="floatleft-part">
+          <h4 class="modal-title">
+            <span [translate]="'Rates Remarks'"></span>
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right-part">
+          <!-- <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="closeRemarksPopUp()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+          <button
+            class="capsule-button"
+            type="button"
+            aria-label="Close"
+            (click)="closeRemarksPopUp()"
+            style="background-color: #ec5656"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            {{ "common.buttons.cancel" | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <textarea
+          class="form-control"
+          [value]="remarks"
+          disabled="true"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>

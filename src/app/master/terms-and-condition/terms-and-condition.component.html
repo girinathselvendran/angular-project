@@ -1,0 +1,242 @@
+<div>
+  <div class="alert alert-warning" role="alert" *ngIf="showWarning">
+    <i class="fa-fw fa fa-warning"></i>
+    <strong
+      ><span>{{
+        "common.roleRightsMessages.warning" | translate
+      }}</span></strong
+    >
+    {{ warningMessage | translate }}
+  </div>
+  <div class="prContainer">
+    <div class="content-container">
+      <div class="flex-container">
+        <div class="nopaddingbottom d-flex">
+          <h1>
+            <span class="main-title">
+              {{
+                "master.termsAndCondition.titles.termsAndCondition" | translate
+              }}
+            </span>
+          </h1>
+          <label class="linebadge" style="margin-top: 8px"
+            >{{ mode | translate | uppercase }}
+          </label>
+        </div>
+      </div>
+
+      <div class="cards" style="margin-top: 0px">
+        <div class="container-table">
+          <form
+            class="container-new-ui"
+            [formGroup]="editSaveForm"
+            autocomplete="off"
+          >
+            <div class="row row-table justify-content-between">
+              <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                  <label class="labelText">
+                    <span
+                      [translate]="'master.termsAndCondition.label.code'"
+                    ></span>
+                    <span class="redIcon"> *</span>
+                  </label>
+                  <section
+                    [ngClass]="[
+                      editSaveForm.controls['code'].errors &&
+                      (editSaveForm.controls['code'].touched ||
+                        editSaveForm.controls['code'].dirty)
+                        ? 'redBorder' + ' has-error '
+                        : ''
+                    ]"
+                    class="form-group input-group-md"
+                  >
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="code"
+                      formControlName="code"
+                      (input)="validateTermsAndConditionCode('code')"
+                      maxlength="20"
+                      placeholder="{{
+                        'master.termsAndCondition.placeholder.code' | translate
+                      }}"
+                      spaceatfirst
+                      uppercase
+                      alphanumeric
+                    />
+                    <div
+                      class="help-block red"
+                      *ngIf="
+                        (submitted && editSaveForm.controls['code'].errors) ||
+                        (editSaveForm.controls['code'].errors &&
+                          editSaveForm.controls['code'].dirty) ||
+                        editSaveForm.controls['code'].touched
+                      "
+                    >
+                      <p
+                        *ngIf="editSaveForm.controls['code'].errors?.['duplicateCode']"
+                      >
+                        <span
+                          [translate]="
+                            'master.termsAndCondition.errors.code.duplicate'
+                          "
+                        ></span>
+                      </p>
+                      <p
+                        *ngIf="editSaveForm.controls['code'].errors?.['required']"
+                      >
+                        <span
+                          [translate]="
+                            'master.termsAndCondition.errors.code.required'
+                          "
+                        ></span>
+                      </p>
+                    </div>
+                  </section>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                  <label class="labelText">
+                    <span
+                      [translate]="'master.termsAndCondition.label.description'"
+                    ></span>
+                    <span class="redIcon"> *</span>
+                  </label>
+                  <section
+                    [ngClass]="[
+                      editSaveForm.controls['description'].errors &&
+                      (editSaveForm.controls['description'].touched ||
+                        editSaveForm.controls['description'].dirty)
+                        ? 'redBorder' + ' has-error '
+                        : ''
+                    ]"
+                    class="form-group input-group-md"
+                  >
+                    <input
+                      type="text"
+                      trim="blur"
+                      class="form-control new-form-control-input"
+                      id="description"
+                      formControlName="description"
+                      maxlength="100"
+                      placeholder="{{
+                        'master.termsAndCondition.placeholder.description'
+                          | translate
+                      }}"
+                      spaceatfirst
+                      uppercase
+                    />
+                    <div
+                      class="help-block red"
+                      *ngIf="
+                        (submitted &&
+                          editSaveForm.controls['description'].errors) ||
+                        (editSaveForm.controls['description'].errors &&
+                          editSaveForm.controls['description'].dirty) ||
+                        editSaveForm.controls['description'].touched
+                      "
+                    >
+                      <p
+                        *ngIf="editSaveForm.controls['description'].errors?.['required']"
+                      >
+                        <span
+                          [translate]="
+                            'master.termsAndCondition.errors.description.required'
+                          "
+                        ></span>
+                      </p>
+                    </div>
+                  </section>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                  <fieldset class="onoffswitch">
+                    <label class="labelText">
+                      <span
+                        [translate]="'master.termsAndCondition.label.active'"
+                      >
+                      </span>
+                    </label>
+                    <div class="onoffswitch">
+                      <input
+                        type="checkbox"
+                        formControlName="active"
+                        id="active"
+                        (input)="onChangeActive('active')"
+                        class="onoffswitch-checkbox"
+                      />
+                      <label class="onoffswitch-label white" for="active">
+                        <span
+                          class="onoffswitch-inner"
+                          data-swchon-text="YES"
+                          data-swchoff-text="NO"
+                        ></span>
+                        <span class="onoffswitch-switch"></span>
+                      </label>
+                    </div>
+                  </fieldset>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                <div
+                  class="btn-col col col-md-2 offset-md-0.5 col-lg-2 offset-lg-0.5 col-sm-2 offset-sm-0.5"
+                >
+                  <div class="action-row-buttons">
+                    <button
+                      type="button"
+                      [ngClass]="{ disabled: disableAddButton }"
+                      class="capsule-button navyBlue"
+                      title="{{
+                        'master.termsAndCondition.button.addNew' | translate
+                      }}"
+                      (click)="addNew()"
+                    >
+                      <div class="icon-circle">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                      </div>
+                      <span
+                        [translate]="'master.termsAndCondition.button.addNew'"
+                      ></span>
+                    </button>
+                    <button
+                      (click)="!disableTCSaveBtn && onSubmit()"
+                      [ngClass]="{ disabled: disableSaveButton }"
+                      class="capsule-button green"
+                      title="{{
+                        'master.termsAndCondition.button.save' | translate
+                      }}"
+                    >
+                      <div class="icon-circle">
+                        <i class="fas fa-light fa-floppy-disk"></i>
+                      </div>
+                      <span
+                        [translate]="'master.termsAndCondition.button.save'"
+                      ></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <app-shared-table-new
+            [headerColumnList]="headerColumnList"
+            [filter]="true"
+            [excelIcon]="true"
+            [refreshIcon]="true"
+            [showHide]="true"
+            [globalSearch]="true"
+            [isMasterComp]="true"
+            [uploadFileIcon]="false"
+            [excelFileName]="excelFileName"
+            [IsRecordHighlights]="true"
+            [tableData]="tableMappingList"
+            [tableInitialData]="termsAndConditionList"
+            (sendTableRowData)="receiveTableRowData($event)"
+            (refreshTableData)="refreshIconClick($event)"
+            [deleteIcon]="true"
+            (handleDeleteRowData)="handleDeleteTermsAndConditionIcon($event)"
+          ></app-shared-table-new>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+{
+  "welcomeMessage": "Merci de votre participation, {{ firstName }} ! C’est génial de vous avoir!",
+  "login": {
+    "username": "Entrez votre nom d’utilisateur",
+    "password": "Mot de passe ici"
+  },
+  "common": {
+    "notificationTitle": {
+      "error": "ERREUR",
+      "success": "Succès",
+      "information": "Information",
+      "confirmation": "Confirmation"
+    },
+    "Information": {
+      "noChangesInfo": "Aucun changement à enregistrer",
+      "noChangesToUpdate": "Aucun changement à mettre à jour",
+      "unsavedChangesInfo": "Vous avez des modifications non enregistrées sur l'écran. Voulez-vous continuer ?",
+      "notFound": "Enregistrement non trouvé",
+      "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer l'enregistrement ? Cliquez sur Oui pour supprimer l'enregistrement. Cliquez sur Non pour ignorer la demande."
+    },
+    "grid": {
+      "summary": {
+        "footerSummaryShowing": "Affichage",
+        "footerSummaryTo": "à",
+        "footerSummaryOf": "de",
+        "footerSummaryRecords": "enregistrements",
+        "footerSummaryFiltered": "filtrés ",
+        "footerSummaryFrom": "de"
+      },
+      "placeholder": {
+        "globalFilter": "Recherche globale",
+        "chooseFile": "Choisir un fichier"
+      },
+      "showHide": {
+        "showHide": "Afficher / Masquer",
+        "commonShowHide": "Afficher / Masquer"
+      },
+      "noRecordsFound": "Aucun enregistrement à afficher",
+      "searchCompletedNoRecordFound": "Recherche terminée et aucun enregistrement correspondant à afficher",
+      "selectionLimitError": "La sélection ne doit pas dépasser 100 enregistrements",
+      "hold": "Maintien",
+      "tooltip": {
+        "refresh": "Actualiser",
+        "pdfDownload": "Télécharger en PDF",
+        "excelDownload": "Télécharger en Excel",
+        "filter": "Filtrer",
+        "clearFilter": "Effacer",
+        "upload": "Téléverser",
+        "search": "Rechercher",
+        "print": "Imprimer",
+        "delete": "Supprimer",
+        "generateReport": "Générer un rapport"
+      }
+    },
+    "buttons": {
+      "addNew": "Ajouter Nouveau",
+      "save": "Enregistrer",
+      "showHide": "Afficher / Masquer"
+    }
+  }
+}

@@ -1,0 +1,189 @@
+
+<div
+  [ngStyle]="{
+    'background-image': getUrl(),
+    height: '100vh',
+    'background-size': 'cover',
+    'background-repeat': 'no-repeat',
+    filter: 'blur(0px)',
+    '-webkit-filter': 'blur(0px)'
+  }"
+>
+<div class="right-align" id="iInterchangeLogo">
+  <img
+    class="logo-container"
+    [src]="iInterchangeLogo"
+    alt="iInterchangeLogo"
+  />
+</div>
+</div>
+
+<div class="login-center">
+  <div
+    
+    class="well no-padding forgotForm"
+  >
+    <form
+      [formGroup]="forgotFormGroup"
+      (ngSubmit)="onSubmit()"
+      class="smart-form client-form"
+      autocomplete="off"
+      name="forgotFormGroup"
+    >
+      <header
+        class="forgot-header"
+      >
+      <div >
+        {{
+          "login.forgetpassword"
+          | translate
+          }}
+      </div>
+      </header>
+      <fieldset>
+        <section>
+          <div class="centered-logo-container" id="companyLogo">
+            <img class="logo-image-password" src="{{ companyLogo }}" alt="companyLogo" />
+          </div>
+        </section>
+
+        <section>
+         <div class="centered-logo-container" id="companyLogo">
+            <img class="logo-image-password" src="{{ iDepoLogo }}" alt="companyLogo" />
+          </div> 
+          
+        </section>
+        <section>
+          <div class="version-password">
+            <span> 
+              {{
+                "login.version"
+                | translate
+                }} 
+               : {{ versionNo }}</span>
+          </div>
+        </section>
+
+        <section>
+          <label class="label">
+            {{
+              
+              "login.label.username"
+              | translate
+              }} 
+
+            </label>
+          <label class="input">
+            <i class="icon-append fa fa-user"></i>
+            <input
+              class="form-control uppercase"
+              id="userName"
+              formControlName="userName"
+              maxlength="20"
+              name="userName"
+            />
+            <b class="tooltip tooltip-top-right"
+              ><i class="fa fa-user txt-color-teal"></i> 
+              {{
+                "login.enterUsername"
+                | translate
+                }} 
+              </b
+            ></label
+          >
+          <div
+            class="help-block red"
+            *ngIf="
+              forgotFormControls.userName.errors &&
+              (forgotFormControls.userName.dirty ||
+                forgotFormControls.userName.touched)
+            "
+          >
+            <p *ngIf="forgotFormControls.userName.errors.required">
+              <span>  {{
+                "login.errors.enterUsername.required"
+                | translate
+                }} </span>
+            </p>
+            <p *ngIf="forgotFormControls.userName.errors.invalid">
+              <span>{{
+                "login.errors.enterUsername.Invalid"
+                | translate
+                }}  </span>
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <label class="label"> {{
+            "login.label.email"
+            | translate
+            }} </label>
+          <label class="input">
+            <i class="icon-append fa fa-envelope"></i>
+            <input
+              class="form-control"
+              type="text"
+              id="email"
+              formControlName="email"
+              maxlength="500"
+              name="email"
+              (input)="checkInvalidEmailPattern('email')"
+            />
+            <b class="tooltip tooltip-top-right"
+              ><i class="fa fa-envelope txt-color-teal"></i> 
+              {{
+                "login.tooltip.email"
+                | translate
+                }}
+              </b
+            ></label
+          >
+
+          <div
+            class="help-block red"
+            *ngIf="
+              forgotFormControls.email.errors &&
+              (forgotFormControls.email.dirty ||
+                forgotFormControls.email.touched)
+            "
+          >
+            <p *ngIf="forgotFormControls.email.errors.required">
+              <span> {{
+                "login.errors.email.required"
+                | translate
+                }} </span>
+            </p>
+            <p *ngIf="forgotFormControls.email.errors.pattern">
+              <span>
+                {{
+                  "login.errors.email.invalid"
+                  | translate
+                  }}
+                </span>
+            </p>
+          </div>
+
+          <div class="note">
+            <a routerLink="/auth/login">
+              {{
+                "login.label.remember"
+                | translate
+                }}
+              </a>
+          </div>
+        </section>
+      </fieldset>
+   
+      <footer class="footer-reset-password">
+        <button type="submit" id="resetBtn" class="btn btn-primary signBtn reset-password-button">
+          {{
+            "login.buttons.resetButton"
+            | translate
+            }}
+        </button>
+      </footer> 
+      
+    </form>
+  </div>
+</div>

@@ -1,0 +1,285 @@
+<div>
+  <div class="alert alert-warning" role="alert" *ngIf="showWarning">
+    <i class="fa-fw fa fa-warning"></i>
+    <strong
+      ><span>{{
+        "common.roleRightsMessages.warning" | translate
+      }}</span></strong
+    >
+    {{ warningMessage | translate }}
+  </div>
+  <div class="prContainer">
+    <div class="content-container">
+      <div class="nopaddingbottom">
+        <b
+          ><span class="main-title">
+            {{
+              "master.additionalService.titles.additionalService" | translate
+            }}
+          </span></b
+        >
+        <label class="linebadge">{{ mode | translate | uppercase }} </label>
+      </div>
+      <div class="cards" style="margin-top: 0px">
+        <div class="container-table">
+          <form
+            class="container-new-ui"
+            [formGroup]="editSaveForm"
+            autocomplete="off"
+          >
+            <div class="row row-table justify-content-between">
+              <div class="row">
+                <div
+                  class="col-lg-2 col-md-2 col-sm-2 form-group"
+                  [ngClass]="{
+                    'has-error':
+                      (submitted &&
+                        editSaveFormController['serviceCode'].errors) ||
+                      (editSaveFormController['serviceCode'].errors &&
+                        (editSaveFormController['serviceCode'].dirty ||
+                          editSaveFormController['serviceCode'].touched))
+                  }"
+                >
+                  <label for="serviceCode" class="labelText">
+                    <span
+                      [translate]="'master.additionalService.label.serviceCode'"
+                    ></span>
+                    <i class="red"> *</i></label
+                  >
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="serviceCode"
+                    formControlName="serviceCode"
+                    placeholder="{{
+                      'master.additionalService.placeholder.serviceCode'
+                        | translate
+                    }}"
+                    (input)="checkExistingField('serviceCode')"
+                    title="{{
+                      'master.additionalService.toolTip.serviceCode' | translate
+                    }}"
+                    maxlength="50"
+                    alphanumeric
+                    uppercase
+                  />
+                  <div
+                    *ngIf="
+                      (submitted &&
+                        editSaveFormController['serviceCode'].errors) ||
+                      (editSaveFormController['serviceCode'].errors &&
+                        (editSaveFormController['serviceCode'].dirty ||
+                          editSaveFormController['serviceCode'].touched))
+                    "
+                    class="help-block red"
+                  >
+                    <div
+                      *ngIf="
+                        editSaveFormController['serviceCode'].errors['required']
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'master.additionalService.errors.serviceCode.required'
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      *ngIf="
+                        editSaveFormController['serviceCode'].errors[
+                          'duplicateCode'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'master.additionalService.errors.serviceCode.duplicate'
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      *ngIf="
+                        editSaveFormController['serviceCode'].errors['pattern']
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'master.additionalService.errors.serviceCode.invalidPattern'
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="col-lg-2 col-md-2 col-sm-2 form-group"
+                  [ngClass]="{
+                    'has-error':
+                      (submitted &&
+                        editSaveFormController['serviceDescription'].errors) ||
+                      (editSaveFormController['serviceDescription'].errors &&
+                        (editSaveFormController['serviceDescription'].dirty ||
+                          editSaveFormController['serviceDescription'].touched))
+                  }"
+                >
+                  <label for="serviceDescription" class="labelText"
+                    ><span
+                      [translate]="
+                        'master.additionalService.label.serviceDescription'
+                      "
+                    ></span>
+                    <span class="redIcon"> *</span></label
+                  >
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="serviceDescription"
+                    formControlName="serviceDescription"
+                    placeholder="{{
+                      'master.additionalService.placeholder.serviceDescription'
+                        | translate
+                    }}"
+                    title="{{
+                      'master.additionalService.toolTip.serviceDescription'
+                        | translate
+                    }}"
+                    maxlength="100"
+                    alphanumeric
+                    uppercase
+                  />
+                  <div
+                    *ngIf="
+                      (submitted &&
+                        editSaveFormController['serviceDescription'].errors) ||
+                      (editSaveFormController['serviceDescription'].errors &&
+                        (editSaveFormController['serviceDescription'].dirty ||
+                          editSaveFormController['serviceDescription'].touched))
+                    "
+                    class="help-block red"
+                  >
+                    <div
+                      *ngIf="
+                        editSaveFormController['serviceDescription'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'master.additionalService.errors.serviceDescription.required'
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+                  <div class="col-lg-8 col-md-8 col-sm-8">
+                    <label for="default" class="labelText">
+                      <span
+                        [translate]="'master.additionalService.label.default'"
+                      ></span></label
+                    ><br />
+                    <div class="onoffswitch">
+                      <input
+                        type="checkbox"
+                        formControlName="default"
+                        id="default"
+                        class="onoffswitch-checkbox"
+                      />
+                      <label class="onoffswitch-label white" for="default">
+                        <span
+                          class="onoffswitch-inner"
+                          data-swchon-text="YES"
+                          data-swchoff-text="NO"
+                        ></span>
+                        <span class="onoffswitch-switch"></span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-3">
+                    <label for="active" class="labelText">
+                      <span
+                        [translate]="'master.additionalService.label.active'"
+                      ></span></label
+                    ><br />
+                    <div class="onoffswitch">
+                      <input
+                        type="checkbox"
+                        formControlName="active"
+                        id="active"
+                        class="onoffswitch-checkbox"
+                        (change)="onChangeActive()"
+                      />
+                      <label class="onoffswitch-label white" for="active">
+                        <span
+                          class="onoffswitch-inner"
+                          data-swchon-text="YES"
+                          data-swchoff-text="NO"
+                        ></span>
+                        <span class="onoffswitch-switch"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                <div
+                  class="btn-col col col-md-2 offset-md-0.5 col-lg-2 offset-lg-0.5 col-sm-2 offset-sm-0.5"
+                >
+                  <div class="action-row-buttons">
+                    <button
+                      type="button"
+                      class="capsule-button navyBlue"
+                      [ngClass]="{ disabled: disableAddButton }"
+                      (click)="!disableAddButton && addNewEntry()"
+                      title="{ 'common.buttons.addNew | translate }"
+                    >
+                      <div class="icon-circle">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                      </div>
+                      <span [translate]="'common.buttons.addNew'"></span>
+                    </button>
+                    <button
+                      type="submit"
+                      class="capsule-button green"
+                      title="{{ 'common.buttons.save' | translate }}"
+                      [ngClass]="{ disabled: disableSaveButton }"
+                      (click)="!disableSaveButton && onSubmit()"
+                    >
+                      <div class="icon-circle">
+                        <i
+                          class="fas fa-light fa-floppy-disk"
+                          aria-hidden="true"
+                        ></i>
+                      </div>
+                      <span [translate]="'common.buttons.save'"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <app-shared-table-new
+            [headerColumnList]="headerColumnList"
+            [filter]="true"
+            [excelIcon]="true"
+            [IsRecordHighlights]="true"
+            [refreshIcon]="true"
+            [showHide]="true"
+            [globalSearch]="true"
+            [uploadFileIcon]="false"
+            [excelFileName]="excelFileName"
+            [tableData]="tableMappingList"
+            [tableInitialData]="tableInitialData"
+            (sendTableRowData)="receiveTableRowData($event)"
+            (refreshTableData)="refreshIconClick($event)"
+            [deleteIcon]="true"
+            (handleDeleteRowData)="handleDeleteAdditionalServiceIcon($event)"
+          ></app-shared-table-new>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

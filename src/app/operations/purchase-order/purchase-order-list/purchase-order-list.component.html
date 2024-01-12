@@ -1,0 +1,135 @@
+<div *ngIf="showTableByColumn == 1">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderListWithStatus"
+    [tableInitialData]="purchaseRequisitionData"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    (printIconFn)="handlePrintIcon($event)"
+    [refreshIcon]="true"
+    [addRecordIcon]="true"
+    (addRecordIconFn)="handleAddRecordIcon($event)"
+    [reopenIcon]="true"
+    (reopenIconFn)="handleReopenIcon($event)"
+    [cancelIcon]="
+      currentStatusId == 578 || currentStatusId == 579 ? false : true
+    "
+    (cancelIconFn)="handleCancelIcon('icon')"
+    [disableCancelPRIcons]="disableCancelPOIcons"
+    [sendForApprovalIcon]="
+      currentStatusId == 578 || currentStatusId == 579 ? false : true
+    "
+    (sendForApprovalIconFn)="handleSendForApprovalIcon($event)"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    (sendTableRowData)="receiveTableRowData($event)"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    (sendSelectedData)="receiveSelectedData($event)"
+    [disableAddNewIcons]="disableAddNewIcons"
+    [disableSendForApprovalIcons]="disableSendForApprovalIcons"
+    [disableReopenIcons]="disableReopenIcons"
+    [disablePrintPRIcons]="disablePrintPOIcons"
+    [disableEmailPRIcons]="disableEmailPOIcons"
+    (emailIconFn)="handleEmailIcon($event)"
+    [emailIcon]="
+      currentStatusId == 578 || currentStatusId == 579 ? false : true 
+    "
+    (exportExcel)="exportToExcelData($event)"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+  >
+  </app-shared-lazy-table-new>
+</div>
+<div *ngIf="showTableByColumn == 2">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderListWithCancelRemarks"
+    [tableInitialData]="purchaseRequisitionData"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    (printIconFn)="handlePrintIcon($event)"
+    [refreshIcon]="true"
+    [addRecordIcon]="true"
+    (addRecordIconFn)="handleAddRecordIcon($event)"
+    [reopenIcon]="true"
+    (reopenIconFn)="handleReopenIcon($event)"
+    [cancelIcon]="false"
+    (cancelIconFn)="handleCancelIcon('icon')"
+    [disableCancelPRIcons]="disableCancelPOIcons"
+    [sendForApprovalIcon]="false"
+    (sendForApprovalIconFn)="handleSendForApprovalIcon($event)"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    (sendTableRowData)="receiveTableRowData($event)"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    (sendSelectedData)="receiveSelectedData($event)"
+    [disableAddNewIcons]="disableAddNewIcons"
+    [disableSendForApprovalIcons]="disableSendForApprovalIcons"
+    [disableReopenIcons]="disableReopenIcons"
+    [disablePrintPRIcons]="disablePrintPOIcons"
+    [disableEmailPRIcons]="disableEmailPOIcons"
+    (emailIconFn)="handleEmailIcon($event)"
+    [emailIcon]="false"
+    (exportExcel)="exportToExcelData($event)"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+  >
+  </app-shared-lazy-table-new>
+</div>
+<div *ngIf="showTableByColumn == 3">
+  <app-shared-lazy-table-new
+    #sharedLazyTableNew
+    [headerColumnList]="columnHeaderListWithRejectionRemarks"
+    [tableInitialData]="purchaseRequisitionData"
+    [filter]="true"
+    [excelIcon]="true"
+    [printIcon]="true"
+    (printIconFn)="handlePrintIcon($event)"
+    [refreshIcon]="true"
+    [addRecordIcon]="true"
+    (addRecordIconFn)="handleAddRecordIcon($event)"
+    [reopenIcon]="true"
+    (reopenIconFn)="handleReopenIcon($event)"
+    [cancelIcon]="false"
+    (cancelIconFn)="handleCancelIcon('icon')"
+    [disableCancelPRIcons]="disableCancelPOIcons"
+    [sendForApprovalIcon]="false"
+    (sendForApprovalIconFn)="handleSendForApprovalIcon($event)"
+    (lazyLoadGetData)="getServerSideTableList($event)"
+    [tableFilterFormGroup]="tableFilterFormGroup"
+    (sendTableRowData)="receiveTableRowData($event)"
+    [isCheckBox]="true"
+    [checkboxWidth]="false"
+    (sendSelectedData)="receiveSelectedData($event)"
+    [disableAddNewIcons]="disableAddNewIcons"
+    [disableSendForApprovalIcons]="disableSendForApprovalIcons"
+    [disableReopenIcons]="disableReopenIcons"
+    [disablePrintPRIcons]="disablePrintPOIcons"
+    [disableEmailPRIcons]="disableEmailPOIcons"
+    (emailIconFn)="handleEmailIcon($event)"
+    [emailIcon]="false"
+    (exportExcel)="exportToExcelData($event)"
+    [tableTitle]="tableTitle"
+    [showHide]="true"
+  >
+  </app-shared-lazy-table-new>
+</div>
+
+
+<app-send-email
+  #emailModal
+  (sendEmailFunction)="sendEmailFunction($event)"
+  [attachmentPath]="attachmentPath"
+  [emailSubject]="emailSubject"
+>
+</app-send-email>
+<div>
+  <app-generate-po-pdf
+    #generatePdfComponent
+   
+  ></app-generate-po-pdf>
+</div>

@@ -1,0 +1,279 @@
+<div
+  bsModal
+  #rejectionPopup="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            <span [translate]="'operations.approval.titles.rejection'"></span>
+          </h4>
+        </b>
+        <div class="pull-right buttonGroup">
+          <div class="row">
+            <button
+              (click)="handleRejectionFormClear()"
+              class="capsule-button grey"
+            >
+              <div class="icon-circle">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </div>
+              {{ "operations.approval.button.clear" | translate }}
+            </button>
+            <button
+              class="capsule-button green"
+              (click)="handleRejectionPopup()"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-light fa-floppy-disk"></i>
+              </div>
+              {{ "operations.approval.button.save" | translate }}
+            </button>
+            <button
+              class="capsule-button"
+              (click)="rejectionPopupClose()"
+              style="background-color: #ec5656"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-xmark"></i>
+              </div>
+              {{ "operations.approval.button.cancel" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="widget-body fuelux">
+          <div class="container-fluid">
+            <div class="row">
+              <form
+                class="container-new-ui"
+                [formGroup]="rejectionForm"
+                autocomplete="off"
+              >
+                <div
+                  class="form-group col-lg-6 col-md-6 col-sm-6"
+                  [ngClass]="{
+                    'has-error':
+                      (submitted &&
+                        this.rejectionFormController['rejectedBy'].errors) ||
+                      (this.rejectionFormController['rejectedBy'].errors &&
+                        (this.rejectionFormController['rejectedBy'].dirty ||
+                          this.rejectionFormController['rejectedBy'].touched))
+                  }"
+                >
+                  <label for="rejectedBy" class="labelText">
+                    <span
+                      [translate]="'operations.approval.label.rejectedBy'"
+                    ></span
+                    ><i class="red"> *</i>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="rejectedBy"
+                    formControlName="rejectedBy"
+                    maxlength="20"
+                    spaceatfirst
+                    placeholder="{{
+                      'operations.approval.placeholder.rejectedBy' | translate
+                    }}"
+                  />
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        rejectionFormController['rejectedBy'].errors) ||
+                      (rejectionFormController['rejectedBy'].errors &&
+                        (rejectionFormController['rejectedBy'].dirty ||
+                          rejectionFormController['rejectedBy'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        rejectionFormController['rejectedBy'].errors['required']
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.rejectedBy.required'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+                <!-- Rejection Date -->
+                <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                  <label for="rejectedDate" class="labelText">
+                    <span
+                      [translate]="'operations.approval.label.rejectedDate'"
+                    ></span
+                    ><i class="red"> *</i>
+                  </label>
+                  <div class="input-group input-group-md">
+                    <input
+                      type="text"
+                      class="form-control uppercase"
+                      bsDatepicker
+                      (keydown.arrowdown)="rejectedDate.click()"
+                      formControlName="rejectedDate"
+                      #rejectedDate
+                      [bsConfig]="{
+                        dateInputFormat: 'DD-MMM-YYYY',
+                        containerClass: 'theme-dark-blue',
+                        adaptivePosition: true
+                      }"
+                      [ngClass]="{
+                        redBorderCalender:
+                          (submitted &&
+                            rejectionFormController['rejectedDate'].errors) ||
+                          (rejectionFormController['rejectedDate'].errors &&
+                            (rejectionFormController['rejectedDate'].dirty ||
+                              rejectionFormController['rejectedDate'].touched))
+                      }"
+                      (ngModelChange)="
+                        validateRejectedDate('rejectedDate', $event)
+                      "
+                    />
+
+                    <span class="input-group-btn">
+                      <button
+                        class="btn custom-button"
+                        type="button"
+                        (click)="rejectedDate.click()"
+                        tabindex="-1"
+                      >
+                        <app-svg-calender-icon></app-svg-calender-icon>
+                      </button>
+                    </span>
+                  </div>
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        rejectionFormController['rejectedDate'].errors) ||
+                      (rejectionFormController['rejectedDate'].errors &&
+                        (rejectionFormController['rejectedDate'].dirty ||
+                          rejectionFormController['rejectedDate'].touched))
+                    "
+                  >
+                    <div
+                      *ngIf="rejectionFormController['rejectedDate'].errors?.['invalid']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.approvalDate.invalid'
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      *ngIf="rejectionFormController['rejectedDate'].errors?.['currentDateError']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.rejectedDateGreater'
+                        "
+                      ></span>
+                      {{ currentDateFormat | date : "dd-MMM-yyyy" | uppercase }}
+                    </div>
+                    <div
+                      *ngIf="rejectionFormController['rejectedDate'].errors?.['requestedDateError']"
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.rejectedDateLesser'
+                        "
+                      ></span>
+                      {{
+                        requestedDateFormat | date : "dd-MMM-yyyy" | uppercase
+                      }}
+                    </div>
+                    <div
+                      *ngIf="
+                        rejectionFormController['rejectedDate'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.rejectedDate.required'
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="form-group col-lg-6 col-md-6 col-sm-6"
+                  [ngClass]="{
+                    'has-error':
+                      (submitted &&
+                        this.rejectionFormController['rejectionRemarks']
+                          .errors) ||
+                      (this.rejectionFormController['rejectionRemarks']
+                        .errors &&
+                        (this.rejectionFormController['rejectionRemarks']
+                          .dirty ||
+                          this.rejectionFormController['rejectionRemarks']
+                            .touched))
+                  }"
+                >
+                  <label for="rejectionRemarks" class="labelText">
+                    <span
+                      [translate]="'operations.approval.label.rejectionRemarks'"
+                    ></span><i class="red"> *</i>
+                  </label>
+                  <input
+                    type="text"
+                    trim="blur"
+                    class="form-control new-form-control-input"
+                    id="rejectionRemarks"
+                    formControlName="rejectionRemarks"
+                    maxlength="500"
+                    spaceatfirst
+                    placeholder="{{
+                      'operations.approval.placeholder.rejectionRemarks'
+                        | translate
+                    }}"
+                  />
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        rejectionFormController['rejectionRemarks'].errors) ||
+                      (rejectionFormController['rejectionRemarks'].errors &&
+                        (rejectionFormController['rejectionRemarks'].dirty ||
+                          rejectionFormController['rejectionRemarks'].touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        rejectionFormController['rejectionRemarks'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.approval.errors.rejectionRemarks.required'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

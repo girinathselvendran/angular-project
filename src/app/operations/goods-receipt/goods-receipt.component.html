@@ -1,0 +1,1267 @@
+<div
+  class="alert alert-warning"
+  role="alert"
+  *ngIf="showWarningMessageForRoleRights"
+>
+  <i class="fa-fw fa fa-warning"></i>
+  <strong
+    ><span [translate]="'common.roleRightsMessages.warning'"></span
+  ></strong>
+  {{ warningMessageForRoleRights | translate }}
+</div>
+<div class="prContainer">
+  <div class="content-container" *ngIf="showList">
+    <div style="display: flex; justify-content: space-between">
+      <h1
+        style="display: inline"
+        [translate]="'operations.goodReceipt.title.goodsReceipt'"
+      ></h1>
+      <strong class="last-updated">
+        {{ "operations.requestForQuote.titles.lastUpdatedWasOn" | translate }}
+        <!-- {{ lastModifiedDate }} -->
+      </strong>
+    </div>
+    <div class="cards">
+      <div
+        class="card-goods-receipt"
+        (click)="getPendingData(1)"
+      >
+        <!--586 is DRAFT status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-drafts">
+                <app-svg-drafts-icon></app-svg-drafts-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.goodReceipt.title.pending'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.pending }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- requested -->
+      <div
+        class="card-goods-receipt"
+        (click)="getSubmitData(2)"
+      >
+        <!--586 is REQUESTED status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-requested">
+                <app-svg-requested-icon></app-svg-requested-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.goodReceipt.title.submitted'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.submitted }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-table">
+      <div
+        class="pull-right buttonGroup"
+        style="padding: 0px 5px 0px 0px; margin: -9px 0px -18px 0px"
+      ></div>
+      <form
+        class="container-new-ui"
+        [formGroup]="editSaveFormSearch"
+        autocomplete="off"
+      >
+        <div class="row row-table col-lg-12 col-md-12 col-sm-12">
+          <!-- ........................................................................................................................................... -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="poNo" class="labelText">
+              <span [translate]="'operations.goodReceipt.label.poNo'"></span>
+            </label>
+
+            <ng-select
+              [items]="goodsReceiptPo"
+              [selectOnTab]="true"
+              bindLabel="purchaseOrderNo"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              [searchFn]="dropdownSearchFngoodsReceiptCategory"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch &&
+                    editSaveFormSearchPendingController['poNo'].errors) ||
+                  (editSaveFormSearchPendingController['poNo'].errors &&
+                    (editSaveFormSearchPendingController['poNo'].dirty ||
+                      editSaveFormSearchPendingController['poNo'].touched))
+              }"
+              placeholder="{{
+                'operations.goodReceipt.placeholder.poNo' | translate
+              }}"
+              notFoundText="Record not found"
+              id="poNo"
+              formControlName="poNo"
+              (input)="checkNgSelectValue($event, 'poNo')"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.purchaseOrderNo }}">
+                  <small
+                    ><b>{{ item?.purchaseOrderNo }}</b></small
+                  ><br />
+                  <!-- <span class="dropDownDescription">{{ item?.depotName }}</span> -->
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item?.depotCode }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['poNo'].errors) ||
+                (editSaveFormSearchPendingController['poNo'].errors &&
+                  (editSaveFormSearchPendingController['poNo'].dirty ||
+                    editSaveFormSearchPendingController['poNo'].touched))
+              "
+            >
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['poNo'].errors['invalid']
+                "
+              >
+                <span
+                  [translate]="
+                    'master.supplier.supplierGeneralInfo.errors.poNo.invalid'
+                  "
+                ></span>
+              </p>
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['poNo'].errors['required']
+                "
+              >
+                <span
+                  [translate]="
+                    'master.supplier.supplierGeneralInfo.errors.poNo.required'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- For 'podateFrom' control -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="podateFrom" class="labelText">
+              <span
+                [translate]="'operations.goodReceipt.label.podateFrom'"
+              ></span>
+            </label>
+            <div class="input-group input-group-md">
+              <input
+                type="text"
+                class="form-control uppercase"
+                bsDatepicker
+                (keydown.arrowdown)="podateFrom.click()"
+                formControlName="podateFrom"
+                #podateFrom
+                [bsConfig]="{
+                  dateInputFormat: 'DD-MMM-YYYY',
+                  containerClass: 'theme-dark-blue',
+                  adaptivePosition: true
+                }"
+                [ngClass]="{
+                  redBorderCalender:
+                    startPeriodSmallerThanCurrent ||
+                    startPeriodSmallerThanEnd ||
+                    (submittedSearch &&
+                      editSaveFormSearchPendingController['podateFrom']
+                        .errors) ||
+                    (editSaveFormSearchPendingController['podateFrom'].errors &&
+                      (editSaveFormSearchPendingController['podateFrom']
+                        .dirty ||
+                        editSaveFormSearchPendingController['podateFrom']
+                          .touched))
+                }"
+                (ngModelChange)="validatePeriod('podateFrom', $event)"
+              />
+              <span class="input-group-btn">
+                <button
+                  class="btn custom-button"
+                  type="button"
+                  (click)="podateFrom.click()"
+                  tabindex="-1"
+                >
+                  <app-svg-calender-icon></app-svg-calender-icon>
+                </button>
+              </span>
+            </div>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['podateFrom'].errors) ||
+                (editSaveFormSearchPendingController['podateFrom'].errors &&
+                  (editSaveFormSearchPendingController['podateFrom'].dirty ||
+                    editSaveFormSearchPendingController['podateFrom'].touched))
+              "
+            >
+              <div
+                *ngIf="editSaveFormSearchPendingController['podateFrom'].errors?.['bsDate']?.['invalid']"
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.podateFrom.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSaveFormSearchPendingController['podateFrom'].errors?.['greaterThanCurrentDateError']"
+              >
+                {{
+                  "operations.requestForQuote.errors.rfqFromGreaterThanCurrent"
+                    | translate
+                }}
+                <!-- {{ currentDate | date : "dd-MMM-yyyy" | uppercase }} -->
+              </div>
+              <!-- <div
+                    *ngIf="editSaveFormSearchPendingController['podateFrom'].errors?.['customErr']"
+                  >
+                    <span>
+                      {{
+                        "operations.requestForQuote.errors.rfqFromGreaterThanRfqTo"
+                          | translate
+                      }}
+                      {{
+                        editSaveFormSearchPendingController["rfqToDate"].value
+                          | date : "dd-MMM-yyyy"
+                          | uppercase
+                      }}
+                    </span>
+                  </div> -->
+            </div>
+          </div>
+
+          <!-- For 'podateTo' control -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="podateTo" class="labelText">
+              <span
+                [translate]="'operations.goodReceipt.label.podateTo'"
+              ></span>
+            </label>
+            <div class="input-group input-group-md">
+              <input
+                type="text"
+                class="form-control uppercase"
+                bsDatepicker
+                (keydown.arrowdown)="podateTo.click()"
+                formControlName="podateTo"
+                #podateTo
+                [bsConfig]="{
+                  dateInputFormat: 'DD-MMM-YYYY',
+                  containerClass: 'theme-dark-blue',
+                  adaptivePosition: true
+                }"
+                [ngClass]="{
+                  redBorderCalender:
+                    startPeriodSmallerThanCurrent ||
+                    startPeriodSmallerThanEnd ||
+                    (submittedSearch &&
+                      editSaveFormSearchPendingController['podateTo'].errors) ||
+                    (editSaveFormSearchPendingController['podateTo'].errors &&
+                      (editSaveFormSearchPendingController['podateTo'].dirty ||
+                        editSaveFormSearchPendingController['podateTo']
+                          .touched))
+                }"
+                (ngModelChange)="validatePeriod('podateTo', $event)"
+              />
+              <span class="input-group-btn">
+                <button
+                  class="btn custom-button"
+                  type="button"
+                  (click)="podateTo.click()"
+                  tabindex="-1"
+                >
+                  <app-svg-calender-icon></app-svg-calender-icon>
+                </button>
+              </span>
+            </div>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['podateTo'].errors) ||
+                (editSaveFormSearchPendingController['podateTo'].errors &&
+                  (editSaveFormSearchPendingController['podateTo'].dirty ||
+                    editSaveFormSearchPendingController['podateTo'].touched))
+              "
+            >
+              <div
+                *ngIf="editSaveFormSearchPendingController['podateTo'].errors?.['bsDate']?.['invalid']"
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.podateTo.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSaveFormSearchPendingController['podateTo'].errors?.['greaterThanCurrentDateError']"
+              >
+                {{
+                  "operations.requestForQuote.errors.rfqToGreaterThanCurrent"
+                    | translate
+                }}
+                <!-- {{ currentDate | date : "dd-MMM-yyyy" | uppercase }} -->
+              </div>
+              <!-- <div
+                    *ngIf="editSaveFormSearchPendingController['podateTo'].errors?.['customErr']"
+                  >
+                    {{
+                      "operations.requestForQuote.errors.rfqToLesserThanRfqFrom"
+                        | translate
+                    }}
+                    {{
+                      editSaveFormSearchPendingController["rfqFromDate"].value
+                        | date : "dd-MMM-yyyy"
+                        | uppercase
+                    }}
+                  </div> -->
+            </div>
+          </div>
+          <!-- ........................................................................................................................................... -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="supplier" class="labelText">
+              <span
+                [translate]="'operations.goodReceipt.label.supplier'"
+              ></span>
+            </label>
+
+            <ng-select
+              [items]="goodsReceiptSupplier"
+              [selectOnTab]="true"
+              bindLabel="supplierCode"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              [searchFn]="dropdownSearchFngoodsReceiptCategory"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch &&
+                    editSaveFormSearchPendingController['supplier'].errors) ||
+                  (editSaveFormSearchPendingController['supplier'].errors &&
+                    (editSaveFormSearchPendingController['supplier'].dirty ||
+                      editSaveFormSearchPendingController['supplier'].touched))
+              }"
+              placeholder="{{
+                'operations.goodReceipt.placeholder.supplier' | translate
+              }}"
+              notFoundText="Record not found"
+              id="supplier"
+              formControlName="supplier"
+              (input)="checkNgSelectValue($event, 'supplier')"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.supplierCode }} - {{ item?.supplierName }}">
+                  <small
+                    ><b>{{ item?.supplierCode }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{ item?.supplierName }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item?.supplierCode }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['supplier'].errors) ||
+                (editSaveFormSearchPendingController['supplier'].errors &&
+                  (editSaveFormSearchPendingController['supplier'].dirty ||
+                    editSaveFormSearchPendingController['supplier'].touched))
+              "
+            >
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['supplier'].errors[
+                    'invalid'
+                  ]
+                "
+              >
+                <span
+                  [translate]="
+                    'master.supplier.supplierGeneralInfo.errors.supplier.invalid'
+                  "
+                ></span>
+              </p>
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['supplier'].errors[
+                    'required'
+                  ]
+                "
+              >
+                <span
+                  [translate]="
+                    'master.supplier.supplierGeneralInfo.errors.supplier.required'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+          <!-- ........................................................................................................................................... -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="depot" class="labelText">
+              <span [translate]="'operations.goodReceipt.label.depot'"></span>
+            </label>
+
+            <ng-select
+              [items]="associatedDepots"
+              [selectOnTab]="true"
+              bindLabel="depotCode"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              [searchFn]="dropdownSearchFngoodsReceiptCategory"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch &&
+                    editSaveFormSearchPendingController['depot'].errors) ||
+                  (editSaveFormSearchPendingController['depot'].errors &&
+                    (editSaveFormSearchPendingController['depot'].dirty ||
+                      editSaveFormSearchPendingController['depot'].touched))
+              }"
+              placeholder="{{
+                'operations.goodReceipt.placeholder.depot' | translate
+              }}"
+              notFoundText="Record not found"
+              id="depot"
+              formControlName="depot"
+              (input)="checkNgSelectValue($event, 'depot')"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.depotCode }} - {{ item?.depotName }}">
+                  <small
+                    ><b>{{ item?.depotCode }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{ item?.depotName }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item?.depotCode }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['depot'].errors) ||
+                (editSaveFormSearchPendingController['depot'].errors &&
+                  (editSaveFormSearchPendingController['depot'].dirty ||
+                    editSaveFormSearchPendingController['depot'].touched))
+              "
+            >
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['depot'].errors['invalid']
+                "
+              >
+                <span
+                  [translate]="
+                    'master.supplier.supplierGeneralInfo.errors.supplier.invalid'
+                  "
+                ></span>
+              </p>
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['depot'].errors[
+                    'required'
+                  ]
+                "
+              >
+                <span
+                  [translate]="
+                    'master.supplier.supplierGeneralInfo.errors.supplier.required'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <div class="form-group col-lg-1 col-md-1 col-sm-1">
+            <label for="rfqStatus" class="labelText">
+              <span [translate]="''"></span> </label
+            ><button
+              [disabled]="clickedSearchBtn"
+              (click)="searchRecordsList()"
+              class="btn first-action-btn custom-button-search search-button-color"
+            >
+              <div class="icon-container">
+                <app-svg-search-icon></app-svg-search-icon>
+              </div>
+              Search
+            </button>
+          </div>
+          <div class="form-group col-lg-1 col-md-1 col-sm-1">
+            <label for="rfqStatus" class="labelText">
+              <span [translate]="''"></span> </label
+            ><button
+              (click)="resetForm()"
+              class="btn custom-button-search reset-button-color"
+            >
+              <div class="reset-icon-container">
+                <i class="fa-solid fa-arrows-spin"></i>
+              </div>
+              Reset
+            </button>
+          </div>
+          <div
+            class="form-group col-lg-2 col-md-2 col-sm-2"
+            *ngIf="currentCard == 2"
+          >
+            <label for="goodsReceiptNo" class="labelText">
+              <span
+                [translate]="'operations.goodReceipt.label.goodsReceiptNo'"
+              ></span>
+            </label>
+
+            <ng-select
+              
+              [items]="goodsReceiptNo"
+              [selectOnTab]="true"
+              (input)="checkNgSearchFormSelectValue($event, 'goodsReceiptNo')"
+              bindLabel="goodsReceiptNo"
+              formControlName="goodsReceiptNo"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.goodReceipt.placeholder.goodsReceiptNo' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch &&
+                    editSaveFormSearchPendingController['goodsReceiptNo']
+                      .errors) ||
+                  (editSaveFormSearchPendingController['goodsReceiptNo']
+                    .errors &&
+                    (editSaveFormSearchPendingController['goodsReceiptNo']
+                      .dirty ||
+                      editSaveFormSearchPendingController['goodsReceiptNo']
+                        .touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div
+                  title="{{ item?.goodsReceiptNo }}"
+                >
+                  <small
+                    ><b>{{ item?.goodsReceiptNo }}</b></small
+                  ><br />
+                 
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label"
+                    >{{ item.goodsReceiptNo }}
+                  </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['goodsReceiptNo']
+                    .errors) ||
+                (editSaveFormSearchPendingController['goodsReceiptNo'].errors &&
+                  (editSaveFormSearchPendingController['goodsReceiptNo']
+                    .dirty ||
+                    editSaveFormSearchPendingController['goodsReceiptNo']
+                      .touched))
+              "
+            >
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['goodsReceiptNo'].errors[
+                    'invalid'
+                  ]
+                "
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.goodsReceiptNo.invalid'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+          <!-- For 'goodsReceiptFromDate' control -->
+          <div
+            class="form-group col-lg-2 col-md-2 col-sm-2"
+            *ngIf="currentCard == 2"
+          >
+            <label for="goodsReceiptFromDate" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.label.goodsReceiptFromDate'
+                "
+              ></span>
+            </label>
+            <div class="input-group input-group-md">
+              <input
+                type="text"
+                class="form-control uppercase"
+                bsDatepicker
+                (keydown.arrowdown)="goodsReceiptFromDate.click()"
+                formControlName="goodsReceiptFromDate"
+                #goodsReceiptFromDate
+                [bsConfig]="{
+                  dateInputFormat: 'DD-MMM-YYYY',
+                  containerClass: 'theme-dark-blue',
+                  adaptivePosition: true
+                }"
+                [ngClass]="{
+                  redBorderCalender:
+                    startPeriodSmallerThanCurrent ||
+                    startPeriodSmallerThanEnd ||
+                    (submittedSearch &&
+                      editSaveFormSearchPendingController[
+                        'goodsReceiptFromDate'
+                      ].errors) ||
+                    (editSaveFormSearchPendingController['goodsReceiptFromDate']
+                      .errors &&
+                      (editSaveFormSearchPendingController[
+                        'goodsReceiptFromDate'
+                      ].dirty ||
+                        editSaveFormSearchPendingController[
+                          'goodsReceiptFromDate'
+                        ].touched))
+                }"
+                (ngModelChange)="validatePeriod('goodsReceiptFromDate', $event)"
+              />
+              <span class="input-group-btn">
+                <button
+                  class="btn custom-button"
+                  type="button"
+                  (click)="goodsReceiptFromDate.click()"
+                  tabindex="-1"
+                >
+                  <app-svg-calender-icon></app-svg-calender-icon>
+                </button>
+              </span>
+            </div>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['goodsReceiptFromDate']
+                    .errors) ||
+                (editSaveFormSearchPendingController['goodsReceiptFromDate']
+                  .errors &&
+                  (editSaveFormSearchPendingController['goodsReceiptFromDate']
+                    .dirty ||
+                    editSaveFormSearchPendingController['goodsReceiptFromDate']
+                      .touched))
+              "
+            >
+              <div
+                *ngIf="editSaveFormSearchPendingController['goodsReceiptFromDate'].errors?.['bsDate']?.['invalid']"
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.goodsReceiptFromDate.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSaveFormSearchPendingController['goodsReceiptFromDate'].errors?.['greaterThanCurrentDateError']"
+              >
+                {{
+                  "operations.requestForQuote.errors.rfqToGreaterThanCurrent"
+                    | translate
+                }}
+                <!-- {{ currentDate | date : "dd-MMM-yyyy" | uppercase }} -->
+              </div>
+              <!-- <div
+                    *ngIf="editSaveFormSearchPendingController['goodsReceiptFromDate'].errors?.['customErr']"
+                  >
+                    {{
+                      "operations.requestForQuote.errors.rfqToLesserThanRfqFrom"
+                        | translate
+                    }}
+                    {{
+                      editSaveFormSearchPendingController["rfqFromDate"].value
+                        | date : "dd-MMM-yyyy"
+                        | uppercase
+                    }}
+                  </div> -->
+            </div>
+          </div>
+          <!-- For 'goodsReceiptToDate' control -->
+          <div
+            class="form-group col-lg-2 col-md-2 col-sm-2"
+            *ngIf="currentCard == 2"
+          >
+            <label for="goodsReceiptToDate" class="labelText">
+              <span
+                [translate]="'operations.goodReceipt.label.goodsReceiptToDate'"
+              ></span>
+            </label>
+            <div class="input-group input-group-md">
+              <input
+                type="text"
+                class="form-control uppercase"
+                bsDatepicker
+                (keydown.arrowdown)="goodsReceiptToDate.click()"
+                formControlName="goodsReceiptToDate"
+                #goodsReceiptToDate
+                [bsConfig]="{
+                  dateInputFormat: 'DD-MMM-YYYY',
+                  containerClass: 'theme-dark-blue',
+                  adaptivePosition: true
+                }"
+                [ngClass]="{
+                  redBorderCalender:
+                    startPeriodSmallerThanCurrent ||
+                    startPeriodSmallerThanEnd ||
+                    (submittedSearch &&
+                      editSaveFormSearchPendingController['goodsReceiptToDate']
+                        .errors) ||
+                    (editSaveFormSearchPendingController['goodsReceiptToDate']
+                      .errors &&
+                      (editSaveFormSearchPendingController['goodsReceiptToDate']
+                        .dirty ||
+                        editSaveFormSearchPendingController[
+                          'goodsReceiptToDate'
+                        ].touched))
+                }"
+                (ngModelChange)="validatePeriod('goodsReceiptToDate', $event)"
+              />
+              <span class="input-group-btn">
+                <button
+                  class="btn custom-button"
+                  type="button"
+                  (click)="goodsReceiptToDate.click()"
+                  tabindex="-1"
+                >
+                  <app-svg-calender-icon></app-svg-calender-icon>
+                </button>
+              </span>
+            </div>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['goodsReceiptToDate']
+                    .errors) ||
+                (editSaveFormSearchPendingController['goodsReceiptToDate']
+                  .errors &&
+                  (editSaveFormSearchPendingController['goodsReceiptToDate']
+                    .dirty ||
+                    editSaveFormSearchPendingController['goodsReceiptToDate']
+                      .touched))
+              "
+            >
+              <div
+                *ngIf="editSaveFormSearchPendingController['goodsReceiptToDate'].errors?.['bsDate']?.['invalid']"
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.goodsReceiptToDate.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSaveFormSearchPendingController['goodsReceiptToDate'].errors?.['greaterThanCurrentDateError']"
+              >
+                {{
+                  "operations.requestForQuote.errors.rfqToGreaterThanCurrent"
+                    | translate
+                }}
+                <!-- {{ currentDate | date : "dd-MMM-yyyy" | uppercase }} -->
+              </div>
+              <!-- <div
+                    *ngIf="editSaveFormSearchPendingController['goodsReceiptToDate'].errors?.['customErr']"
+                  >
+                    {{
+                      "operations.requestForQuote.errors.rfqToLesserThanRfqFrom"
+                        | translate
+                    }}
+                    {{
+                      editSaveFormSearchPendingController["rfqFromDate"].value
+                        | date : "dd-MMM-yyyy"
+                        | uppercase
+                    }}
+                  </div> -->
+            </div>
+          </div>
+
+          <div
+            class="form-group col-lg-2 col-md-2 col-sm-2"
+            *ngIf="currentCard == 2"
+          >
+            <label for="goodsReceiptType" class="labelText">
+              <span
+                [translate]="'operations.goodReceipt.label.goodsReceiptType'"
+              ></span>
+            </label>
+
+            <ng-select
+             [items]="goodsReceiptType"
+              [selectOnTab]="true"
+              (input)="checkNgSearchFormSelectValue($event, 'goodsReceiptType')"
+              bindLabel="code"
+              formControlName="goodsReceiptType"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.goodReceipt.placeholder.goodsReceiptType'
+                  | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch &&
+                    editSaveFormSearchPendingController['goodsReceiptType']
+                      .errors) ||
+                  (editSaveFormSearchPendingController['goodsReceiptType']
+                    .errors &&
+                    (editSaveFormSearchPendingController['goodsReceiptType']
+                      .dirty ||
+                      editSaveFormSearchPendingController['goodsReceiptType']
+                        .touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div
+                  title="{{ item?.code }} - {{
+                    item?.description
+                  }}"
+                >
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label"
+                    >{{ item.code }}
+                  </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['goodsReceiptType']
+                    .errors) ||
+                (editSaveFormSearchPendingController['goodsReceiptType']
+                  .errors &&
+                  (editSaveFormSearchPendingController['goodsReceiptType']
+                    .dirty ||
+                    editSaveFormSearchPendingController['goodsReceiptType']
+                      .touched))
+              "
+            >
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['goodsReceiptType']
+                    .errors['invalid']
+                "
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.goodsReceiptType.invalid'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+          <!-- ........................................................................................................................................... -->
+          <div
+            class="form-group col-lg-2 col-md-2 col-sm-2"
+            *ngIf="currentCard == 2"
+          >
+            <label for="goodsReceiptCategory" class="labelText">
+              <span
+                [translate]="
+                  'operations.goodReceipt.label.goodsReceiptCategory'
+                "
+              ></span>
+            </label>
+
+            <ng-select
+              [items]="goodsReceiptCategory"
+              [selectOnTab]="true"
+              bindLabel="code"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              [searchFn]="dropdownSearchFngoodsReceiptCategory"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch &&
+                    editSaveFormSearchPendingController['goodsReceiptCategory']
+                      .errors) ||
+                  (editSaveFormSearchPendingController['goodsReceiptCategory']
+                    .errors &&
+                    (editSaveFormSearchPendingController['goodsReceiptCategory']
+                      .dirty ||
+                      editSaveFormSearchPendingController[
+                        'goodsReceiptCategory'
+                      ].touched))
+              }"
+              placeholder="{{
+                'operations.goodReceipt.placeholder.goodsReceiptCategory'
+                  | translate
+              }}"
+              notFoundText="Record not found"
+              id="goodsReceiptCategory"
+              formControlName="goodsReceiptCategory"
+              (input)="checkNgSelectValue($event, 'goodsReceiptCategory')"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{ item?.description }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item?.code }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchPendingController['goodsReceiptCategory']
+                    .errors) ||
+                (editSaveFormSearchPendingController['goodsReceiptCategory']
+                  .errors &&
+                  (editSaveFormSearchPendingController['goodsReceiptCategory']
+                    .dirty ||
+                    editSaveFormSearchPendingController['goodsReceiptCategory']
+                      .touched))
+              "
+            >
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['goodsReceiptCategory']
+                    .errors['invalid']
+                "
+              >
+                <span
+                  [translate]="
+                    'master.supplier.supplierGeneralInfo.errors.goodsReceiptCategory.invalid'
+                  "
+                ></span>
+              </p>
+              <p
+                *ngIf="
+                  editSaveFormSearchPendingController['goodsReceiptCategory']
+                    .errors['required']
+                "
+              >
+                <span
+                  [translate]="
+                    'master.supplier.supplierGeneralInfo.errors.goodsReceiptCategory.required'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="line"></div>
+      <app-goods-receipt-list
+        #requestForQuoteList
+        [goodsReceiptData]="goodsReceiptData"
+        (getReceivedTableRowData)="getReceivedTableRowData($event)"
+        [currentCard]="currentCard"
+        (exportToExcel)="exportToExcel($event)"
+      ></app-goods-receipt-list>
+      <!-- (handleAddRecord)="handleAddRecordIcon($event)" -->
+    </div>
+  </div>
+  <!-- .................................form.......................... -->
+  <div class="panel panel-default" *ngIf="!showList">
+    <div class="panel-heading clearfix">
+      <div class="panel-title panelHeading pull-left">
+        <div class="nopaddingbottom">
+          <b>
+            <span
+              [translate]="'operations.goodReceipt.title.goodsReceipt'"
+              class="main-title"
+            ></span
+          ></b>
+          <label class="linebadge"> {{ mode | translate | uppercase }}</label>
+        </div>
+        <div *ngIf="mode == 'edit'">
+          <span class="panelSubHeading-Pr redIcon">
+            {{ "operations.goodReceipt.title.grNo" | translate }}
+            {{ grNumber }}</span
+          >
+        </div>
+      </div>
+      <div class="pull-right buttonGroup">
+        <div class="row">
+          <button
+            type="button"
+            class="capsule-button pale-orange"
+            id="btnAttachment"
+            title="{{ 'master.store.button.attachment' | translate }}"
+          >
+            <!-- [disabled]="mode == 'new' || disableAttachmentButton" -->
+
+            <!-- (click)="
+          mode != 'new' &&
+            !disableAttachmentButton &&
+            attachment.showAttachment(
+              'Store Master',
+              'StoreMaster',
+              selectedRowList.storeId || 0,
+              selectedRowList.storeId || 0
+            )
+        " -->
+            <div class="icon-circle">
+              <i class="far fa-fw fa-paperclip"></i>
+            </div>
+            <span [translate]="'master.store.button.attachment'"></span>
+            <span class="badge badge-danger badge-pill attachmentCoutBadge">
+              {{ noOfAttachment }}
+            </span>
+          </button>
+      
+        
+          <!-- [hidden]="hideSendForApproval" -->
+         
+       
+
+         
+          <button
+            [class.unclickable]="disableFormSubmitIcons"
+            [disabled]="disableFormSubmitIcons"
+            class="capsule-button green"
+            (click)="handleFormSubmit()"
+            [hidden]="hidesave"
+          >
+            <div class="icon-circle">
+              <i class="fas fa-light fa-floppy-disk"></i>
+            </div>
+            {{ "operations.requestForQuote.buttons.save" | translate }}
+          </button>
+
+          <button
+            [class.unclickable]="disableFormResetIcons"
+            [disabled]="disableFormResetIcons"
+            class="capsule-button grey"
+            (click)="handleFormResetIcon()"
+            [hidden]="hideResetRFQ"
+          >
+            <div class="icon-circle">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </div>
+            {{ "operations.requestForQuote.buttons.reset" | translate }}
+          </button>
+          <button
+            class="capsule-button pale-orange"
+            title="{{ 'Back To List' | translate }}"
+            (click)="handleBackToList()"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-arrow-left"></i>
+            </div>
+            {{ "operations.requestForQuote.buttons.backToList" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <app-goods-receipt-form [editSavePartDetailForm]="editSavePartDetailForm" [goodsReceiptForm]="goodsReceiptForm" [selectedGoodsReceiptData]="[selectedGoodsReceiptData]" [goodsReceiptCategory]="goodsReceiptCategory" [partDetailList]="partDetailList" [mode]="mode"></app-goods-receipt-form>
+  </div>
+</div>

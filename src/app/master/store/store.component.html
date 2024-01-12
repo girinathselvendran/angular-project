@@ -1,0 +1,267 @@
+<div
+  class="alert alert-warning"
+  role="alert"
+  *ngIf="showWarningMessageForRoleRights"
+>
+  <i class="fa-fw fa fa-warning"></i>
+  <strong
+    ><span [translate]="'common.roleRightsMessages.warning'"></span
+  ></strong>
+  {{ warningMessageForRoleRights | translate }}
+</div>
+<div *ngIf="showList">
+  <!-- <sa-ribbon icon="fas fa-user-tie"></sa-ribbon> -->
+  <div class="prContainer">
+    <div class="content-container" *ngIf="showList">
+      <div class="flex-container">
+        <h1
+          class="purchase-requisition-title"
+          [translate]="
+            'master.store.titles.store'
+          "
+        ></h1>
+      </div>
+      <div class="mt-2">
+
+        <app-shared-lazy-table-new
+          #sharedLazyTable
+          [headerColumnList]="columnHeaderList"
+          [filter]="true"
+          [excelIcon]="true"
+          [refreshIcon]="true"
+          [holdIcon]="false"
+          [showHide]="true"
+          [globalSearch]="true"
+          [isPanelHeading]="true"
+          [checkboxWidth]="false"
+          [addRecordIcon]="true"
+          [excelFileName]="screenName"
+          [tableInitialData]="storeRecordsList"
+          (addTableDataService)="addIconClick($event, 'new')"
+          (sendTableRowData)="receiveTableRowData($event)"
+          (lazyLoadGetData)="getStoreListServerSide($event)"
+          [tableFilterFormGroup]="storeTableFilterFormGroup"
+          (exportExcel)="exportToExcel($event)"
+          [disableAddButton]="disableAddButton"
+          [tableTitle]="''"
+        ></app-shared-lazy-table-new>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!showList">
+  <div class="prContainer">
+    <div class="content-container" *ngIf="showList">
+      <div class="flex-container">
+        <h1
+          class="purchase-requisition-title"
+          [translate]="
+            'master.store.titles.store'
+          "
+        ></h1>
+      </div>
+    </div>
+  </div>
+  <form class="container-new-ui" [formGroup]="editSaveForm" autocomplete="off">
+    <div class="panel panel-default">
+      <div class="panel-heading clearfix">
+        <div class="panel-title panelHeading pull-left">
+          <b> <span [translate]="'master.store.titles.store'"></span></b>
+          <label class="badge badgeMargin">
+            {{ mode | translate | uppercase }}</label
+          >
+        </div>
+        <div class="pull-right buttonGroup">
+          <div class="row">
+
+            <button
+              [disabled]="mode == 'new' || disableAttachmentButton"
+              type="button"
+              class="capsule-button pale-orange"
+              id="btnAttachment"
+              title="{{ 'master.store.button.attachment' | translate }}"
+              (click)="
+                mode != 'new' &&
+                  !disableAttachmentButton &&
+                  attachment.showAttachment(
+                    'Store Master',
+                    'StoreMaster',
+                    selectedRowList.storeId || 0,
+                    selectedRowList.storeId || 0
+                  )
+              "
+            >
+              <!-- <i class="far fa-fw fa-paperclip" style="color: #455d9f"></i> -->
+              <div class="icon-circle">
+                <i class="far fa-fw fa-paperclip"></i>
+              </div>
+              <span [translate]="'master.store.button.attachment'"></span>
+              <span class="badge badge-danger badge-pill attachmentCoutBadge">
+                {{ noOfAttachment }}
+              </span>
+            </button>
+  
+            <button
+              [disabled]="disableAddButton"
+              type="button"
+              class="capsule-button navyBlue"
+              id="btnAttachment"
+              title="{{ 'master.store.button.addNew' | translate }}"
+              [ngClass]="{ disabled: disableAddButton }"
+              (click)="!disableAddButton && addNewRecord()"
+            >
+              <div class="icon-circle">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+              <span [translate]="'master.store.button.addNew'"></span>
+            </button>
+  
+            <button
+              type="button"
+              class="capsule-button green"
+              id="btnSubmit"
+              appPreventDoubleClick
+              (debounceClick)="!disableSaveButton && onSubmit()"
+              [debounceTime]="500"
+              title="{{ 'master.store.button.save' | translate }}"
+              [disabled]="disableSaveButton"
+              [ngClass]="{ disabled: disableSaveButton }"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-light fa-floppy-disk"></i>
+              </div>
+              <span [translate]="'master.store.button.save'"></span>
+            </button>
+  
+            <button
+              type="button"
+              class="capsule-button pale-orange"
+              (click)="backToList()"
+              title="{{ 'master.store.button.backToList' | translate }}"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-arrow-left" aria-hidden="true"></i>
+              </div>
+              <span [translate]="'master.store.button.backToList'"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- tabs -->
+      <div class="panel-body">
+        <div class="widget-body fuelux">
+          <div class="container-fluid">
+            <div class="row">
+              <div
+                *ngIf="showCreateStore"
+                class="alert alert-danger"
+                role="alert"
+                style="color: white !important"
+              >
+                <i class="fa fa-fw fa-times"></i>
+                <span
+                  [translate]="'master.store.errors.showCreateStore'"
+                ></span>
+              </div>
+              <div
+                *ngIf="showSaveStoreError"
+                class="alert alert-danger"
+                role="alert"
+                style="color: white !important"
+              >
+                <i class="fa fa-fw fa-times"></i>
+                <span
+                  [translate]="'master.store.errors.showSaveStoreError'"
+                ></span>
+              </div>
+              <fuel-ux-wizard [(ngModel)]="activeTab">
+                <div class="wizard">
+                  <div class="steps-container">
+                    <ul class="steps">
+                      <li
+                        data-step="1"
+                        [class.active]="activeTab === 1"
+                        class="cursor-pointer"
+                        (click)="checkFileMode($event, 1)"
+                        #InfoTab
+                      >
+                        <span
+                          [translate]="'master.store.titles.storeInformation'"
+                        ></span>
+
+                        <span class="chevron"></span>
+                      </li>
+
+                      <li
+                        data-step="2"
+                        [class.active]="activeTab === 2"
+                        (click)="checkFileMode($event, 2)"
+                        #ratesTab
+                      >
+                        <span
+                          [translate]="
+                            'master.store.titles.storePartMappingtitle'
+                          "
+                        ></span>
+                        <span class="chevron"></span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- tab component render based on tab -->
+                <div class="step-content">
+                  <div
+                    class="step-pane active"
+                    data-step="1"
+                    [class.active]="activeTab === 1"
+                  >
+                    <app-store-information
+                      #storeInformation
+                      #StoreInformationComponent
+                      [editSaveStoreInformationForm]="editSaveForm"
+                      [zoneDetailsForm]="zoneDetailsForm"
+                      [binDetailsForm]="binDetailsForm"
+                      [storeKeeperDetailsForm]="storeKeeperDetailsForm"
+                      [parentMode]="mode"
+                      [parentStoreId]="parentStoreId"
+                      [createBit]="createBit"
+                      [editBit]="editBit"
+                      [viewBit]="viewBit"
+                    >
+                    </app-store-information>
+                  </div>
+                  <div
+                    *ngIf="activeTab === 2"
+                    class="step-pane active"
+                    data-step="2"
+                    [class.active]="activeTab === 2"
+                  >
+                    <fieldset>
+                      <app-store-part-mapping
+                        [parentStoreId]="parentStoreId"
+                        [createBit]="createBit"
+                        [editBit]="editBit"
+                        [viewBit]="viewBit"
+                      ></app-store-part-mapping>
+                    </fieldset>
+                  </div>
+                </div>
+              </fuel-ux-wizard>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <sa-attachment
+      id="attachment"
+      #attachment
+      (attachmentOutPutEvent)="attachmentOutPutEvent($event)"
+      [disableBtnsBit]="disableSaveButton"
+    >
+    </sa-attachment>
+  </form>
+</div>

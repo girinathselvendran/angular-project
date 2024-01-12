@@ -1,0 +1,341 @@
+<header id="header">
+  <div id="logo-group">
+    <!-- PLACE YOUR LOGO HERE -->
+
+    <span id="extr-page-header-space">
+      <span class="hidden-mobile hiddex-xs"
+        ><img
+          src="assets/img/iDepoLogo1.png"
+          class="customerLogoHomeHeader"
+          alt="imsDepoLogo"
+          style="height: 65px; width: 100px !important" /></span
+    ></span>
+  </div>
+
+  <!-- <sa-recent-projects></sa-recent-projects> -->
+
+  <div class="pull-right" *ngIf="tabVersion">
+    <!-- time {{this.currentDateTime | date: 'dd/MM/yyyy hh:mm:ss' }} -->
+    <!-- <sa-logout></sa-logout>
+    <sa-change-password
+      #changePassword
+      (click)="checkForgotPasswordCondition()"
+      [disableCloseBit]="disableCloseBit"
+    >
+    </sa-change-password> -->
+
+    <form
+      class="globalSearchForm"
+      #searchForm="ngForm"
+      class="header-search pull-right form-inline"
+    >
+      <div class="row searchFormRow">
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 nopadding">
+          <div
+            id="welcomeUserText"
+            style="
+              margin-top: 7px;
+              margin-left: 20px !important;
+              white-space: nowrap;
+            "
+          >
+            Welcome {{ this.currentUserName | uppercase }}
+          </div>
+        </div>
+        <div
+          class="col-lg-7 col-md-7 col-sm-7 col-xs-7"
+          style="padding-left: 0px"
+        >
+          <div class="input-group">
+            <input
+              style="height: 35px; font-size: 14px"
+              maxlength="30"
+              [value]="globalSearchValue | uppercase"
+              [(ngModel)]="globalSearchValue"
+              name="globalSearchInput"
+              type="text"
+              trim="blur"
+              class="form-control uppercase"
+              placeholder="Search Equipment No"
+            />
+            <div class="input-group-btn">
+              <button
+                class="btn btn-default"
+                style="height: 35px"
+                type="submit"
+              >
+                <!-- (click)="onGlobalSearchSubmitForTabVersion()" -->
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="pull-left icon-addon addon-md" *ngIf="!tabVersion">
+    <div class="serverDetails">
+      <!-- <b style="float:left !important;">Last Login: {{lastLoginDate }}</b> -->
+
+      <b style="float: left !important">System Date: {{ displayTime }}</b>
+    </div>
+  </div>
+  <div style="float: right !important; margin-right: 20px">
+    <!-- <p-dropdown
+      [options]="languages"
+      [ngModel]="selectedLanguage"
+      (ngModelChange)="languageChange($event)"
+      optionLabel="name"
+    ></p-dropdown> -->
+    <div
+      id="menulogout clickable"
+      (click)="logoutAction()"
+      class="btn-header transparent pull-right"
+    >
+      <span>
+        <a
+          title="Sign Out"
+          class="btn-header-icon"
+          style="cursor: pointer !important"
+          ><i class="fa fa-sign-out"></i
+        ></a>
+      </span>
+    </div>
+    <!--  -->
+    <!-- id="fullscreen"  //  only  show full screen/ window screen -->
+    <div class="btn-header transparent pull-right">
+      <span>
+        <a
+          style="cursor: pointer !important"
+          (click)="showDialog()"
+          title="{{ 'changePassword.titles.pageTitle' | translate }}"
+          class="btn-header-icon"
+          ><i class="fa fa-key"></i
+        ></a>
+      </span>
+    </div>
+    <!--  -->
+    <!-- id="fullscreen" -->
+    <div class="btn-header transparent pull-right">
+      <span id="fullScreenText">
+        <b id="welcomeUserText">
+          Welcome {{ this.currentUserName | uppercase }}
+        </b>
+        <!-- <p
+          id="welcomeUserText"
+          translate
+          [translateParams]="{ firstName: user.firstName }"
+        >
+          welcomeMessage
+        </p> -->
+        <a
+          style="cursor: pointer !important"
+          (click)="toggleFullScreen()"
+          title="Full Screen"
+          class="btn-header-icon"
+          ><i class="fa fa-arrows-alt"></i
+        ></a>
+      </span>
+    </div>
+    <!-- <button
+      class="p-link layout-topbar-button pull-right btn-header-icon"
+      (click)="getDocumentation()"
+      title="User Manual"
+      style="margin-left: 1px !important"
+      [routerLink]="'/documentation'"
+    >
+      <i class="fas fa-question-circle"></i>
+      <span>User Manual</span>
+    </button> -->
+    <!--  -->
+    <sa-layout-switcher></sa-layout-switcher>
+  </div>
+
+  <!-- pulled right: nav area -->
+  <div class="pull-right headerRightPadding" *ngIf="!tabVersion">
+    <div>
+      <form
+        class="globalSearchForm"
+        #searchForm="ngForm"
+        class="header-search pull-right form-inline"
+      >
+        <!-- <div class="row searchFormRow">z
+          <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <p-dropdown
+              class="globalSearchTypesDropdown"
+              name="globalSearchTypesDropdown"
+              [options]="globalSearchDropDown"
+              [(ngModel)]="selectedGlobalSearchType"
+              (onChange)="onGlobalSearchTypeSelected()"
+            >
+              <ng-template let-item pTemplate="selectedItem">
+                <i style="width: 20px" class="fa fa-truck-container"></i>
+                <span
+                  style="
+                    vertical-align: middle;
+                    padding-left: 20px;
+                    font-size: 13px;
+                  "
+                  >{{ item.label | translate }}</span
+                >
+              </ng-template>
+
+              <ng-template let-object pTemplate="item">
+                <i style="width: 20px" class="fa fa-truck-container"></i>
+                <span style="vertical-align: middle; padding-left: 15px">{{
+                  object.label | translate
+                }}</span>
+              </ng-template>
+            </p-dropdown>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <input
+              id="search-fld"
+              class="global-search-fld"
+              type="text"
+              trim="blur"
+              name="search-fld"
+              maxlength="30"
+              [value]="globalSearchValue | uppercase"
+              [(ngModel)]="globalSearchValue"
+              required
+              placeholder="{{ searchInputPlaceholder }}"
+            />
+            <button
+              class="global-search-btn"
+              type="submit"
+              (click)="onSubmit()"
+            >
+              <i class="fa fa-search"></i>
+            </button>
+            <a
+              id="cancel-search-js"
+              (click)="toggleSearchMobile()"
+              title="Cancel Search"
+              ><i class="fa fa-times"></i
+            ></a>
+          </div>
+          <div></div>
+        </div> -->
+      </form>
+    </div>
+
+    <!-- #MOBILE -->
+    <!-- Top menu profile link : this shows only when top menu is active -->
+    <ul
+      id="mobile-profile-img"
+      class="header-dropdown-list hidden-xs padding-5"
+    >
+      <li class=""></li>
+    </ul>
+
+    <!-- end logout button -->
+
+    <!-- search mobile button (this is hidden till mobile view port) -->
+    <!-- <div id="search-mobile" class="btn-header transparent pull-right">
+      <span> <a (click)="toggleSearchMobile()" title="{{ 'grid.tooltip.search' | translate }}"><i class="fa fa-search"></i></a> </span>
+    </div> -->
+
+    <!-- end search mobile button -->
+
+    <!-- input: search field -->
+    <!-- <form #searchForm="ngForm" (ngSubmit)="onSubmit()" class="header-search pull-right">
+      <input id="search-fld" type="text" name="param" required
+             placeholder="Find reports and more">
+      <button type="submit">
+        <i class="fa fa-search"></i>
+      </button>
+      <a id="cancel-search-js" (click)="toggleSearchMobile()" title="Cancel Search"><i class="fa fa-times"></i></a>
+    </form> -->
+    <!-- end input: search field -->
+
+    <!-- Change password -->
+    <!-- <sa-change-password
+      #changePassword
+      (click)="checkForgotPasswordCondition()"
+      [disableCloseBit]="disableCloseBit"
+    >
+    </sa-change-password> -->
+    <!-- End Change password -->
+    <!-- fullscreen button -->
+    <!-- <sa-full-screen></sa-full-screen> -->
+    <div
+      id="welcomeUserText"
+      style="padding-top: 15px; width: 235px"
+      *ngIf="tabVersion"
+    >
+      Welcome {{ this.currentUserName | uppercase }}
+    </div>
+
+    <form
+      *ngIf="!tabVersion"
+      class="globalSearchForm"
+      #searchForm="ngForm"
+      class="header-search pull-right form-inline"
+    >
+      <!-- <div class="row searchFormRow">
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+          <p-dropdown
+            class="globalSearchTypesDropdown"
+            name="globalSearchTypesDropdown"
+            [options]="globalSearchDropDown"
+            [(ngModel)]="selectedGlobalSearchType"
+            (onChange)="onGlobalSearchTypeSelected()"
+          >
+            <ng-template let-item pTemplate="selectedItem">
+              <i style="width: 20px" class="{{ item.icon }}"></i>
+              <span
+                style="
+                  vertical-align: middle;
+                  padding-left: 20px;
+                  font-size: 13px;
+                "
+                >{{ item.label | translate }}</span
+              >
+            </ng-template>
+
+            <ng-template let-object pTemplate="item">
+              <i style="width: 20px" class="{{ object.icon }}"></i>
+              <span style="vertical-align: middle; padding-left: 15px">{{
+                object.label | translate
+              }}</span>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+          <input
+            id="search-fld"
+            class="global-search-fld"
+            type="text"
+            trim="blur"
+            name="search-fld"
+            maxlength="30"
+            [value]="globalSearchValue | uppercase"
+            [(ngModel)]="globalSearchValue"
+            required
+            placeholder="{{ searchInputPlaceholder }}"
+          />
+          <button class="global-search-btn" type="submit" (click)="onSubmit()">
+            <i class="fa fa-search"></i>
+          </button>
+          <a
+            id="cancel-search-js"
+            (click)="toggleSearchMobile()"
+            title="Cancel Search"
+            ><i class="fa fa-times"></i
+          ></a>
+        </div>
+      </div> -->
+    </form>
+  </div>
+  <!-- end pulled right: nav area -->
+</header>
+
+<!-- Change password -->
+<app-change-password
+  #changePassword
+  (click)="checkForgotPasswordCondition()"
+  [disableCloseBit]="disableCloseBit"
+>
+</app-change-password>

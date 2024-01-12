@@ -1,0 +1,71 @@
+/* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700");
+
+/* #GOOGLE FONT */
+
+/* @import "typeface-muli"; */
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700");
+/* @import "~@ng-select/ng-select/themes/default.theme.css"; */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
+    Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+}
+/* .p-menubar {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  overflow: hidden;
+  font-size: x-small;
+  font-weight: lighter;
+  color: black;
+background: none;
+}
+
+.p-menuitem-text {
+  max-width: 150px !important;
+  font-size: 12px;
+  min-width: 5px;
+  color: azure;
+}
+.p-menuitem-icon{
+  color: white;
+}
+
+.p-menubar .p-submenu-list {
+  position: fixed !important;
+  z-index: 9999 !important;
+  color: black;
+} */
+
+/* .custom-menu {
+    .p-menubar .p-submenu-list {
+        position: fixed !important;
+        z-index: 9999 !important;
+    }
+} */
+
+/* Table css */
+p-table.responsive table {
+  min-width: 100%;
+  width: auto !important;
+}
+
+p-table.responsive .ui-table-wrapper {
+  overflow: auto !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  padding: 3px !important;
+
+  background: #0b3a77 !important;
+
+  color: white !important;
+
+  font-weight: 900 !important;
+
+  font-size: 12px !important;
+}

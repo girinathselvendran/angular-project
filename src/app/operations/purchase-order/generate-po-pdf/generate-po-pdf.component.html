@@ -1,0 +1,357 @@
+<div class="off-screen " #pdfContent>
+  <!--off-screen  -->
+  <div class="pdf-content">
+    <div class="pdf-container">
+      <div class="pdf-header mar-pad-bottom-0">
+        <!-- depot info -->
+        <div class="row margin-padding-0">
+          <div class="col">
+            <div class="po-left-info-container">
+              <strong>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.titles.depot"
+                    | translate
+                }}
+              </strong>
+              <strong>{{ pdfData?.depotDetails?.depotCode }}</strong>
+              <span> {{ pdfData?.depotDetails?.address }} </span>
+              <span
+                >{{ pdfData?.depotDetails?.city }},
+                {{ pdfData?.depotDetails?.country?.countryDescription }}
+              </span>
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.titles.depotTrn"
+                    | translate
+                }}
+                 <u> {{pdfData?.depotDetails?.country?.countryDescription}} </u> </span>
+            </div>
+          </div>
+          <div class="col custom-pdf-po-header">
+            <strong class="bolder-txt-output-title"
+              ><u>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.titles.po-title"
+                    | translate
+                }}</u
+              ></strong
+            >
+          </div>
+
+          <div class="col-lg-2 col-md-2 col-sm-2 p-3">
+            <div class="po-right-logo">
+              <img
+                class="logo-right"
+                src="assets/img/iDepoLogo1.png"
+                alt="Logo 2"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- supplier info -->
+        <div class="row margin-padding-0 supplier-info">
+          <div class="col right-border">
+            <div class="po-left-info-container-no-padding">
+              <strong>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.titles.supplier"
+                    | translate
+                }}
+              </strong>
+              <strong>{{ pdfData?.supplierDetails?.supplierCode }}</strong>
+              <!-- <span class="mb-3">Chennai Railway Address</span> -->
+              <address>
+                <!-- Chennai, Tamil Nad Iconic Gothic Revival railway terminal -->
+                {{ pdfData?.supplierDetails?.supplierAddress?.address }}
+              </address>
+              <span>
+                {{
+                  pdfData?.supplierDetails?.supplierAddress?.cityDescription
+                }},
+                {{
+                  pdfData?.supplierDetails?.supplierAddress?.country
+                    ?.countryDescription
+                }}
+              </span>
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.email"
+                    | translate
+                }}
+
+                {{ pdfData?.supplierContactInfo?.email }}
+              </span>
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.phone"
+                    | translate
+                }}
+                {{ pdfData?.supplierContactInfo?.mobileNo }}
+              </span>
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.fax"
+                    | translate
+                }}
+                {{ pdfData?.supplierContactInfo?.fax }}
+              </span>
+
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.attn"
+                    | translate
+                }}
+
+                {{ pdfData?.supplierContactInfo?.attn }}
+              </span>
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.supplierTrn"
+                    | translate
+                }}
+                {{ pdfData?.supplierTRN }}
+              </span>
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.supplierTin"
+                    | translate
+                }}
+                {{ pdfData?.supplierTIN }}
+              </span>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-4 padding-bottom">
+            <strong class="bold-text-alignment">
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.poNo"
+                    | translate
+                }}
+              </span>
+              <span>:</span>
+              <span> {{ pdfData?.purchaseOrderNo }}</span>
+            </strong>
+            <strong class="bold-text-alignment">
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.poDate"
+                    | translate
+                }}
+              </span>
+              <span>:</span>
+              <span>{{ pdfData?.poDate }}</span>
+            </strong>
+            <strong class="bold-text-alignment">
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.prNo"
+                    | translate
+                }}
+              </span>
+              <span>:</span>
+              <span>{{ pdfData?.prNo }}</span>
+            </strong>
+            <strong class="bold-text-alignment">
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.prDate"
+                    | translate
+                }}
+              </span>
+              <span>:</span>
+              <span>{{ pdfData?.prDate }}</span>
+            </strong>
+            <strong class="bold-text-alignment">
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.rfqNo"
+                    | translate
+                }}
+              </span>
+              <span>:</span>
+              <span>
+                <!-- RFQ NO not available (screen not developed) -->
+              </span>
+            </strong>
+            <strong class="bold-text-alignment">
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.rfqDate"
+                    | translate
+                }}
+              </span>
+              <span>:</span>
+              <span> <!-- RFQ Date not available (screen not developed) --></span>
+            </strong>
+            <strong class="bold-text-alignment">
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.quoteRefNo"
+                    | translate
+                }}
+              </span>
+              <span>:</span>
+              <span> <!-- QuoteRefNo not available (screen not developed) --></span>
+            </strong>
+            <strong class="bold-text-alignment">
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.generatedBy"
+                    | translate
+                }}
+              </span>
+              <span>:</span>
+              <span>{{generatedBy}}</span>
+            </strong>
+            <strong class="bold-text-alignment">
+              <span>
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.generatedDate"
+                    | translate
+                }}
+              </span>
+              <span>:</span>
+              <span>{{generatedDate}}</span>
+            </strong>
+          </div>
+        </div>
+        <!-- supplier info end -->
+      </div>
+
+      <div>
+        <table class="po-pdf-table mar-pad-top-0">
+          <thead>
+            <tr>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.sNo"
+                    | translate
+                }}
+              </th>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.supplierPartRefNo"
+                    | translate
+                }}
+              </th>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.partCode"
+                    | translate
+                }}
+              </th>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.partName"
+                    | translate
+                }}
+              </th>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.partSpecification"
+                    | translate
+                }}
+              </th>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.uom"
+                    | translate
+                }}
+              </th>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.quantity"
+                    | translate
+                }}
+              </th>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.deliveryDate"
+                    | translate
+                }}
+              </th>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.partRate"
+                    | translate
+                }}
+              </th>
+              <th class="poTbcolumTh">
+                {{
+                  "operations.purchaseOrder.purchaseOrderOutput.field.totalAmount"
+                    | translate
+                }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="po-table" *ngFor="let item of pdfData?.supplierPartDetails;let i = index">
+              <td class="poTbcolumTd">{{ i + 1 }}</td>
+              <td class="poTbcolumTd">{{ item.supplierPartRefNo }}</td>
+              <td class="poTbcolumTd">{{ item.partCode }}</td>
+              <td class="poTbcolumTd">{{ item.partName }}</td>
+              <td class="poTbcolumTd">{{ item.partSpecification }}</td>
+              <td class="poTbcolumTd">{{ item.uom }}</td>
+              <td class="poTbcolumTd numberColum">
+                {{ item.quantity }}
+              </td>
+              <td class="poTbcolumTd">{{ item.deliveryDate }}</td>
+              <td class="poTbcolumTd numberColum">
+                {{ item.partRate }}
+              </td>
+              <td class="poTbcolumTd numberColum">
+                {{ item.totalAmount }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="po-pdf-total mar-pad-bottom-0">
+        <div class="row margin-padding-0">
+          <div class="col right-border">
+            <!-- Empty column -->
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-4 padding-bottom right-border">
+            <div
+              class="po-tatal-column po-column-total-text right-border fw-bold"
+            >
+              {{
+                "operations.purchaseOrder.purchaseOrderOutput.titles.total"
+                  | translate
+              }}
+            </div>
+            <div class="po-tatal-column po-column-total-value">{{pdfData?.totalAmountSum}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="po mar-pad-bottom-0 po-terms-condition">
+        <div class="po-terms-condition-info">
+          <span>
+            {{
+              "operations.purchaseOrder.purchaseOrderOutput.titles.termsAndCondition"
+                | translate
+            }}
+          </span>
+          <ol>
+            <li *ngFor="let item of pdfData?.termsAndConditions;">
+              {{item}}
+            </li>
+            
+          </ol>
+        </div>
+      </div>
+
+      <div class="info-generation">
+        <small>
+          {{
+            "operations.purchaseRequisition.purchaseRequisitionReport.message"
+              | translate
+          }}
+        </small>
+      </div>
+    </div>
+  </div>
+</div>

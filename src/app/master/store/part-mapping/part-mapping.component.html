@@ -1,0 +1,545 @@
+<div class="panel panel-info">
+  <div class="panel-heading clearfix">
+    <span class="panel-title panelSubHeading pull-left">
+      <b>
+        <span [translate]="'master.store.titles.storePartMapping'"></span>
+      </b>
+    </span>
+    <div class="pull-right buttonGroup">
+      <button
+        type="button"
+        class="capsule-button navyBlue"
+        id="btnClear"
+        title="Add Contact"
+        (click)="!addStoreRateBtn && openStorePartMappingDialog()"
+      >
+        <div class="icon-circle">
+          <i class="fa-solid fa-plus"></i>
+        </div>
+        <span [translate]="'master.store.button.addPartDetail'"></span>
+      </button>
+    </div>
+  </div>
+  <app-shared-table-new
+    [filter]="true"
+    [excelIcon]="true"
+    [refreshIcon]="true"
+    [showHide]="false"
+    [globalSearch]="false"
+    [isPanelHeading]="true"
+    [addRecordIcon]="false"
+    [headerColumnList]="columnHeaderList"
+    [tableInitialData]="tableInitialData"
+    [excelFileName]="excelFileName"
+    (sendTableRowData)="receiveTableRowData($event)"
+    (refreshTableData)="refreshIconClick($event)"
+    [isMasterComp]="false"
+    [deleteIcon]="true"
+    (handleDeleteRowData)="handleDeleteStorePartMapping($event)"
+    (handlePartSpecificationRowData)="handlePartSpecificationRowData($event)"
+    [tableTitle]="''"
+    [removeHeaderBorder]="false"
+  ></app-shared-table-new>
+</div>
+
+<!-- Modal components-->
+
+<div
+  bsModal
+  #addPartMappingModel="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <form [formGroup]="editSaveForm" autocomplete="off">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="store-modal-header-new">
+          <b style="float: left">
+            <h4 class="modal-title">
+              <span
+                [translate]="'master.store.titles.storePartMappingtitle'"
+              ></span>
+              <label class="linebadge">
+                {{ mode | translate | uppercase }}</label
+              >
+            </h4>
+          </b>
+          <div
+            class="row gridRightAlign"
+            style="float: right !important"
+          >
+            <button
+              type="button"
+              class="capsule-button reset-button-color"
+              id="btnClear"
+              title="{{ 'master.store.button.clear' | translate }}"
+              [ngClass]="{ disabled: false }"
+              (click)="ClearForm()"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-fw fa-eraser" aria-hidden="true"></i>
+              </div>
+              <span [translate]="'master.store.button.clear'"></span>
+            </button>
+            <button
+              type="submit"
+              appPreventDoubleClick
+              [debounceTime]="500"
+              class="capsule-button green"
+              id="btnSaveContact"
+              title="{{ 'master.store.button.savePartMapping' | translate }}"
+              [ngClass]="{ disabled: false }"
+              (click)="onSubmit()"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-light fa-floppy-disk"></i>
+              </div>
+              <span [translate]="'master.store.button.savePartMapping'"></span>
+            </button>
+            <button
+              type="button"
+              class="capsule-button reset-button-color"
+              id="btnClsoe"
+              title="{{ 'master.store.button.close' | translate }}"
+              [ngClass]="{ disabled: false }"
+              (click)="closePartMappingDialog()"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-xmark"></i>
+              </div>
+              <span [translate]="'master.store.button.close'"></span>
+            </button>
+          </div>
+        </div>
+        <div
+          *ngIf="IsCombinationErr"
+          class="alert alert-danger"
+          role="alert"
+          style="color: white !important"
+        >
+          <i class="fa fa-fw fa-times"></i>
+          <span
+            [translate]="'master.store.partMapping.combinationExist'"
+          ></span>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="zoneCode" class="labelText">
+                <span [translate]="'master.store.label.zoneCode'"></span>
+                <i style="color: red"> *</i>
+              </label>
+              <ng-select
+                [items]="zoneDDList"
+                [selectOnTab]="true"
+                bindLabel="zoneCode"
+                (input)="checkNgSelectValue($event, 'zoneCode')"
+                [searchFn]="dropdownSearchFn"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSaveFormControls['zoneCode'].errors) ||
+                    (this.editSaveFormControls['zoneCode'].errors &&
+                      (this.editSaveFormControls['zoneCode'].dirty ||
+                        this.editSaveFormControls['zoneCode'].touched))
+                }"
+                placeholder="{{
+                  'master.store.placeholder.zoneCode' | translate
+                }}"
+                formControlName="zoneCode"
+                (customValidator)="checkNgSelectValue($event, 'zoneCode')"
+                notFoundText="Record not found"
+                (change)="onZoneCodeSelected($event); combinationCheck()"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div class="card-body" title="{{ item?.zoneCode }}">
+                    <div>
+                      <small
+                        ><b>{{ item?.zoneCode }}</b></small
+                      ><br />
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted && this.editSaveFormControls['zoneCode'].errors) ||
+                  (this.editSaveFormControls['zoneCode'].errors &&
+                    (this.editSaveFormControls['zoneCode'].dirty ||
+                      this.editSaveFormControls['zoneCode'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSaveFormControls['zoneCode'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="'master.store.errors.zoneCode.required'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSaveFormControls['zoneCode'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="'master.store.errors.zoneCode.invalid'"
+                  ></span>
+                </p>
+              </div>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="binCode" class="labelText">
+                <span [translate]="'master.store.label.binName'"></span>
+                <i style="color: red"> *</i>
+              </label>
+              <ng-select
+                [items]="binDDList"
+                [selectOnTab]="true"
+                bindLabel="binCode"
+                (input)="checkNgSelectValue($event, 'binCode')"
+                [searchFn]="dropdownSearchFn"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSaveFormControls['binCode'].errors) ||
+                    (this.editSaveFormControls['binCode'].errors &&
+                      (this.editSaveFormControls['binCode'].dirty ||
+                        this.editSaveFormControls['binCode'].touched))
+                }"
+                placeholder="{{
+                  'master.store.placeholder.binName' | translate
+                }}"
+                formControlName="binCode"
+                (customValidator)="checkNgSelectValue($event, 'binCode')"
+                notFoundText="Record not found"
+                (change)="combinationCheck()"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div class="card-body" title="{{ item?.binCode }}">
+                    <div>
+                      <small
+                        ><b>{{ item?.binCode }}</b></small
+                      ><br />
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted && this.editSaveFormControls['binCode'].errors) ||
+                  (this.editSaveFormControls['binCode'].errors &&
+                    (this.editSaveFormControls['binCode'].dirty ||
+                      this.editSaveFormControls['binCode'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSaveFormControls['binCode'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="'master.store.errors.binName.required'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="this.editSaveFormControls['binCode'].errors['invalid']"
+                >
+                  <span
+                    [translate]="'master.store.errors.binName.invalid'"
+                  ></span>
+                </p>
+              </div>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="partType" class="labelText">
+                <span [translate]="'master.store.label.partType'"></span>
+                <i style="color: red"> *</i>
+              </label>
+              <ng-select
+                [items]="partTypeDDList"
+                [selectOnTab]="true"
+                bindLabel="code"
+                (input)="checkNgSelectValue($event, 'partType')"
+                [searchFn]="dropdownSearchFn"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSaveFormControls['partType'].errors) ||
+                    (this.editSaveFormControls['partType'].errors &&
+                      (this.editSaveFormControls['partType'].dirty ||
+                        this.editSaveFormControls['partType'].touched))
+                }"
+                placeholder="{{
+                  'master.store.placeholder.partType' | translate
+                }}"
+                formControlName="partType"
+                (customValidator)="checkNgSelectValue($event, 'partType')"
+                notFoundText="Record not found"
+                (change)="onPartTypeSelected($event); combinationCheck()"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div
+                    class="card-body"
+                    title="{{ item?.code }} - {{ item.description }}"
+                  >
+                    <div>
+                      <small
+                        ><b>{{ item?.code }}</b></small
+                      ><br />
+                      <span class="dropDownDescription">{{
+                        item?.description
+                      }}</span>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted && this.editSaveFormControls['partType'].errors) ||
+                  (this.editSaveFormControls['partType'].errors &&
+                    (this.editSaveFormControls['partType'].dirty ||
+                      this.editSaveFormControls['partType'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSaveFormControls['partType'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="'master.store.errors.partType.required'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSaveFormControls['partType'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="'master.store.errors.partType.invalid'"
+                  ></span>
+                </p>
+              </div>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="partCode" class="labelText">
+                <span [translate]="'master.store.label.partCode'"></span>
+                <i style="color: red"> *</i>
+              </label>
+              <ng-select
+                [items]="partCodeDDList"
+                [selectOnTab]="true"
+                bindLabel="partCode"
+                (input)="checkNgSelectValue($event, 'partCode')"
+                [searchFn]="dropdownSearchFn"
+                [ngClass]="{
+                  redBorder:
+                    (submitted &&
+                      this.editSaveFormControls['partCode'].errors) ||
+                    (this.editSaveFormControls['partCode'].errors &&
+                      (this.editSaveFormControls['partCode'].dirty ||
+                        this.editSaveFormControls['partCode'].touched))
+                }"
+                placeholder="{{
+                  'master.store.placeholder.partCode' | translate
+                }}"
+                formControlName="partCode"
+                (customValidator)="checkNgSelectValue($event, 'partCode')"
+                notFoundText="Record not found"
+                (change)="onPartCodeSelected($event); combinationCheck()"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div class="card-body" title="{{ item?.partCode }}">
+                    <div>
+                      <small
+                        ><b>{{ item?.partCode }}</b></small
+                      ><br />
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted && this.editSaveFormControls['partCode'].errors) ||
+                  (this.editSaveFormControls['partCode'].errors &&
+                    (this.editSaveFormControls['partCode'].dirty ||
+                      this.editSaveFormControls['partCode'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSaveFormControls['partCode'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="'master.store.errors.partCode.required'"
+                  ></span>
+                </p>
+                <p
+                  *ngIf="
+                    this.editSaveFormControls['partCode'].errors['invalid']
+                  "
+                >
+                  <span
+                    [translate]="'master.store.errors.partCode.invalid'"
+                  ></span>
+                </p>
+              </div>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="partName" class="labelText">
+                <span [translate]="'master.store.label.partName'"></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="partName"
+                formControlName="partName"
+                maxlength="100"
+                placeholder="{{
+                  'master.store.placeholder.partName' | translate
+                }}"
+              />
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="partCategory" class="labelText">
+                <span [translate]="'master.store.label.partCategory'"></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="partCategory"
+                formControlName="partCategory"
+                maxlength="100"
+                placeholder="{{
+                  'master.store.placeholder.partCategory' | translate
+                }}"
+              />
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="uom" class="labelText">
+                <span [translate]="'master.store.label.uom'"></span>
+              </label>
+              <input
+                type="text"
+                trim="blur"
+                class="form-control new-form-control-input"
+                id="uom"
+                formControlName="uom"
+                maxlength="100"
+                placeholder="{{ 'master.store.placeholder.uom' | translate }}"
+              />
+            </div>
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+              <label for="purchaseSpecification" class="labelText">
+                <span
+                  [translate]="'master.store.label.purchaseSpecification'"
+                ></span>
+              </label>
+              <br />
+              <p style="margin-left: 20px; font-size: 20px">
+                <i
+                  class="far fa-eye clickable"
+                  (click)="handleOpenPurchaseSpecification()"
+                ></i>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div
+  bsModal
+  #purchasePartSpecificationModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="store-modal-header-new">
+        <b style="float: left">
+          <h4 class="modal-title">
+            <span
+              [translate]="'master.store.titles.purchasePartSpecification'"
+            ></span>
+          </h4>
+        </b>
+        <div class="row gridRightAlign float-right">
+          <button
+            type="button"
+            class="capsule-button reset-button-color"
+            id="btnClsoe"
+            (click)="handleClosePurchaseSpecification()"
+            title="{{ 'Close' | translate }}"
+          >
+            <div class="icon-circle">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <span [translate]="'master.store.button.close'"></span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <sa-shared-table
+          [headerColumnList]="tableColumnHeaderListPurchasePartSpecification"
+          [filter]="true"
+          [excelIcon]="true"
+          [refreshIcon]="true"
+          [showHide]="true"
+          [globalSearch]="true"
+          [isPanelHeading]="false"
+          [addRecordIcon]="false"
+          [tableInitialData]="purchasePartSpecificationData"
+          [isMasterComp]="false"
+          [tableTitle]="'Purchase Part Specification'"
+          [excelFileName]="'Purchase Part Specification List'"
+        ></sa-shared-table>
+      </div>
+    </div>
+  </div>
+</div>

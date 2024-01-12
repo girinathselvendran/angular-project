@@ -1,0 +1,16 @@
+.iconly-bold-paper,
+.iconly-bold-paper * {
+  box-sizing: border-box;
+}
+.iconly-bold-paper {
+  width: 16.89px;
+  height: 16.89px;
+  position: relative;
+}
+.paper {
+  height: auto;
+  position: absolute;
+  left: 2.46px;
+  top: 1.41px;
+  overflow: visible;
+}

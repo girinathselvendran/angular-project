@@ -1,0 +1,982 @@
+<!-- {{showWarningMessageForRoleRights|json}}
+{{warningMessageForRoleRights|json}} -->
+
+<div
+  class="alert alert-warning"
+  role="alert"
+  *ngIf="showWarningMessageForRoleRights"
+>
+  <i class="fa-fw fa fa-warning"></i>
+  <strong
+    ><span [translate]="'common.roleRightsMessages.warning'"></span
+  ></strong>
+  {{ warningMessageForRoleRights | translate }}
+</div>
+<div>
+  <app-generate-rfq-pdf #generatePdfComponent></app-generate-rfq-pdf>
+</div>
+
+<div class="prContainer">
+  <div class="content-container" *ngIf="showList">
+    <div style="display: flex; justify-content: space-between">
+      <h1
+        style="display: inline"
+        [translate]="'operations.requestForQuote.titles.requestForQuote'"
+      ></h1>
+      <strong class="last-updated">
+        {{ "operations.requestForQuote.titles.lastUpdatedWasOn" | translate }}
+        {{ lastModifiedDate }}
+      </strong>
+    </div>
+
+    <div class="cards">
+      <div class="card-mg" (click)="getRFQNoByCurrentStatusId(586, 1)">
+        <!--586 is OVERALL status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-overall">
+                <app-svg-overall-icon></app-svg-overall-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.requestForQuote.titles.overall'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.overAll }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-mg" (click)="getRFQNoByCurrentStatusId(587, 2)">
+        <!--586 is DRAFT status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-drafts">
+                <app-svg-drafts-icon></app-svg-drafts-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.requestForQuote.titles.drafts'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.drafts }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- requested -->
+      <div class="card-mg" (click)="getRFQNoByCurrentStatusId(588, 3)">
+        <!--586 is REQUESTED status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-requested">
+                <app-svg-requested-icon></app-svg-requested-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.requestForQuote.titles.requested'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.requested }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- quotesReceived -->
+      <div class="card-mg" (click)="getRFQNoByCurrentStatusId(589, 4)">
+        <!--589 is QUOTE RECEIVED status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-received">
+                <app-svg-quote-received-icon></app-svg-quote-received-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  style="width: 85px; height: 25px"
+                  [translate]="
+                    'operations.requestForQuote.titles.quotesReceived'
+                  "
+                ></span>
+                <span class="count">{{
+                  this.overViewObject?.quoteReceived
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-mg" (click)="getRFQNoByCurrentStatusId(590, 5)">
+        <!--590 is PENDING APPROVAL status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-pending">
+                <app-svg-pending-approval-icon></app-svg-pending-approval-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  style="width: 85px; height: 25px"
+                  [translate]="
+                    'operations.requestForQuote.titles.pendingApproval'
+                  "
+                ></span>
+                <span class="count">{{
+                  this.overViewObject?.pendingApproval
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-mg" (click)="getRFQNoByCurrentStatusId(591, 6)">
+        <!--591 is APPROVED status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-approved">
+                <app-svg-aproved-icon></app-svg-aproved-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.requestForQuote.titles.approved'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.approved }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-mg" (click)="getRFQNoByCurrentStatusId(592, 7)">
+        <!--592 is CANCELLED status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-cancelled">
+                <app-svg-cancelled-icon></app-svg-cancelled-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.requestForQuote.titles.cancelled'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.cancelled }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-mg" (click)="getRFQNoByCurrentStatusId(593, 8)">
+        <!--593 is REJECTED status Id-->
+        <div class="card">
+          <div class="row" style="flex-wrap: nowrap">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-rejected">
+                <app-svg-rejected-icon></app-svg-rejected-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.requestForQuote.titles.rejected'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.rejected }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-table">
+      <div
+        class="pull-right buttonGroup"
+        style="padding: 0px 5px 0px 0px; margin: -9px 0px -18px 0px"
+      >
+        <div class="action-row-buttons">
+          <button
+            [disabled]="clickedSearchBtn"
+            (click)="searchRecordsList()"
+            class="btn first-action-btn custom-button-search search-button-color"
+          >
+            <div class="icon-container">
+              <app-svg-search-icon></app-svg-search-icon>
+            </div>
+            Search
+          </button>
+          <button
+            (click)="resetForm()"
+            class="btn custom-button-search reset-button-color"
+          >
+            <div class="reset-icon-container">
+              <i class="fa-solid fa-arrows-spin"></i>
+            </div>
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <form
+        class="container-new-ui"
+        [formGroup]="editSaveFormSearch"
+        autocomplete="off"
+      >
+        <div class="row row-table col-lg-12 col-md-12 col-sm-12">
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="depot" class="labelText">
+              <span
+                [translate]="'operations.requestForQuote.label.depot'"
+              ></span>
+            </label>
+
+            <ng-select
+              [items]="associatedDepots"
+              [searchFn]="dropdownDepotSearchFn"
+              [selectOnTab]="true"
+              (input)="checkNgSearchFormSelectValue($event, 'depot')"
+              bindLabel="depotCode"
+              formControlName="depot"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.requestForQuote.placeholder.depot' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch && editSaveFormSearchController['depot'].errors) ||
+                  (editSaveFormSearchController['depot'].errors &&
+                    (editSaveFormSearchController['depot'].dirty ||
+                      editSaveFormSearchController['depot'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.depotCode }} - {{ item?.depotName }}">
+                  <small
+                    ><b>{{ item?.depotCode }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{ item?.depotName }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item.depotCode }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch && editSaveFormSearchController['depot'].errors) ||
+                (editSaveFormSearchController['depot'].errors &&
+                  (editSaveFormSearchController['depot'].dirty ||
+                    editSaveFormSearchController['depot'].touched))
+              "
+            >
+              <p *ngIf="editSaveFormSearchController['depot'].errors['invalid']">
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.depot.invalid'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="rfqNo" class="labelText">
+              <span
+                [translate]="'operations.requestForQuote.label.rfqNo'"
+              ></span>
+            </label>
+
+            <ng-select
+              [items]="rfqNumberDDList"
+              [searchFn]="dropdownRFQNoSearchFn"
+              [selectOnTab]="true"
+              (input)="checkNgSearchFormSelectValue($event, 'rfqNo')"
+              bindLabel="requestForQuoteNo"
+              formControlName="rfqNo"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.requestForQuote.placeholder.rfqNo' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch && editSaveFormSearchController['rfqNo'].errors) ||
+                  (editSaveFormSearchController['rfqNo'].errors &&
+                    (editSaveFormSearchController['rfqNo'].dirty ||
+                      editSaveFormSearchController['rfqNo'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.requestForQuoteNo }}">
+                  <small
+                    ><b>{{ item?.requestForQuoteNo }}</b></small
+                  ><br />
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label"
+                    >{{ item?.requestForQuoteNo }}
+                  </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch && editSaveFormSearchController['rfqNo'].errors) ||
+                (editSaveFormSearchController['rfqNo'].errors &&
+                  (editSaveFormSearchController['rfqNo'].dirty ||
+                    editSaveFormSearchController['rfqNo'].touched))
+              "
+            >
+              <p *ngIf="editSaveFormSearchController['rfqNo'].errors['invalid']">
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.rfqNo.invalid'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- For 'rfqFromDate' control -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="rfqFromDate" class="labelText">
+              <span
+                [translate]="'operations.requestForQuote.label.rfqFromDate'"
+              ></span>
+            </label>
+            <div class="input-group input-group-md">
+              <input
+                type="text"
+                class="form-control uppercase"
+                bsDatepicker
+                (keydown.arrowdown)="rfqFromDate.click()"
+                formControlName="rfqFromDate"
+                #rfqFromDate
+                [bsConfig]="{
+                  dateInputFormat: 'DD-MMM-YYYY',
+                  containerClass: 'theme-dark-blue',
+                  adaptivePosition: true
+                }"
+                [ngClass]="{
+                  redBorderCalender:
+                    startPeriodSmallerThanCurrent ||
+                    startPeriodSmallerThanEnd ||
+                    (submittedSearch &&
+                      editSaveFormSearchController['rfqFromDate'].errors) ||
+                    (editSaveFormSearchController['rfqFromDate'].errors &&
+                      (editSaveFormSearchController['rfqFromDate'].dirty ||
+                        editSaveFormSearchController['rfqFromDate'].touched))
+                }"
+                (ngModelChange)="validatePeriod('rfqFromDate', $event)"
+              />
+              <span class="input-group-btn">
+                <button
+                  class="btn custom-button"
+                  type="button"
+                  (click)="rfqFromDate.click()"
+                  tabindex="-1"
+                >
+                  <app-svg-calender-icon></app-svg-calender-icon>
+                </button>
+              </span>
+            </div>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchController['rfqFromDate'].errors) ||
+                (editSaveFormSearchController['rfqFromDate'].errors &&
+                  (editSaveFormSearchController['rfqFromDate'].dirty ||
+                    editSaveFormSearchController['rfqFromDate'].touched))
+              "
+            >
+              <div
+                *ngIf="editSaveFormSearchController['rfqFromDate'].errors?.['bsDate']?.['invalid']"
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.rfqFromDate.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSaveFormSearchController['rfqFromDate'].errors?.['greaterThanCurrentDateError']"
+              >
+                {{
+                  "operations.requestForQuote.errors.rfqFromGreaterThanCurrent"
+                    | translate
+                }}
+                {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+              </div>
+              <div
+                *ngIf="editSaveFormSearchController['rfqFromDate'].errors?.['customErr']"
+              >
+                <span>
+                  {{
+                    "operations.requestForQuote.errors.rfqFromGreaterThanRfqTo"
+                      | translate
+                  }}
+                  {{
+                    editSaveFormSearchController["rfqToDate"].value
+                      | date : "dd-MMM-yyyy"
+                      | uppercase
+                  }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- For 'rfqToDate' control -->
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="rfqToDate" class="labelText">
+              <span
+                [translate]="'operations.requestForQuote.label.rfqToDate'"
+              ></span>
+            </label>
+            <div class="input-group input-group-md">
+              <input
+                type="text"
+                class="form-control uppercase"
+                bsDatepicker
+                (keydown.arrowdown)="rfqToDate.click()"
+                formControlName="rfqToDate"
+                #rfqToDate
+                [bsConfig]="{
+                  dateInputFormat: 'DD-MMM-YYYY',
+                  containerClass: 'theme-dark-blue',
+                  adaptivePosition: true
+                }"
+                [ngClass]="{
+                  redBorderCalender:
+                    startPeriodSmallerThanCurrent ||
+                    startPeriodSmallerThanEnd ||
+                    (submittedSearch &&
+                      editSaveFormSearchController['rfqToDate'].errors) ||
+                    (editSaveFormSearchController['rfqToDate'].errors &&
+                      (editSaveFormSearchController['rfqToDate'].dirty ||
+                        editSaveFormSearchController['rfqToDate'].touched))
+                }"
+                (ngModelChange)="validatePeriod('rfqToDate', $event)"
+              />
+              <span class="input-group-btn">
+                <button
+                  class="btn custom-button"
+                  type="button"
+                  (click)="rfqToDate.click()"
+                  tabindex="-1"
+                >
+                  <app-svg-calender-icon></app-svg-calender-icon>
+                </button>
+              </span>
+            </div>
+
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  editSaveFormSearchController['rfqToDate'].errors) ||
+                (editSaveFormSearchController['rfqToDate'].errors &&
+                  (editSaveFormSearchController['rfqToDate'].dirty ||
+                    editSaveFormSearchController['rfqToDate'].touched))
+              "
+            >
+              <div
+                *ngIf="editSaveFormSearchController['rfqToDate'].errors?.['bsDate']?.['invalid']"
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.rfqToDate.invalid'
+                  "
+                ></span>
+              </div>
+              <div
+                *ngIf="editSaveFormSearchController['rfqToDate'].errors?.['greaterThanCurrentDateError']"
+              >
+                {{
+                  "operations.requestForQuote.errors.rfqToGreaterThanCurrent"
+                    | translate
+                }}
+                {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+              </div>
+              <div
+                *ngIf="editSaveFormSearchController['rfqToDate'].errors?.['customErr']"
+              >
+                {{
+                  "operations.requestForQuote.errors.rfqToLesserThanRfqFrom"
+                    | translate
+                }}
+                {{
+                  editSaveFormSearchController["rfqFromDate"].value
+                    | date : "dd-MMM-yyyy"
+                    | uppercase
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="rfqStatus" class="labelText">
+              <span
+                [translate]="'operations.requestForQuote.label.rfqStatus'"
+              ></span>
+            </label>
+            <ng-select
+              [items]="rfqStatusDDList"
+              [searchFn]="dropdownSearchFn"
+              [selectOnTab]="true"
+              (input)="checkNgSearchFormSelectValue($event, 'rfqStatus')"
+              bindLabel="code"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              formControlName="rfqStatus"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.requestForQuote.placeholder.rfqStatus' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch &&
+                    this.editSaveFormSearch.controls['rfqStatus'].errors) ||
+                  (this.editSaveFormSearch.controls['rfqStatus'].errors &&
+                    (this.editSaveFormSearch.controls['rfqStatus'].dirty ||
+                      this.editSaveFormSearch.controls['rfqStatus'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item?.description }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  this.editSaveFormSearch.controls['rfqStatus'].errors) ||
+                (this.editSaveFormSearch.controls['rfqStatus'].errors &&
+                  (this.editSaveFormSearch.controls['rfqStatus'].dirty ||
+                    this.editSaveFormSearch.controls['rfqStatus'].touched))
+              "
+            >
+              <p
+                *ngIf="
+                  this.editSaveFormSearch.controls['rfqStatus'].errors['invalid']
+                "
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.rfqStatus.invalid'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-md-2 col-sm-2">
+            <label for="rfqSource" class="labelText">
+              <span
+                [translate]="'operations.requestForQuote.label.rfqSource'"
+              ></span>
+            </label>
+            <ng-select
+              [items]="rfqSourceDDList"
+              [searchFn]="dropdownSearchFn"
+              [selectOnTab]="true"
+              (input)="checkNgSearchFormSelectValue($event, 'rfqSource')"
+              bindLabel="code"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [markFirst]="true"
+              formControlName="rfqSource"
+              notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+              placeholder="{{
+                'operations.requestForQuote.placeholder.rfqSource' | translate
+              }}"
+              [ngClass]="{
+                redBorder:
+                  (submittedSearch &&
+                    this.editSaveFormSearch.controls['rfqSource'].errors) ||
+                  (this.editSaveFormSearch.controls['rfqSource'].errors &&
+                    (this.editSaveFormSearch.controls['rfqSource'].dirty ||
+                      this.editSaveFormSearch.controls['rfqSource'].touched))
+              }"
+            >
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm"
+                let-clear="clear"
+              >
+                <div title="{{ item?.code }} - {{ item?.description }}">
+                  <small
+                    ><b>{{ item?.code }}</b></small
+                  ><br />
+                  <span class="dropDownDescription">{{
+                    item?.description
+                  }}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items ? items.slice(0, 2) : []"
+                >
+                  <span class="ng-value-label">{{ item.code }} </span>
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+            <div
+              class="help-block red"
+              *ngIf="
+                (submittedSearch &&
+                  this.editSaveFormSearch.controls['rfqSource'].errors) ||
+                (this.editSaveFormSearch.controls['rfqSource'].errors &&
+                  (this.editSaveFormSearch.controls['rfqSource'].dirty ||
+                    this.editSaveFormSearch.controls['rfqSource'].touched))
+              "
+            >
+              <p
+                *ngIf="
+                  this.editSaveFormSearch.controls['rfqSource'].errors['invalid']
+                "
+              >
+                <span
+                  [translate]="
+                    'operations.requestForQuote.errors.rfqSource.invalid'
+                  "
+                ></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="line"></div>
+      <app-request-for-quote-list
+        #requestForQuoteList
+        (exportToExcel)="exportToExcel($event)"
+        (handleAddRecord)="handleAddRecordIcon($event)"
+        (receiveTableRow)="receiveTableRowData($event)"
+        (receiveSelected)="receiveSelectedData($event)"
+        (handleCancel)="handleCancelIcon($event)"
+        (handleSendForApproval)="handleSendForApprovalIcon($event)"
+        (handleReopen)="handleReopenIcon($event)"
+        (handleSendRFQ)="handleSendRequestForQuote($event)"
+        (getServerSideTable)="getServerSideTableList($event)"
+        (sendEmailGridFunction)="handleEmailIcon($event)"
+        [tableTitle]="tableTitle"
+        [requestForQuoteData]="this.requestForQuoteData"
+        [showTableByColumn]="showTableByColumn"
+        [tableFilterFormGroup]="tableFilterFormGroup"
+        [disableAddNewIcons]="disableAddNewIcons"
+        [disableSendForApprovalIcons]="disableSendForApprovalIcons"
+        [disableCancelRFQIcons]="disableCancelRFQIcons"
+        [disableReopenIcons]="disableReopenIcons"
+        [disablePrintRFQIcons]="disablePrintRFQIcons"
+        [disableEmailRFQIcons]="disableEmailRFQIcons"
+        [showFormSendRFQIcons]="showFormSendRFQIcons"
+        [showFormSendForApprovalIcons]="showFormSendForApprovalIcons"
+        [showEmailRFQIcons]="showEmailRFQIcons"
+        [showReopenIcons]="showReopenIcons"
+        [showCancelIcons]="showCancelIcons"
+      ></app-request-for-quote-list>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default" *ngIf="!showList">
+  <div class="panel-heading clearfix">
+    <div class="panel-title panelHeading pull-left">
+      <div class="nopaddingbottom">
+        <b>
+          <span
+            [translate]="'operations.requestForQuote.titles.requestForQuote'"
+            class="main-title"
+          ></span
+        ></b>
+        <label class="linebadge"> {{ mode | translate | uppercase }}</label>
+      </div>
+      <div *ngIf="mode == 'edit'">
+        <span class="panelSubHeading-Pr redIcon">
+          {{ "operations.requestForQuote.label.rfqNo" | translate }}
+          {{ rfqNumber }}</span
+        >
+      </div>
+    </div>
+    <div class="pull-right buttonGroup">
+      <div class="row">
+        <button
+          [hidden]="mode === 'new'"
+          class="capsule-button light-blue"
+          (click)="handleFormPrintIcon()"
+          [disabled]="disableFormPrintRFQIcons"
+          [class.unclickable]="disableFormPrintRFQIcons"
+        >
+          <div class="icon-circle">
+            <i class="fa-regular fa-print"></i>
+          </div>
+          {{ "operations.requestForQuote.buttons.printRfq" | translate }}
+        </button>
+        <button
+          [class.unclickable]="disableFormCancelRFQIcons"
+          [hidden]="mode === 'new' || hideCancelRFQ"
+          [disabled]="disableFormCancelRFQIcons"
+          class="capsule-button brown"
+          (click)="handleCancelIcon('button')"
+        >
+          <div class="icon-circle">
+            <i class="fa-regular fa-xmark"></i>
+          </div>
+          {{ "operations.requestForQuote.buttons.cancelRfq" | translate }}
+        </button>
+        <!-- [hidden]="hideSendForApproval" -->
+        <button
+          [class.unclickable]="disableFormSendForApprovalIcons"
+          [hidden]="hideSendForApproval || mode === 'new'"
+          [disabled]="disableFormSendForApprovalIcons"
+          class="capsule-button light-green"
+          (click)="handleSendForApprovalFormIcon()"
+        >
+          <div class="icon-circle">
+            <i class="fa-regular fa-circle-check"></i>
+          </div>
+          {{ "operations.requestForQuote.buttons.sendForApproval" | translate }}
+        </button>
+        <button
+          [class.unclickable]="disableFormAddNewIcons"
+          [hidden]="mode === 'new'"
+          [disabled]="disableFormAddNewIcons"
+          class="capsule-button navyBlue"
+          (click)="handleFormNewRFQIcon()"
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          {{ "operations.requestForQuote.buttons.addNewRfq" | translate }}
+        </button>
+        <button
+          [class.unclickable]="disableFormSendRFQIcons"
+          [disabled]="disableFormSendRFQIcons"
+          class="capsule-button navyBlue"
+          [hidden]="hideSendEmail"
+          (click)="handleEmailIcon($event)"
+        >
+          <div class="icon-circle">
+            <i class="fa-thin fa-paper-plane"></i>
+          </div>
+          {{ "operations.requestForQuote.buttons.sendEmail" | translate }}
+        </button>
+        
+        <button
+        [class.unclickable]="disableFormSendRFQIcons"
+        [disabled]="disableFormSendRFQIcons"
+        class="capsule-button navyBlue"
+        [hidden]="hideSendRFQ ||   mode === 'new'"
+        (click)="handleSendRequestForQuote($event)"
+      >
+        <div class="icon-circle">
+          <i class="fa-thin fa-paper-plane"></i>
+        </div>
+        {{ "operations.requestForQuote.buttons.sendRfq" | translate }}
+      </button>
+        <button
+          [class.unclickable]="disableFormSubmitIcons"
+          [disabled]="disableFormSubmitIcons"
+          class="capsule-button green"
+          (click)="handleFormSubmit()"
+          [hidden]="hidesave"
+        >
+          <div class="icon-circle">
+            <i class="fas fa-light fa-floppy-disk"></i>
+          </div>
+          {{ "operations.requestForQuote.buttons.save" | translate }}
+        </button>
+
+        <button
+          [class.unclickable]="disableFormResetIcons"
+          [disabled]="disableFormResetIcons"
+          class="capsule-button grey"
+          (click)="handleFormResetIcon()"
+          [hidden]="hideResetRFQ"
+        >
+          <div class="icon-circle">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </div>
+          {{ "operations.requestForQuote.buttons.reset" | translate }}
+        </button>
+        <button
+          class="capsule-button pale-orange"
+          title="{{ 'Back To List' | translate }}"
+          (click)="handleBackToList()"
+        >
+          <div class="icon-circle">
+            <i class="fa-regular fa-arrow-left"></i>
+          </div>
+          {{ "operations.requestForQuote.buttons.backToList" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <app-request-for-quote-form
+    [mode]="mode"
+    [editSaveRFQForm]="editSaveForm"
+    [editSaveRFQPartForm]="editSaveRFQPartForm"
+    [editSaveSupplierForm]="editSaveSupplierForm"
+    [submitted]="submitted"
+    [associatedDepots]="associatedDepots"
+    [rfqNumberDDList]="rfqNumberDDList"
+    [rfqStatusDDList]="rfqStatusDDList"
+    [rfqSourceDDList]="rfqSourceDDList"
+    [showPartDetails]="showPartDetails"
+    [selectedGridDataList]="selectedDataList"
+    [requestForQuoteId]="requestForQuoteId"
+    [partDetailList]="newPartDetailList"
+    [screenId]="screenId"
+    
+  ></app-request-for-quote-form>
+</div>
+
+<app-cancel-popup
+  #cancelPopup
+  [popupTitle]="cancelPopupTitle"
+  [isClearButton]="false"
+  (handleFormCancelSaveFn)="handleFormCancelSave($event)"
+></app-cancel-popup>
+<app-send-email
+  #emailModal
+  (sendEmailFunction)="sendEmailFunction($event)"
+  [attachmentPath]="attachmentPath"
+  [emailSubject]="emailSubject"
+>
+</app-send-email>

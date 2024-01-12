@@ -1,0 +1,103 @@
+<div
+  bsModal
+  #cancelPopup="bs-modal"
+  class="modal remark-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+>
+  <form [formGroup]="cancelRemarkForm" autocomplete="off">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content border-radius-8">
+        <div class="cancel-modal-body">
+          <div class="cancel-modal-header">
+            <div
+              class="cancel-txt-remarks"
+              
+            >{{popupTitle | translate}}</div>
+          </div>
+          <div class="canel-modal-body">
+            <div class="cancel-txt-area-container">
+              <h3 class="margin-padding-0">
+                <label for="city" class="labelText">
+                  <span
+                  >{{fieldTitle}}</span>
+                  <span class="redIcon"> *</span>
+                </label>
+              </h3>
+              <textarea
+                class="form-control remarks-textarea"
+                formControlName="remarks"
+              ></textarea>
+
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submitted &&
+                    this.cancelRemarkForm.controls['remarks'].errors) ||
+                  (this.cancelRemarkForm.controls['remarks'].errors &&
+                    (this.cancelRemarkForm.controls['remarks'].dirty ||
+                      this.cancelRemarkForm.controls['remarks'].touched))
+                "
+              >
+                <p
+                  class="red"
+                  *ngIf="
+                    this.cancelRemarkForm.controls['remarks'].errors['required']
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.common.cancelPurchase.errors.remarks.required'
+                    "
+                  ></span>
+                </p>
+              </div>
+              <div class="cancel-modal-footer">
+                <div class="row">
+                  <button *ngIf="isClearButton"
+                    class="capsule-button green"
+                    (click)="clearForm()"
+                  >
+                    <div class="icon-circle">
+                      <i
+                        class="fas fa-fw fa-eraser navy"
+                        aria-hidden="true"
+                        title="{{
+                          'common.grid.tooltip.clearFilter' | translate
+                        }}"
+                      ></i>
+                    </div>
+                    {{ "common.buttons.clear" | translate }}
+                  </button>
+                  <button
+                    class="capsule-button green"
+                    (click)="handleFormCancelSave()"
+                  >
+                    <div class="icon-circle">
+                      <i class="fas fa-light fa-floppy-disk"></i>
+                    </div>
+
+                    {{ "common.buttons.save" | translate }}
+                  </button>
+                  <button
+                    class="capsule-button reset-button-color"
+                    (click)="cancelPopupClose()"
+                  >
+                    <div class="icon-circle">
+                      <i class="fa-regular fa-circle-xmark"></i>
+                    </div>
+
+                    {{ "common.buttons.close" | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

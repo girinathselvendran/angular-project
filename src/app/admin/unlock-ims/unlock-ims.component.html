@@ -1,0 +1,39 @@
+<div
+  class="alert alert-warning"
+  role="alert"
+  *ngIf="showWarningMessageForRoleRights"
+>
+  <i class="fa-fw fa fa-warning"></i>
+  <strong
+    ><span [translate]="'common.roleRightsMessages.warning'"></span
+  ></strong>
+  {{ warningMessageForRoleRights | translate }}
+</div>
+<!-- {{ warningMessageForRoleRights | translate }} -->
+
+<div >
+  <sa-ribbon icon="fas fa-user-tie"></sa-ribbon>
+  <sa-shared-table
+      [filter]="true"
+      [excelIcon]="true"
+      [refreshIcon]="true"
+      [showHide]="false"
+      [globalSearch]="true"
+      [excelFileName]="excelFileName"
+      [isPanelHeading]="false"
+      [addRecordIcon]="false"
+      [headerColumnList]="columnHeaderList"
+      [tableInitialData]="contactInfoList"
+      (addTableDataService)="addIconClick($event)"
+      (sendTableRowData)="receiveTableRowData($event)"
+      (refreshTableData)="refreshIconClick($event)"
+      [isMasterComp]="false"
+      [tableTitle]="''"
+      [deleteIcon]="true"
+      (handleDeleteRowData)="handleDeleteContactIcon($event)"
+    ></sa-shared-table>
+</div>
+
+
+
+

@@ -1,0 +1,360 @@
+<div
+  bsModal
+  #rfqSupplierModal="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="supplierModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content modal-content-custom">
+      <div class="modal-header-new header-blue">
+        <b class="float-left">
+          <h4 class="modal-title">
+            <span
+              [translate]="
+                'operations.requestForQuote.addSupplier.titles.supplier'
+              "
+            ></span>
+          </h4>
+        </b>
+
+        <div class="pull-right buttonGroup">
+          <div class="row">
+            <button
+              class="capsule-button green"
+              [disabled]="disableSaveButton"
+              [class.unclickable]="disableSaveButton"
+              (click)="!disableSaveButton && saveSupplier()"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-light fa-floppy-disk"></i>
+              </div>
+              {{
+                "operations.requestForQuote.addSupplier.buttons.save"
+                  | translate
+              }}
+            </button>
+            <button (click)="resetForm()" class="capsule-button grey">
+              <div class="icon-circle">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </div>
+              {{
+                "operations.requestForQuote.addSupplier.buttons.reset"
+                  | translate
+              }}
+            </button>
+            <button
+              class="capsule-button"
+              (click)="handleCloseSupplier()"
+              style="background-color: #ec5656"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-xmark"></i>
+              </div>
+              {{
+                "operations.requestForQuote.addSupplier.buttons.cancel"
+                  | translate
+              }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="widget-body fuelux">
+          <div class="container-fluid">
+            <form
+              class="container-new-ui"
+              [formGroup]="editSaveSupplierForm"
+              autocomplete="off"
+            >
+              <div class="row">
+                <div class="form-group col">
+                  <label for="supplierCode" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.addSupplier.label.supplierCode'
+                      "
+                    ></span>
+                    <i class="red"> *</i>
+                  </label>
+
+                  <ng-select
+                    [items]="supplierCodeDDList"
+                    [searchFn]="dropdownSearchFn"
+                    [selectOnTab]="true"
+                    (input)="checkNgSelectValue($event, 'supplierCode')"
+                    bindLabel="supplierCode"
+                    formControlName="supplierCode"
+                    notFoundText="{{
+                      'common.dropdown.notFoundText' | translate
+                    }}"
+                    placeholder="{{
+                      'operations.requestForQuote.addSupplier.placeholder.supplierCode'
+                        | translate
+                    }}"
+                    (change)="onSupplierCodeSelected($event)"
+                    [ngClass]="{
+                      redBorder:
+                        (submitted &&
+                          editSaveSupplierFormController['supplierCode']
+                            .errors) ||
+                        (editSaveSupplierFormController['supplierCode']
+                          .errors &&
+                          (editSaveSupplierFormController['supplierCode']
+                            .dirty ||
+                            editSaveSupplierFormController['supplierCode']
+                              .touched))
+                    }"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div
+                        title="{{ item?.supplierCode }} - {{
+                          item?.supplierName
+                        }}"
+                      >
+                        <small
+                          ><b>{{ item?.supplierCode }}</b></small
+                        ><br />
+                        <span class="dropDownDescription">{{
+                          item?.supplierName
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+
+                  <div *ngIf="isShowSupplierExistErr" class="help-block red">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.addSupplier.errors.supplier.exist'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    class="help-block red"
+                    *ngIf="
+                      (submitted &&
+                        editSaveSupplierFormController['supplierCode']
+                          .errors) ||
+                      (editSaveSupplierFormController['supplierCode'].errors &&
+                        (editSaveSupplierFormController['supplierCode'].dirty ||
+                          editSaveSupplierFormController['supplierCode']
+                            .touched))
+                    "
+                  >
+                    <p
+                      *ngIf="
+                        editSaveSupplierFormController['supplierCode'].errors[
+                          'invalid'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.addSupplier.errors.supplierCode.invalid'
+                        "
+                      ></span>
+                    </p>
+                    <p
+                      *ngIf="
+                        editSaveSupplierFormController['supplierCode'].errors[
+                          'required'
+                        ]
+                      "
+                    >
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.addSupplier.errors.supplierCode.required'
+                        "
+                      ></span>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="form-group col">
+                  <label for="supplierName" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.addSupplier.label.supplierName'
+                      "
+                    ></span>
+                  </label>
+
+                  <ng-select
+                    [selectOnTab]="true"
+                    (input)="checkNgSelectValue($event, 'supplierName')"
+                    bindLabel="supplierName"
+                    formControlName="supplierName"
+                    notFoundText="{{
+                      'common.dropdown.notFoundText' | translate
+                    }}"
+                    placeholder="{{
+                      'operations.requestForQuote.addSupplier.placeholder.supplierName'
+                        | translate
+                    }}"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div title="{{ item?.code }} - {{ item?.description }}">
+                        <small
+                          ><b>{{ item?.code }}</b></small
+                        ><br />
+                        <span class="dropDownDescription">{{
+                          item?.description
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+
+                <div class="form-group col">
+                  <label for="manufacturer" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.addSupplier.label.manufacturer'
+                      "
+                    ></span>
+                  </label>
+
+                  <ng-select
+                    [selectOnTab]="true"
+                    (input)="checkNgSelectValue($event, 'manufacturer')"
+                    bindLabel="manufacturerCode"
+                    formControlName="manufacturer"
+                    notFoundText="{{
+                      'common.dropdown.notFoundText' | translate
+                    }}"
+                    placeholder="{{
+                      'operations.requestForQuote.addSupplier.placeholder.manufacturer'
+                        | translate
+                    }}"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div title="{{ item?.code }} - {{ item?.description }}">
+                        <small
+                          ><b>{{ item?.code }}</b></small
+                        ><br />
+                        <span class="dropDownDescription">{{
+                          item?.description
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+
+                <div class="form-group col">
+                  <label for="city" class="labelText">
+                    <span
+                      [translate]="
+                        'operations.requestForQuote.addSupplier.label.city'
+                      "
+                    ></span>
+                  </label>
+
+                  <ng-select
+                    [items]="cityDDList"
+                    [searchFn]="dropdownSearchFn"
+                    [selectOnTab]="true"
+                    (input)="checkNgSelectValue($event, 'city')"
+                    bindLabel="cityCode"
+                    formControlName="city"
+                    notFoundText="Not found"
+                    placeholder="{{
+                      'operations.requestForQuote.addSupplier.placeholder.city'
+                        | translate
+                    }}"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                      let-search="searchTerm"
+                    >
+                      <div
+                        title="{{ item?.cityCode }} - {{
+                          item?.cityDescription
+                        }}"
+                      >
+                        <small
+                          ><b>{{ item?.cityCode }}</b></small
+                        ><br />
+                        <span class="dropDownDescription">{{
+                          item?.cityDescription
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <div class="form-group col-2">
+                  <fieldset>
+                    <label [for]="'preferredSupplier'" class="labelText">
+                      <span
+                        [translate]="
+                          'operations.requestForQuote.addSupplier.label.preferredSupplier'
+                        "
+                      ></span>
+                    </label>
+                    <br />
+                    <div class="onoffswitch" style="margin-top: 8px">
+                      <input
+                        type="checkbox"
+                        formControlName="preferredSupplier"
+                        [id]="'preferredSupplier'"
+                        class="onoffswitch-checkbox"
+                        [readonly]="false"
+                        [disabled]="false"
+                        (input)="onChangePreferredSupplierToggle($event)"
+                      />
+                      <label
+                        class="onoffswitch-label"
+                        [for]="'preferredSupplier'"
+                        style="color: white"
+                      >
+                        <span
+                          class="onoffswitch-inner"
+                          data-swchon-text="YES"
+                          data-swchoff-text="NO"
+                        ></span>
+                        <span class="onoffswitch-switch"></span>
+                      </label>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </form>
+            <app-shared-table-new
+              [headerColumnList]="tableColumnsSupplier"
+              [filter]="true"
+              [deleteGnIcon]="true"
+              [refreshIcon]="false"
+              [addRecordIcon]="false"
+              [isCheckBox]="true"
+              [isGridTittle]="false"
+              (sendSelectedData)="receiveSelectedData($event)"
+              (handleDeleteGnIconFn)="handleDeleteRowData($event)"
+              [tableInitialData]="rfqSupplierData"
+              [isMasterComp]="false"
+              [tableTitle]="'Supplier list Grid'"
+              [excelFileName]="'Supplier list Grid'"
+            ></app-shared-table-new>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+{
+    "dateFilterAdvancedOptions": [
+        {"label": "Yesterday", "value":"yesterday"},
+        {"label": "Today", "value":"today"},
+        {"label": "Tomorrow", "value":"tomorrow"},
+        {"label": "Last Week", "value":"lastweek"},
+        {"label": "This Week", "value":"thisweek"},
+        {"label": "Next Week", "value":"nextweek"},
+        {"label": "Last Month", "value":"lastmonth"},
+        {"label": "This Month", "value":"thismonth"},
+        {"label": "Next Month", "value":"nextmonth"},
+        {"label": "Last Year", "value":"lastyear"},
+        {"label": "This Year", "value":"thisyear"},
+        {"label": "Next Year", "value":"nextyear"}
+    ],
+    "numericMatchModeOptions": [
+        { 
+          "label": "== - Equals", 
+          "value": "equals"
+        },
+        { 
+            "label": "!= - Not equals", 
+            "value": "notEquals"
+        },
+        { 
+          "label": "> - Greater than", 
+          "value": "gt"
+        },
+        { 
+          "label": "< - Less than", 
+          "value": "lt"
+        },
+        { 
+          "label": ">= - Greater than or equal to", 
+          "value": "gte"
+        },
+        { 
+          "label": "<= - Less than or equal to", 
+          "value": "lte"
+        }
+      ],
+      "textMatchModeOptions": [
+        { 
+          "label": "Contains", 
+          "value": "contains"
+        },
+        { 
+            "label": "Not Contains", 
+            "value": "notContains"
+        },
+        { 
+          "label": "Equals", 
+          "value": "equals"
+        }
+      ],
+      "booleanMatchModeOptions": [
+        { 
+          "value": "any", 
+          "description": "Any" 
+        },
+        { 
+          "value": "active", 
+          "description": "Active" 
+        },
+        { 
+          "value": "inActive", 
+        "description": "InActive" 
+      }
+    ]
+}

@@ -1,0 +1,44 @@
+<div class="panel panel-default">
+  <div [hidden]="selectedForm != 'PR'">
+    <app-purchase-requisition-form
+      #purchaseRequisition
+      [editSavePRForm]="editSavePRForm"
+      [purchaseRequisitionPartsList]="purchaseRequisitionPartsList"
+      (receiveTablePart)="receiveTablePartList($event)"
+      (handleOpenPurchaseSpecificationModel)="handleOpenPurchaseSpecification()"
+    ></app-purchase-requisition-form>
+  </div>
+
+  <div [hidden]="selectedForm != 'PO'">
+    <app-purchase-order-form
+      #purchaseOrderForm
+      [poMode]="formMode"
+      [editSavePOForm]="editSavePOForm"
+      [selectedPoRowData]="selectedFormRowData"
+      [additionalChargesList]="additionalChargesList"
+      [selectedPoId]="selectedPoId"
+      [currentStatusId]="currentStatusId"
+    >
+    </app-purchase-order-form>
+  </div>
+
+  <div [hidden]="selectedForm != 'RFQ'">
+    <app-request-for-quote-form
+      [mode]="formMode"
+      [editSaveRFQForm]="editSaveRFQForm"
+      [editSaveRFQPartForm]="editSaveRFQPartForm"
+      [editSaveSupplierForm]="editSaveSupplierForm"
+      [associatedDepots]="associatedDepots"
+      [showPartDetails]="false"
+      [selectedGridDataList]="this.selectedFormRowData.value"
+      [requestForQuoteId]="requestForQuoteId"
+      [partDetailList]="newPartDetailList"
+      [screenId]="screenId"
+    ></app-request-for-quote-form>
+  </div>
+</div>
+
+<app-part-specifications
+  #partSpecification
+  [partSpecificationData]="partSpecificationData"
+></app-part-specifications>

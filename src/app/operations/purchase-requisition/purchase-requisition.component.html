@@ -1,0 +1,987 @@
+<div>
+  <app-generate-pdf
+    #generatePDF
+    
+  ></app-generate-pdf>
+  <!-- [pdfData]="this.purchaseRequisitionOutputData" -->
+</div>
+
+<div
+  class="alert alert-warning"
+  role="alert"
+  *ngIf="showWarningMessageForRoleRights"
+>
+  <i class="fa-fw fa fa-warning"></i>
+  <strong
+    ><span [translate]="'common.roleRightsMessages.warning'"></span
+  ></strong>
+  {{ warningMessageForRoleRights | translate }}
+</div>
+
+<div class="prContainer">
+  <div class="content-container" *ngIf="showList">
+    <div class="flex-container">
+      <h1
+        class="purchase-requisition-title"
+        [translate]="
+          'operations.purchaseRequisition.titles.purchaseRequisitionOverview'
+        "
+      ></h1>
+      <strong class="last-updated">
+        {{
+          "operations.purchaseRequisition.titles.lastUpdatedWasOn" | translate
+        }}
+        {{ lastModifiedDate }}
+      </strong>
+    </div>
+
+    <div class="cards">
+      <div class="card-bg" (click)="getPRNoByCurrentStatusId(547, 1)">
+        <div class="card">
+          <div class="row">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-overall">
+                <app-svg-overall-icon></app-svg-overall-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.purchaseRequisition.titles.overall'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.overAll }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div (click)="getPRNoByCurrentStatusId(542, 2)" class="card-bg">
+        <div class="card">
+          <div class="row">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-drafts">
+                <app-svg-drafts-icon></app-svg-drafts-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.purchaseRequisition.titles.drafts'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.drafts }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-bg" (click)="getPRNoByCurrentStatusId(543, 3)">
+        <div class="card">
+          <div class="row">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-pending">
+                <app-svg-pending-approval-icon></app-svg-pending-approval-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="
+                    'operations.purchaseRequisition.titles.pendingApproval'
+                  "
+                ></span>
+                <span class="count">{{
+                  this.overViewObject?.pendingApproval
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-bg" (click)="getPRNoByCurrentStatusId(544, 4)">
+        <div class="card">
+          <div class="row">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-approved">
+                <app-svg-aproved-icon></app-svg-aproved-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.purchaseRequisition.titles.approved'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.approved }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-bg" (click)="getPRNoByCurrentStatusId(545, 5)">
+        <div class="card">
+          <div class="row">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-cancelled">
+                <app-svg-cancelled-icon></app-svg-cancelled-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.purchaseRequisition.titles.canceled'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.cancelled }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-bg" (click)="getPRNoByCurrentStatusId(546, 6)">
+        <div class="card">
+          <div class="row">
+            <div class="col col-auto">
+              <div class="rectangle-6 rectangle-rejected">
+                <app-svg-rejected-icon></app-svg-rejected-icon>
+              </div>
+            </div>
+            <div class="col col-auto">
+              <div class="text-container">
+                <span
+                  class="card-text-lable"
+                  [translate]="'operations.purchaseRequisition.titles.rejected'"
+                ></span>
+                <span class="count">{{ this.overViewObject?.rejected }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-table">
+        <form
+          class="container-new-ui"
+          [formGroup]="editSaveForm"
+          autocomplete="off"
+        >
+          <div class="row row-table justify-content-between">
+            <div class="col">
+              <label for="depot" class="labelText">
+                <span
+                  [translate]="'operations.purchaseRequisition.label.depot'"
+                ></span>
+              </label>
+
+              <ng-select
+                [items]="associatedDepots"
+                [searchFn]="dropdownDepotSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSearchFormSelectValue($event, 'depot')"
+                bindLabel="depotCode"
+                formControlName="depot"
+                notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+                placeholder="{{
+                  'operations.purchaseRequisition.placeholder.depot' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submittedSearch &&
+                      this.editSaveForm.controls['depot'].errors) ||
+                    (this.editSaveForm.controls['depot'].errors &&
+                      (this.editSaveForm.controls['depot'].dirty ||
+                        this.editSaveForm.controls['depot'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div title="{{ item?.depotCode }} - {{ item?.depotName }}">
+                    <small
+                      ><b>{{ item?.depotCode }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.depotName
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submittedSearch &&
+                    this.editSaveForm.controls['depot'].errors) ||
+                  (this.editSaveForm.controls['depot'].errors &&
+                    (this.editSaveForm.controls['depot'].dirty ||
+                      this.editSaveForm.controls['depot'].touched))
+                "
+              >
+                <p
+                  *ngIf="this.editSaveForm.controls['depot'].errors['invalid']"
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseRequisition.errors.depot.invalid'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <div class="col">
+              <label for="prNo" class="labelText">
+                <span
+                  [translate]="'operations.purchaseRequisition.label.prNo'"
+                ></span>
+              </label>
+              <ng-select
+                [items]="prNumbers"
+                [searchFn]="dropdownPRNoSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSearchFormSelectValue($event, 'prNo')"
+                bindLabel="purchaseRequisitionNo"
+                formControlName="prNo"
+                notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+                placeholder="{{
+                  'operations.purchaseRequisition.placeholder.prNo' | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submittedSearch &&
+                      this.editSaveForm.controls['prNo'].errors) ||
+                    (this.editSaveForm.controls['prNo'].errors &&
+                      (this.editSaveForm.controls['prNo'].dirty ||
+                        this.editSaveForm.controls['prNo'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div title="{{ item?.purchaseRequisitionNo }}">
+                    <small
+                      ><b>{{ item?.purchaseRequisitionNo }}</b></small
+                    ><br />
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submittedSearch &&
+                    this.editSaveForm.controls['prNo'].errors) ||
+                  (this.editSaveForm.controls['prNo'].errors &&
+                    (this.editSaveForm.controls['prNo'].dirty ||
+                      this.editSaveForm.controls['prNo'].touched))
+                "
+              >
+                <p *ngIf="this.editSaveForm.controls['prNo'].errors['invalid']">
+                  <span
+                    [translate]="
+                      'operations.purchaseRequisition.errors.prNo.invalid'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <div class="col">
+              <label for="purchaseDateFrom" class="labelText">
+                <span
+                  [translate]="
+                    'operations.purchaseRequisition.label.prDateFrom'
+                  "
+                ></span>
+              </label>
+              <div class="input-group input-group-md">
+                <input
+                  type="text"
+                  class="form-control uppercase"
+                  bsDatepicker
+                  (keydown.arrowdown)="purchaseDateFrom.click()"
+                  formControlName="purchaseDateFrom"
+                  #purchaseDateFrom
+                  [bsConfig]="{
+                    dateInputFormat: 'DD-MMM-YYYY',
+                    containerClass: 'theme-dark-blue',
+                    adaptivePosition: true
+                  }"
+                  [ngClass]="{
+                    redBorderCalender:
+                      startPeriodSmallerThanCurrent ||
+                      startPeriodSmallerThanEnd ||
+                      (submittedSearch &&
+                        editSaveFormControls['purchaseDateFrom'].errors) ||
+                      (editSaveFormControls['purchaseDateFrom'].errors &&
+                        (editSaveFormControls['purchaseDateFrom'].dirty ||
+                          editSaveFormControls['purchaseDateFrom'].touched))
+                  }"
+                  (ngModelChange)="validatePeriod('purchaseDateFrom', $event)"
+                />
+                <span class="input-group-btn">
+                  <button
+                    class="btn custom-button"
+                    type="button"
+                    (click)="purchaseDateFrom.click()"
+                    tabindex="-1"
+                  >
+                    <app-svg-calender-icon></app-svg-calender-icon>
+                  </button>
+                </span>
+              </div>
+              
+
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submittedSearch &&
+                    editSaveFormControls['purchaseDateFrom'].errors) ||
+                  (editSaveFormControls['purchaseDateFrom'].errors &&
+                    (editSaveFormControls['purchaseDateFrom'].dirty ||
+                      editSaveFormControls['purchaseDateFrom'].touched))
+                "
+              >
+                <div
+                  *ngIf="editSaveFormControls['purchaseDateFrom'].errors?.['bsDate']?.['invalid']"
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseRequisition.errors.invalid'
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="editSaveFormControls['purchaseDateFrom'].errors?.['greaterThanCurrentDateError']"
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseRequisition.errors.fromGreaterThanCurrent'
+                    "
+                  ></span>
+                  {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                </div>
+                <div
+                  *ngIf="editSaveFormControls['purchaseDateTo'].errors?.['customErr']"
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseRequisition.errors.fromGreaterThanTo'
+                    "
+                  ></span>
+                  {{
+                    editSaveFormControls["purchaseDateFrom"].value
+                      | date : "dd-MMM-yyyy"
+                      | uppercase
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <label for="purchaseDateTo" class="labelText">
+                <span
+                  [translate]="'operations.purchaseRequisition.label.prDateTo'"
+                ></span>
+              </label>
+              <div class="input-group input-group-md">
+                <input
+                  type="text"
+                  class="form-control uppercase"
+                  bsDatepicker
+                  (keydown.arrowdown)="purchaseDateTo.click()"
+                  formControlName="purchaseDateTo"
+                  #purchaseDateTo
+                  [bsConfig]="{
+                    dateInputFormat: 'DD-MMM-YYYY',
+                    containerClass: 'theme-dark-blue',
+                    adaptivePosition: true
+                  }"
+                  [ngClass]="{
+                    redBorderCalender:
+                      startPeriodSmallerThanCurrent ||
+                      startPeriodSmallerThanEnd ||
+                      (submittedSearch &&
+                        editSaveFormControls['purchaseDateTo'].errors) ||
+                      (editSaveFormControls['purchaseDateTo'].errors &&
+                        (editSaveFormControls['purchaseDateTo'].dirty ||
+                          editSaveFormControls['purchaseDateTo'].touched))
+                  }"
+                  (ngModelChange)="validatePeriod('purchaseDateTo', $event)"
+                />
+                <span class="input-group-btn">
+                  <button
+                    class="btn custom-button"
+                    type="button"
+                    (click)="purchaseDateTo.click()"
+                    tabindex="-1"
+                  >
+                    <app-svg-calender-icon></app-svg-calender-icon>
+                  </button>
+                </span>
+              </div>
+             
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submittedSearch &&
+                    editSaveFormControls['purchaseDateTo'].errors) ||
+                  (editSaveFormControls['purchaseDateTo'].errors &&
+                    (editSaveFormControls['purchaseDateTo'].dirty ||
+                      editSaveFormControls['purchaseDateTo'].touched))
+                "
+              >
+                <div
+                  *ngIf="editSaveFormControls['purchaseDateTo'].errors?.['bsDate']?.['invalid']"
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseRequisition.errors.invalid'
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="editSaveFormControls['purchaseDateTo'].errors?.['greaterThanCurrentDateError']"
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseRequisition.errors.toLesserThanCurrent'
+                    "
+                  ></span>
+                  {{ currentDate | date : "dd-MMM-yyyy" | uppercase }}
+                </div>
+                <div
+                  *ngIf="editSaveFormControls['purchaseDateTo'].errors?.['customErr']"
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseRequisition.errors.toLesserThanFrom'
+                    "
+                  ></span>
+                  {{
+                    editSaveFormControls["purchaseDateFrom"].value
+                      | date : "dd-MMM-yyyy"
+                      | uppercase
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <label for="currentStatus" class="labelText">
+                <span
+                  [translate]="
+                    'operations.purchaseRequisition.label.currentStatus'
+                  "
+                ></span>
+              </label>
+              <ng-select
+                [items]="prStatuses"
+                [searchFn]="dropdownSearchFn"
+                [selectOnTab]="true"
+                (input)="checkNgSearchFormSelectValue($event, 'currentStatus')"
+                (change)="changeStatusID($event)"
+                bindLabel="code"
+                formControlName="currentStatus"
+                notFoundText="{{ 'common.dropdown.notFoundText' | translate }}"
+                placeholder="{{
+                  'operations.purchaseRequisition.placeholder.status'
+                    | translate
+                }}"
+                [ngClass]="{
+                  redBorder:
+                    (submittedSearch &&
+                      this.editSaveForm.controls['currentStatus'].errors) ||
+                    (this.editSaveForm.controls['currentStatus'].errors &&
+                      (this.editSaveForm.controls['currentStatus'].dirty ||
+                        this.editSaveForm.controls['currentStatus'].touched))
+                }"
+              >
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm"
+                >
+                  <div title="{{ item?.code }} - {{ item?.description }}">
+                    <small
+                      ><b>{{ item?.code }}</b></small
+                    ><br />
+                    <span class="dropDownDescription">{{
+                      item?.description
+                    }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="help-block red"
+                *ngIf="
+                  (submittedSearch &&
+                    this.editSaveForm.controls['currentStatus'].errors) ||
+                  (this.editSaveForm.controls['currentStatus'].errors &&
+                    (this.editSaveForm.controls['currentStatus'].dirty ||
+                      this.editSaveForm.controls['currentStatus'].touched))
+                "
+              >
+                <p
+                  *ngIf="
+                    this.editSaveForm.controls['currentStatus'].errors[
+                      'invalid'
+                    ]
+                  "
+                >
+                  <span
+                    [translate]="
+                      'operations.purchaseRequisition.errors.currentStatus.invalid'
+                    "
+                  ></span>
+                </p>
+              </div>
+            </div>
+            <div
+              class="btn-col col col-md-2 offset-md-0.5 col-lg-2 offset-lg-0.5 col-sm-2 offset-sm-0.5"
+            >
+              <div class="action-row-buttons">
+                <button
+                  [disabled]="clickedSearchBtn"
+                  (click)="searchRecordsList()"
+                  class="btn first-action-btn custom-button-search search-button-color"
+                >
+                  <div class="icon-container">
+                    <app-svg-search-icon></app-svg-search-icon>
+                  </div>
+                  Search
+                </button>
+                <button
+                  (click)="resetForm()"
+                  class="btn custom-button-search reset-button-color"
+                >
+                  <div class="reset-icon-container">
+                    <i class="fa-solid fa-arrows-spin"></i>
+                  </div>
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="line"></div>
+
+        <!-- purchase-requisition-list -->
+        <app-purchase-requisition-list
+          [purchaseRequisitionData]="purchaseRequisitionData"
+          [tableTitle]="tableTitle"
+          (getServerSideTable)="getServerSideTableList($event)"
+          (handleReopen)="handleReopenIcon($event)"
+          (handleAddRecord)="handleAddRecordIcon($event)"
+          (handlePrint)="handlePrintIcon($event)"
+          (handleCancel)="handleCancelIcon($event)"
+          (handleEmail)="handleEmailIcon($event)"
+          (handleSendForApproval)="handleSendForApprovalIcon($event)"
+          (receiveTableRow)="receiveTableRowData($event)"
+          (receiveSelected)="receiveSelectedData($event)"
+          (exportToExcel)="exportToExcel($event)"
+          (handleRemarks)="handleRemarksIcon($event)"
+          [showTableByColumn]="showTableByColumn"
+          [tableFilterFormGroup]="tableFilterFormGroup"
+          [disableAddNewIcons]="disableAddNewIcons"
+          [disableSendForApprovalIcons]="disableSendForApprovalIcons"
+          [disableCancelPRIcons]="disableCancelPRIcons"
+          [disableReopenIcons]="disableReopenIcons"
+          [disablePrintPRIcons]="disablePrintPRIcons"
+          [disableEmailPRIcons]="disableEmailPRIcons"
+          [currentStatusId]="currentStatusId"
+        >
+        </app-purchase-requisition-list>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Record Popup form -->
+
+  <!-- Modal components-->
+
+  <div *ngIf="!showList">
+    <div *ngIf="IsCombinationErr" class="alert alert-danger" role="alert">
+      <i class="fa fa-fw fa-times"></i>
+      <span
+        [translate]="'operations.purchaseRequisition.errors.partCombination'"
+      ></span>
+    </div>
+    <div
+      class="alert alert-warning"
+      role="alert"
+      *ngIf="showWarningMessageForRoleRightsForm"
+    >
+      <i class="fa-fw fa fa-warning"></i>
+      <strong
+        ><span [translate]="'common.roleRightsMessages.warning'"></span
+      ></strong>
+      {{ warningMessageForRoleRightsForm | translate }}
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading clearfix">
+        <div class="panel-title panelHeading pull-left">
+          <div class="nopaddingbottom">
+            <b>
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.titles.purchaseRequisition'
+                "
+                class="main-title"
+              ></span
+            ></b>
+            <label class="linebadge"> {{ mode | translate | uppercase }}</label>
+          </div>
+          <div *ngIf="mode == 'edit'">
+            <span class="panelSubHeading-Pr redIcon">
+              {{ "operations.purchaseRequisition.label.prNo" | translate }}
+              {{ prNumber }}</span
+            >
+          </div>
+        </div>
+        <div class="pull-right buttonGroup">
+          <div class="row">
+            <button
+              [hidden]="mode === 'new'"
+              (click)="handleFormPrintIcon()"
+              [disabled]="disableFormPrintPRIcons"
+              class="capsule-button light-blue"
+              [class.unclickable]="disableFormPrintPRIcons"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-print"></i>
+              </div>
+              {{ "operations.purchaseRequisition.buttons.printPr" | translate }}
+            </button>
+            <button
+              [class.unclickable]="disableFormCancelPRIcons"
+              [hidden]="mode === 'new' || hideCancelPR"
+              [disabled]="disableFormCancelPRIcons"
+              class="capsule-button brown"
+              (click)="handleCancelIcon('button')"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-xmark"></i>
+              </div>
+              {{
+                "operations.purchaseRequisition.buttons.cancelPr" | translate
+              }}
+            </button>
+            <button
+              [class.unclickable]="disableFormSendForApprovalIcons"
+              [hidden]="mode === 'new'"
+              [hidden]="hideSendForApproval"
+              [disabled]="disableFormSendForApprovalIcons"
+              class="capsule-button light-green"
+              (click)="handleSendForApprovalIcon($event)"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-check"></i>
+              </div>
+              {{
+                "operations.purchaseRequisition.buttons.sendForApproval"
+                  | translate
+              }}
+            </button>
+            <button
+              [class.unclickable]="disableFormAddNewIcons"
+              [disabled]="disableFormAddNewIcons"
+              class="capsule-button navyBlue"
+              (click)="handleFormNewPRIcon()"
+            >
+              <div class="icon-circle">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+              {{
+                "operations.purchaseRequisition.buttons.addNewPr" | translate
+              }}
+            </button>
+            <button
+              [class.unclickable]="disableFormSubmitIcons"
+              [disabled]="disableFormSubmitIcons"
+              class="capsule-button green"
+              (click)="handleFormSubmit()"
+              [hidden]="hidesave"
+            >
+              <div class="icon-circle">
+                <i class="fas fa-light fa-floppy-disk"></i>
+              </div>
+              {{ "operations.purchaseRequisition.buttons.save" | translate }}
+            </button>
+
+            <button
+              [class.unclickable]="disableFormResetIcons"
+              *ngIf="mode == 'edit'"
+              [disabled]="disableFormResetIcons"
+              class="capsule-button grey"
+              (click)="handleFormResetIcon()"
+              [hidden]="hideResetPR"
+            >
+              <div class="icon-circle">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </div>
+              {{ "operations.purchaseRequisition.buttons.reset" | translate }}
+            </button>
+            <button
+              class="capsule-button pale-orange"
+              title="{{ 'Back To List' | translate }}"
+              (click)="handleBackToList()"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-arrow-left"></i>
+              </div>
+              {{
+                "operations.purchaseRequisition.buttons.backToList" | translate
+              }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <app-purchase-requisition-form
+        (handleOpenPurchaseSpecificationModel)="
+          handleOpenPurchaseSpecification()
+        "
+        (receiveTablePart)="receiveTablePartList($event)"
+        (combinationCheckFn)="combinationCheck()"
+        (onPartCodeSelectedFn)="onPartCodeSelected($event)"
+        (onPartTypeSelectedFn)="onPartTypeSelected($event)"
+        (refreshPrPart)="refreshPrPartList($event)"
+        (deleteRowData)="deleteRowDataPrPart($event)"
+        [currentDate]="currentDate"
+        [editSavePRForm]="editSavePRForm"
+        [purchaseRequisitionPartsList]="purchaseRequisitionPartsList"
+        [partCodeDDList]="partCodeDDList"
+        [partTypeDDList]="partTypeDDList"
+        [associatedDepots]="associatedDepots"
+        [totalEstimatedCode]="totalEstimatedCode"
+        [submitted]="submitted"
+        [partSpecificationPartId]="partSpecificationPartId"
+      ></app-purchase-requisition-form>
+    </div>
+  </div>
+
+  <div
+    bsModal
+    #purchasePartSpecificationModal="bs-modal"
+    class="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="contactModalLabel"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <b class="float-left">
+            <h4 class="modal-title">
+              <span
+                [translate]="
+                  'operations.purchaseRequisition.titles.purchasePartSpecification'
+                "
+              ></span>
+            </h4>
+          </b>
+          <div class="row" class="gridRightAlign float-right">
+            <div
+              class="custom-button-close"
+              (click)="handleClosePurchaseSpecification()"
+            >
+              <i class="fas fa-fw fa-times white-icon" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <app-shared-table-new
+            [headerColumnList]="tableColumnsPartSpecification"
+            [filter]="true"
+            [excelIcon]="true"
+            [refreshIcon]="true"
+            [showHide]="true"
+            [globalSearch]="true"
+            [isPanelHeading]="false"
+            [addRecordIcon]="false"
+            [tableInitialData]="purchasePartSpecificationData"
+            [isMasterComp]="false"
+            [tableTitle]="'Purchase Part Specification'"
+            [excelFileName]="'Purchase Part Specification List'"
+          ></app-shared-table-new>
+        </div>
+
+        <div class="cancel-modal-footer">
+          <div class="row">
+            <button
+              class="capsule-button reset-button-color"
+              (click)="handleClosePurchaseSpecification()"
+            >
+              <div class="icon-circle">
+                <i class="fa-regular fa-circle-xmark"></i>
+              </div>
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    bsModal
+    #cancelPopup="bs-modal"
+    class="modal remark-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="remarksPopupLabel"
+    [config]="{ backdrop: 'static' }"
+    aria-hidden="true"
+  >
+    <form [formGroup]="cancelRemarkForm" autocomplete="off">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content border-radius-8">
+          <div class="cancel-modal-body">
+            <div class="cancel-modal-header">
+              <div class="cancel-txt-remarks">Remarks</div>
+            </div>
+            <div class="canel-modal-body">
+              <div class="cancel-txt-area-container">
+                <h3 class="margin-padding-0">
+                  Cancellation Remarks <i class="red"> *</i>
+                </h3>
+                <textarea
+                  class="form-control remarks-textarea"
+                  formControlName="remarks"
+                ></textarea>
+
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submitted &&
+                      this.cancelRemarkForm.controls['remarks'].errors) ||
+                    (this.cancelRemarkForm.controls['remarks'].errors &&
+                      (this.cancelRemarkForm.controls['remarks'].dirty ||
+                        this.cancelRemarkForm.controls['remarks'].touched))
+                  "
+                >
+                  <p
+                    class="red"
+                    *ngIf="
+                      this.cancelRemarkForm.controls['remarks'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.purchaseRequisition.errors.remarks.required'
+                      "
+                    ></span>
+                  </p>
+                </div>
+                <div class="cancel-modal-footer">
+                  <div class="row">
+                    <button
+                      class="capsule-button green"
+                      (click)="handleRemarkFormClear()"
+                    >
+                      <div class="icon-circle">
+                        <i
+                          class="fas fa-fw fa-eraser navy"
+                          aria-hidden="true"
+                          title="{{
+                            'common.grid.tooltip.clearFilter' | translate
+                          }}"
+                        ></i>
+                      </div>
+                      {{
+                        "operations.purchaseRequisition.buttons.clear"
+                          | translate
+                      }}
+                    </button>
+                    <button
+                      class="capsule-button green"
+                      (click)="handleFormCancelPRAction()"
+                    >
+                      <div class="icon-circle">
+                        <i class="fas fa-light fa-floppy-disk"></i>
+                      </div>
+
+                      {{
+                        "operations.purchaseRequisition.buttons.save"
+                          | translate
+                      }}
+                    </button>
+                    <button
+                      class="capsule-button reset-button-color"
+                      (click)="cancelPopupClose()"
+                    >
+                      <div class="icon-circle">
+                        <i class="fa-regular fa-circle-xmark"></i>
+                      </div>
+
+                      {{
+                        "operations.purchaseRequisition.buttons.close"
+                          | translate
+                      }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <app-email-pr
+    #emailModal
+    [prId]="prId"
+    [selectedDataList]="selectedDataList"
+    [attachmentPath]="attachmentPath"
+  >
+  </app-email-pr>
+</div>
+<div
+  bsModal
+  #remarksPopup="bs-modal"
+  class="modal remark-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="remarksPopupLabel"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header-new">
+        <b class="float-left">
+          <h4 class="modal-title">
+            <span
+              [translate]="'operations.purchaseRequisition.titles.ratesRemarks'"
+            ></span>
+          </h4>
+        </b>
+        <div class="row" class="gridRightAlign float-right">
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="closeRemarksPopUp()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <textarea
+          class="form-control"
+          [value]="remarks"
+          disabled="true"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>

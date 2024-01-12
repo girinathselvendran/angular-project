@@ -1,0 +1,367 @@
+<!-- newmodal -->
+<div
+  bsModal
+  #storePartAllocationPopup="bs-modal"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <form
+    [formGroup]="storePartAllocationForm"
+    autocomplete="off"
+    class="container-new-ui"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header-new header-blue">
+          <b class="float-left">
+            <h4 class="modal-title">
+              <span
+                [translate]="'operations.goodReceipt.title.storePartAllocation'"
+              ></span>
+              <label class="linebadge">
+                {{ storePartAllocationMode | translate | uppercase }}</label
+              >
+            </h4>
+          </b>
+
+          <div class="gridRightAlign">
+            <div class="row">
+              <button
+                class="capsule-button grey"
+                type="button"
+                id="btnClear"
+                title="{{ 'common.buttons.reset' | translate }}"
+                (click)="clearPartSpecification()"
+              >
+                <div class="icon-circle">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                {{ "common.buttons.reset" | translate }}
+              </button>
+              <button
+                class="capsule-button green"
+                type="submit"
+                id="btnSaveContact"
+                [disabled]="disableSaveButton"
+                title="{{ 'master.part.button.addNew' | translate }}"
+                (click)="!disableSaveButton && saveStorePartAllocation()"
+              >
+                <div class="icon-circle">
+                  <i class="fas fa-light fa-floppy-disk"></i>
+                </div>
+                {{ "common.buttons.save" | translate }}
+              </button>
+              <button
+                class="capsule-button"
+                type="button"
+                id="btnClsoe"
+                (click)="closePurchasePartSpecModal()"
+                title="{{ 'common.buttons.close' | translate }}"
+                style="background-color: #ec5656"
+              >
+                <div class="icon-circle">
+                  <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+                {{ "common.buttons.close" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="panel-body">
+            <div class="row">
+              <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                <label for="storeName" class="labelText">
+                  <span
+                    [translate]="'operations.goodReceipt.label.storeName'"
+                  ></span>
+                  <i class="red"> *</i>
+                </label>
+                <ng-select
+                  [items]="storeNameList"
+                  [selectOnTab]="true"
+                  bindLabel="storeCode"
+                  [searchFn]="dropdownSearchFn"
+                  [ngClass]="{
+                    redBorder:
+                      (submitted &&
+                        this.storePartAllocationFormInfo['storeName'].errors) ||
+                      (this.storePartAllocationFormInfo['storeName'].errors &&
+                        (this.storePartAllocationFormInfo['storeName'].dirty ||
+                          this.storePartAllocationFormInfo['storeName']
+                            .touched))
+                  }"
+                  placeholder="{{
+                    'operations.goodReceipt.placeholder.storeName' | translate
+                  }}"
+                  formControlName="storeName"
+                  notFoundText="Record not found"
+                  (change)="onStoreNameChange($event)"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div
+                      class="card-body"
+                      title="{{ item?.code }} - {{ item.description }}"
+                    >
+                      <div>
+                        <small
+                          ><b>{{ item?.storeCode }}</b></small
+                        ><br />
+                        <!-- <span class="dropDownDescription">{{
+                          item?.description
+                        }}</span> -->
+                      </div>
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submitted &&
+                      this.storePartAllocationFormInfo['storeName'].errors) ||
+                    (this.storePartAllocationFormInfo['storeName'].errors &&
+                      (this.storePartAllocationFormInfo['storeName'].dirty ||
+                        this.storePartAllocationFormInfo['storeName'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      this.storePartAllocationFormInfo['storeName'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.goodReceipt.errors.storeName.required'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      this.storePartAllocationFormInfo['storeName'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.goodReceipt.errors.storeName.invalid'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- .................................................................................................................................. -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                <label for="zoneName" class="labelText">
+                  <span
+                    [translate]="'operations.goodReceipt.label.zoneName'"
+                  ></span>
+                  <i class="red"> *</i>
+                </label>
+                <ng-select
+                  [items]="zoneNameList"
+                  [selectOnTab]="true"
+                  bindLabel="zoneCode"
+                  [searchFn]="dropdownSearchFn"
+                  [ngClass]="{
+                    redBorder:
+                      (submitted &&
+                        this.storePartAllocationFormInfo['zoneName'].errors) ||
+                      (this.storePartAllocationFormInfo['zoneName'].errors &&
+                        (this.storePartAllocationFormInfo['zoneName'].dirty ||
+                          this.storePartAllocationFormInfo['zoneName'].touched))
+                  }"
+                  placeholder="{{
+                    'operations.goodReceipt.placeholder.zoneName' | translate
+                  }}"
+                  formControlName="zoneName"
+                  notFoundText="Record not found"
+                  (change)="onStoreZoneChange($event)"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div class="card-body" title="{{ item?.zoneCode }}">
+                      <div>
+                        <small
+                          ><b>{{ item?.zoneCode }}</b></small
+                        ><br />
+                      </div>
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submitted &&
+                      this.storePartAllocationFormInfo['zoneName'].errors) ||
+                    (this.storePartAllocationFormInfo['zoneName'].errors &&
+                      (this.storePartAllocationFormInfo['zoneName'].dirty ||
+                        this.storePartAllocationFormInfo['zoneName'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      this.storePartAllocationFormInfo['zoneName'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.goodReceipt.errors.zoneName.required'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      this.storePartAllocationFormInfo['zoneName'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.goodReceipt.errors.zoneName.invalid'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- ............................................................................................................................................. -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                <label for="binName" class="labelText">
+                  <span
+                    [translate]="'operations.goodReceipt.label.binName'"
+                  ></span>
+                  <i class="red"> *</i>
+                </label>
+                <ng-select
+                  [items]="binNameList"
+                  [selectOnTab]="true"
+                  bindLabel="binCode"
+                  [searchFn]="dropdownSearchFn"
+                  [ngClass]="{
+                    redBorder:
+                      (submitted &&
+                        this.storePartAllocationFormInfo['binName'].errors) ||
+                      (this.storePartAllocationFormInfo['binName'].errors &&
+                        (this.storePartAllocationFormInfo['binName'].dirty ||
+                          this.storePartAllocationFormInfo['binName'].touched))
+                  }"
+                  placeholder="{{
+                    'operations.goodReceipt.placeholder.binName' | translate
+                  }}"
+                  formControlName="binName"
+                  notFoundText="Record not found"
+                >
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-index="index"
+                    let-search="searchTerm"
+                  >
+                    <div class="card-body" title="{{ item?.binCode }}">
+                      <div>
+                        <small
+                          ><b>{{ item?.binCode }}</b></small
+                        ><br />
+                      </div>
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <div
+                  class="help-block red"
+                  *ngIf="
+                    (submitted &&
+                      this.storePartAllocationFormInfo['binName'].errors) ||
+                    (this.storePartAllocationFormInfo['binName'].errors &&
+                      (this.storePartAllocationFormInfo['binName'].dirty ||
+                        this.storePartAllocationFormInfo['binName'].touched))
+                  "
+                >
+                  <p
+                    *ngIf="
+                      this.storePartAllocationFormInfo['binName'].errors[
+                        'required'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.goodReceipt.errors.binName.required'
+                      "
+                    ></span>
+                  </p>
+                  <p
+                    *ngIf="
+                      this.storePartAllocationFormInfo['binName'].errors[
+                        'invalid'
+                      ]
+                    "
+                  >
+                    <span
+                      [translate]="
+                        'operations.goodReceipt.errors.binName.invalid'
+                      "
+                    ></span>
+                  </p>
+                </div>
+              </div>
+              <!-- ................................................................................................................................................. -->
+              <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                <label for="allocationQuantity" class="labelText">
+                  <span
+                    [translate]="
+                      'operations.goodReceipt.label.allocationQuantity'
+                    "
+                  ></span>
+                  <i class="red"> *</i>
+                </label>
+                <input
+                  type="text"
+                  trim="blur"
+                  class="form-control new-form-control-input"
+                  id="allocationQuantity"
+                  formControlName="allocationQuantity"
+                  maxlength="15"
+                    [scale]="2"
+                    numericType="decimal"
+                    numeric
+                  placeholder="{{
+                    'operations.goodReceipt.label.allocationQuantity'
+                      | translate
+                  }}"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <app-shared-table-new
+              [headerColumnList]="columnHeaderList"
+              [isPanelHeading]="false"
+              [tableInitialData]="partSpecificationList"
+              [isMasterComp]="false"
+              (sendTableRowData)="receiveTableStorePartAllocation($event)"
+
+            ></app-shared-table-new>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
